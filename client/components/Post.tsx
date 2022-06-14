@@ -1,6 +1,7 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { FiMoreVertical } from 'react-icons/fi'
 import { Button } from '@nextui-org/react'
+import moment from 'moment'
 
 type Props = {
   post: {
@@ -9,6 +10,7 @@ type Props = {
     image: string
     comments: string[]
     likes: string[]
+    createdAt: string
   }
   user: {
     id: string
@@ -21,11 +23,13 @@ type Props = {
 }
 
 const Post = ({ post, user }: Props) => {
+  const [isOpen, setIsOpen] = useState<boolean>(false)
+
   return (
     <div>
       <div className="my-14  mb-5 flex h-auto w-full flex-col items-start justify-start rounded-xl bg-gray-100">
-        <div className="mt-3 flex items-center justify-evenly p-2">
-          <div className="mr-56 flex">
+        <div className="mt-3 flex items-center p-2">
+          <div className="mr-32 ml-3 flex">
             <img
               src={user.profilePic}
               alt="ml-3"
@@ -34,10 +38,13 @@ const Post = ({ post, user }: Props) => {
               className="rounded-full"
             />
             <p className="ml-3 text-xl font-bold text-gray-600">{user.name}</p>
+            <p className="ml-3 mt-0.5">• {moment(post.createdAt).fromNow()}</p>
           </div>
-          <FiMoreVertical size={25} className="ml-44" />
+          <FiMoreVertical size={25} className="ml-36" />
         </div>
-        <p className=" p-3 text-lg ">{post.content}</p>
+        <p className="ml-2 p-3 text-lg ">
+          {`${post.content}`.slice(0, 70).concat('...')}
+        </p>
         <img
           src={post.image}
           alt=""

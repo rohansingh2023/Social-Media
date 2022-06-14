@@ -9,6 +9,7 @@ const GET_POSTS = gql`
         image
         comments
         likes
+        createdAt
       }
       user {
         id
@@ -31,6 +32,7 @@ const GET_POSTS_BY_USER_ID = gql`
         image
         comments
         likes
+        createdAt
       }
       user {
         id

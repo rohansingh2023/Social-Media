@@ -21,7 +21,7 @@ const Rightbar = ({ userData }: any) => {
       </div>
       <div className="mx-10 my-7 h-96 w-11/12 rounded-lg bg-gray-300 p-3">
         {userData?.map((user: any, i: any) => (
-          <div className="flex items-center justify-between p-3">
+          <div className="flex items-center justify-between p-3" key={user.id}>
             <div className="flex items-center justify-between">
               <img
                 src={user.profilePic}

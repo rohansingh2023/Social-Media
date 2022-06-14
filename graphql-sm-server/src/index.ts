@@ -15,6 +15,8 @@ const port = process.env.PORT || 8000;
 
 dbConnect();
 
+app.use(express.json({ limit: "50mb" }));
+
 let apolloServer: ApolloServer;
 
 // get the user info from a JWT

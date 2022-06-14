@@ -1,12 +1,15 @@
 import { gql } from "apollo-server-express";
 
 const typeDefs = gql`
+  scalar Date
   type Post {
     id: ID!
     content: String!
     image: String!
     likes: [String]!
     comments: [String]!
+    createdAt: Date
+    updatedAt: String
     # user: User!
   }
 

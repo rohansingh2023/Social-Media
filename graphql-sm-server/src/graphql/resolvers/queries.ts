@@ -38,7 +38,7 @@ export default {
 
   posts: async () => {
     try {
-      const posts = await models.Post.find();
+      const posts = await models.Post.find().sort({ createdAt: -1 });
       return posts.map(async (post) => {
         return {
           posts: post,
@@ -66,7 +66,9 @@ export default {
 
   postByUserId: async (parent: any, args: any, { models }) => {
     try {
-      const posts = await models.Post.find({ user: args.id });
+      const posts = await models.Post.find({ user: args.id }).sort({
+        createdAt: -1,
+      });
       return posts.map(async (post) => {
         return {
           posts: post,
