@@ -60,7 +60,7 @@ export default {
         dob,
       });
       // create and return the json web token
-      return jwt.sign({ id: user._id }, "secret");
+      return jwt.sign({ id: user._id, name: user.name }, "secret");
     } catch (err) {
       console.log(err);
       throw new Error("Error creating account");
@@ -84,7 +84,7 @@ export default {
         throw new AuthenticationError("Error signing in");
       }
       // create and return the json web token
-      const token = jwt.sign({ id: user._id }, "secret");
+      const token = jwt.sign({ id: user._id, name: user.name }, "secret");
 
       return {
         token,
@@ -94,6 +94,32 @@ export default {
     } catch (error) {
       console.log(error);
       throw new Error("Error logging in");
+    }
+  },
+  likePost: async (_: any, { id }: any, { models, user }: any) => {
+    if (!user) {
+      throw new AuthenticationError("You must login to like a post");
+    }
+    const post = await models.Post.findById(id);
+    if (post) {
+      if (
+        post.likes.find((like: any) => like.id.toString() === String(user.id))
+      ) {
+        // Post already liked, unlike it
+        post.likes = post.likes.filter(
+          (like: any) => like.id.toString() !== String(user.id)
+        );
+      } else {
+        // Post not liked, like it
+        post.likes.push({
+          name: user.name,
+          createdAt: new Date().toISOString(),
+        });
+      }
+      await post.save();
+      return post;
+    } else {
+      throw new Error("Post not found");
     }
   },
 };

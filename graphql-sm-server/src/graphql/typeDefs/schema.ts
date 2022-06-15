@@ -6,7 +6,7 @@ const typeDefs = gql`
     id: ID!
     content: String!
     image: String!
-    likes: [String]!
+    likes: [like]!
     comments: [String]!
     createdAt: Date
     updatedAt: String
@@ -40,6 +40,12 @@ const typeDefs = gql`
     posts: [Post]
   }
 
+  type like {
+    id: ID!
+    name: String!
+    createdAt: String!
+  }
+
   type Query {
     hello: String
     posts: [AllPostData]!
@@ -64,6 +70,7 @@ const typeDefs = gql`
       bio: String!
     ): String!
     login(email: String!, password: String!): AuthData!
+    likePost(id: ID!): Post!
   }
 `;
 

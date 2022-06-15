@@ -24,9 +24,12 @@ const PostSchema = new Schema(
     image: {
       type: String,
     },
-    likes: {
-      type: [String],
-    },
+    likes: [
+      {
+        name: String,
+        createdAt: String,
+      },
+    ],
     comments: {
       type: [String],
     },

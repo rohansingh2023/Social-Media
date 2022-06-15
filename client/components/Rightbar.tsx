@@ -1,3 +1,4 @@
+import Link from 'next/link'
 import React, { useEffect } from 'react'
 import { FaBirthdayCake } from 'react-icons/fa'
 import { MdOutlineOnlinePrediction } from 'react-icons/md'
@@ -21,21 +22,26 @@ const Rightbar = ({ userData }: any) => {
       </div>
       <div className="mx-10 my-7 h-96 w-11/12 rounded-lg bg-gray-300 p-3">
         {userData?.map((user: any, i: any) => (
-          <div className="flex items-center justify-between p-3" key={user.id}>
-            <div className="flex items-center justify-between">
-              <img
-                src={user.profilePic}
-                alt=""
-                width="40"
-                height="40"
-                className="rounded-full"
-              />
-              <p className="ml-5 text-lg font-semibold">{user.name}</p>
+          <Link href={`/user/${user.id}`}>
+            <div
+              className="flex cursor-pointer items-center justify-between p-3"
+              key={user.id}
+            >
+              <div className="flex items-center justify-between">
+                <img
+                  src={user.profilePic}
+                  alt=""
+                  width="40"
+                  height="40"
+                  className="rounded-full"
+                />
+                <p className="ml-5 text-lg font-semibold">{user.name}</p>
+              </div>
+              <div>
+                <MdOutlineOnlinePrediction size={30} />
+              </div>
             </div>
-            <div>
-              <MdOutlineOnlinePrediction size={30} />
-            </div>
-          </div>
+          </Link>
         ))}
       </div>
     </div>

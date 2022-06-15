@@ -62,9 +62,9 @@ const Navbar = () => {
         <div className="flex">
           <div className="mr-10 flex items-center justify-between">
             <div className="flex items-center">
-              {/* <p className="hidden  lg:flex lg:text-xl">{user?.name}</p>
-              <MdArrowDropDown size={30} className="mr-5" /> */}
-              <select className="mr-5 bg-inherit text-xl font-semibold outline-none">
+              <p className="hidden  lg:flex lg:text-xl">{user?.name}</p>
+              <MdArrowDropDown size={30} className="mr-5" />
+              {/* <select className="mr-5 bg-inherit text-xl font-semibold outline-none">
                 <option value="" selected disabled hidden className="">
                   {user?.name}
                 </option>
@@ -81,7 +81,7 @@ const Navbar = () => {
                 >
                   Logout
                 </option>
-              </select>
+              </select> */}
             </div>
             <div className="flex items-center">
               <img
@@ -89,11 +89,11 @@ const Navbar = () => {
                 alt=""
                 className="h-10 w-10 rounded-full"
               />
-              {/* <RiLogoutBoxLine
+              <RiLogoutBoxLine
                 className="ml-8"
                 size={30}
                 onClick={handleLogout}
-              /> */}
+              />
               {/* <p>xkcnsknca</p> */}
             </div>
             <FaListUl
