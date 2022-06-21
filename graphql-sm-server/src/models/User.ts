@@ -7,6 +7,8 @@ export interface IUser {
   profilePic: string;
   dob: string;
   bio: string;
+  friendRequests: [string];
+  friends: [string];
 }
 
 export interface IUserModel extends IUser, Document {}
@@ -34,6 +36,22 @@ const UserSchema = new Schema(
     },
     bio: {
       type: String,
+    },
+    friendRequests: [
+      {
+        name: String,
+        email: String,
+        profilePic: String,
+        createdAt: String,
+      },
+    ],
+    friends: {
+      type: [
+        {
+          type: mongoose.Schema.Types.ObjectId,
+          ref: "User",
+        },
+      ],
     },
   },
   { timestamps: true, versionKey: false }

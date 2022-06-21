@@ -83,9 +83,15 @@ function UserProfile({ userD, post }: Props) {
         <hr className="mt-10 border bg-black" />
       </div>
       <div className="flex flex-col items-center ">
-        {userPosts?.map((post: { user: any; posts: any }) => (
-          <Post user={post.user} post={post.posts} />
-        ))}
+        {userPosts ? (
+          userPosts?.map((post: { user: any; posts: any }) => (
+            <Post user={post.user} post={post.posts} />
+          ))
+        ) : (
+          <h1 className="mt-20 text-lg font-bold text-black">
+            No posts to show
+          </h1>
+        )}
       </div>
     </div>
   )

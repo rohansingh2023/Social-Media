@@ -7,8 +7,16 @@ const GET_POSTS = gql`
         id
         content
         image
-        comments
-        likes
+        comments {
+          id
+          name
+          email
+          createdAt
+        }
+        likes {
+          id
+          createdAt
+        }
         createdAt
       }
       user {
@@ -30,8 +38,16 @@ const GET_POSTS_BY_USER_ID = gql`
         id
         content
         image
-        comments
-        likes
+        comments {
+          id
+          name
+          email
+          createdAt
+        }
+        likes {
+          id
+          createdAt
+        }
         createdAt
       }
       user {
@@ -46,4 +62,33 @@ const GET_POSTS_BY_USER_ID = gql`
   }
 `
 
-export { GET_POSTS, GET_POSTS_BY_USER_ID }
+const GET_POST_BY_ID = gql`
+  query getPostById($id: ID!) {
+    postById(id: $id) {
+      user {
+        id
+        name
+        email
+        profilePic
+      }
+      posts {
+        id
+        content
+        createdAt
+        image
+        likes {
+          id
+          createdAt
+        }
+        comments {
+          body
+          id
+          name
+          createdAt
+        }
+      }
+    }
+  }
+`
+
+export { GET_POSTS, GET_POSTS_BY_USER_ID, GET_POST_BY_ID }

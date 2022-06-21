@@ -7,7 +7,7 @@ const typeDefs = gql`
     content: String!
     image: String!
     likes: [like]!
-    comments: [String]!
+    comments: [comment]!
     createdAt: Date
     updatedAt: String
     # user: User!
@@ -21,6 +21,8 @@ const typeDefs = gql`
     profilePic: String!
     dob: String!
     bio: String!
+    friendRequests: [FriendRequest]!
+    friends: [Friend]!
     # posts: [Post]
   }
 
@@ -43,7 +45,36 @@ const typeDefs = gql`
   type like {
     id: ID!
     name: String!
+    email: String!
     createdAt: String!
+  }
+
+  type comment {
+    id: ID!
+    name: String!
+    email: String!
+    body: String!
+    createdAt: String!
+  }
+
+  type SearchUsers {
+    users: [User]!
+    totalCount: Int!
+  }
+
+  type FriendRequest {
+    name: String!
+    email: String!
+    createdAt: String!
+    profilePic: String!
+  }
+
+  type Friend {
+    id: ID!
+    name: String!
+    email: String!
+    createdAt: String!
+    profilePic: String!
   }
 
   type Query {
@@ -55,11 +86,14 @@ const typeDefs = gql`
     users: [UserData]!
     postByUserId(id: ID!): [AllPostData!]!
     onlyUsers: [User!]!
+    searchUsers(searchTerm: String!): SearchUsers!
+    friendRequests: [FriendRequest]!
+    friends: [Friend]!
   }
 
   type Mutation {
     addPost(content: String!, image: String!): Post!
-    updatePost(id: ID!, content: String!, image: String!): Post!
+    updatePost(id: ID!, content: String, image: String): Post!
     deletePost(id: ID!): Boolean!
     register(
       name: String!
@@ -71,6 +105,11 @@ const typeDefs = gql`
     ): String!
     login(email: String!, password: String!): AuthData!
     likePost(id: ID!): Post!
+    createComment(postId: ID!, body: String!): Post!
+    deleteComment(postId: ID!, commentId: ID!): Post!
+    friendRequest(id: ID!): User!
+    acceptFriendRequest(id: ID!): User!
+    # deleteFriendRequest(id: ID!): User!
   }
 `;
 

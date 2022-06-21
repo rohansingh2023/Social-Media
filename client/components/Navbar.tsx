@@ -36,7 +36,7 @@ const Navbar = () => {
 
   return (
     <>
-      <div className=" fixed top-0 z-40 flex w-screen items-center justify-between bg-purple-600 py-5 px-10 text-white">
+      <div className=" fixed top-0 z-50 flex w-screen items-center justify-between bg-purple-600 py-5 px-10 text-white">
         <div className="flex items-center justify-around ">
           <Link href={'/'} passHref>
             <p className="cursor-pointer text-3xl font-bold italic">

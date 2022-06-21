@@ -13,16 +13,9 @@ type Props = {
     dob: string
     bio: string
   }
-  post: {
-    id: string
-    content: string
-    image: string
-    comments: string[]
-    likes: string[]
-  }
 }
 
-function UserCard({ user, post }: Props) {
+function UserCard({ user }: Props) {
   return (
     <Link href={`/user/${user.id}`}>
       <div className="mt-10 cursor-pointer rounded-3xl bg-slate-200 p-2 shadow-lg">

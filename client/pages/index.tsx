@@ -3,7 +3,7 @@ import { Feed, Leftbar, Navbar, Rightbar } from '../components'
 import { getOnlyUsers, getPosts, getUsers } from '../services'
 
 const Index = ({ postData, userData }: any) => {
-  console.log(userData)
+  console.log(postData)
 
   return (
     <div className="flex font-PtSans">

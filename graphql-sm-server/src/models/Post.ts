@@ -27,12 +27,18 @@ const PostSchema = new Schema(
     likes: [
       {
         name: String,
+        email: String,
         createdAt: String,
       },
     ],
-    comments: {
-      type: [String],
-    },
+    comments: [
+      {
+        name: String,
+        email: String,
+        body: String,
+        createdAt: String,
+      },
+    ],
   },
   { timestamps: true, versionKey: false }
 );

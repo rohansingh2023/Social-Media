@@ -80,4 +80,23 @@ export default {
       throw new Error("Error getting posts");
     }
   },
+
+  searchUsers: async (parent: any, args: any, { models }) => {
+    try {
+      const regex = new RegExp(args.searchTerm, "i");
+      const users = await models.User.find({
+        $or: [
+          { name: regex },
+          { email: regex },
+        ],
+      }).sort({ createdAt: -1 });
+      return {
+        users,
+        totalCount: users.length,
+      }
+    } catch (error) {
+      console.log(error);
+      throw new Error("Error getting users");
+    }
+  }
 };

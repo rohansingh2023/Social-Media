@@ -15,8 +15,17 @@ const GET_USERS = gql`
         id
         content
         image
-        comments
-        likes
+        comments {
+          id
+          body
+          createdAt
+          name
+          email
+        }
+        likes {
+          id
+          createdAt
+        }
       }
     }
   }
@@ -35,10 +44,19 @@ const GET_USER_BY_ID = gql`
       }
       posts {
         id
-        comments
+        comments {
+          id
+          body
+          createdAt
+          name
+          email
+        }
         image
         content
-        likes
+        likes {
+          id
+          createdAt
+        }
       }
     }
   }
@@ -57,10 +75,19 @@ const CURRENT_USER = gql`
       }
       posts {
         id
-        comments
+        comments {
+          id
+          body
+          createdAt
+          name
+          email
+        }
         content
         image
-        likes
+        likes {
+          id
+          createdAt
+        }
       }
     }
   }
@@ -79,4 +106,20 @@ const GET_ONLY_USERS = gql`
   }
 `
 
-export { GET_USERS, GET_USER_BY_ID, CURRENT_USER, GET_ONLY_USERS }
+const SEARCH_USERS = gql`
+  query searchUsers($searchTerm: String!) {
+    searchUsers(searchTerm: $searchTerm) {
+      users {
+        id
+        name
+        email
+        profilePic
+        bio
+        dob
+      }
+      totalCount
+    }
+  }
+`
+
+export { GET_USERS, GET_USER_BY_ID, CURRENT_USER, GET_ONLY_USERS, SEARCH_USERS }
