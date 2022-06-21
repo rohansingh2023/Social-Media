@@ -39,20 +39,24 @@ const UserSchema = new Schema(
     },
     friendRequests: [
       {
+        userId: {
+          type: mongoose.Types.ObjectId,
+          ref: "User",
+        },
         name: String,
         email: String,
         profilePic: String,
         createdAt: String,
       },
     ],
-    friends: {
-      type: [
-        {
-          type: mongoose.Schema.Types.ObjectId,
-          ref: "User",
-        },
-      ],
-    },
+    friends: [
+      {
+        name: String,
+        email: String,
+        profilePic: String,
+        createdAt: String,
+      },
+    ],
   },
   { timestamps: true, versionKey: false }
 );

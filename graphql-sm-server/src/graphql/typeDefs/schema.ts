@@ -63,6 +63,8 @@ const typeDefs = gql`
   }
 
   type FriendRequest {
+    id: ID!
+    userId: ID!
     name: String!
     email: String!
     createdAt: String!
@@ -108,7 +110,7 @@ const typeDefs = gql`
     createComment(postId: ID!, body: String!): Post!
     deleteComment(postId: ID!, commentId: ID!): Post!
     friendRequest(id: ID!): User!
-    acceptFriendRequest(id: ID!): User!
+    acceptFriendRequest(email: String!): User!
     # deleteFriendRequest(id: ID!): User!
   }
 `;

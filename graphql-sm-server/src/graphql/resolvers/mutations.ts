@@ -189,13 +189,12 @@ export default {
       }
       const userTo = await models.User.findById(id);
       const userFrom = await models.User.findById(user.id);
-      if (userTo.friendRequests.find((f: any) => f.email === userFrom.email)) {
+      if (userTo.friendRequests.find((f: any) => f.id === userFrom.id)) {
         userTo.friendRequests = userTo.friendRequests.filter(
-          (f: any) => f.email !== userFrom.email
+          (f: any) => f.id !== userFrom.id
         );
       } else {
         userTo.friendRequests.push({
-          // id: userFrom.id,
           email: userFrom.email,
           name: userFrom.name,
           profilePic: userFrom.profilePic,
@@ -206,6 +205,43 @@ export default {
       }
     } catch (error) {
       throw new Error("Error sending friend request");
+    }
+  },
+
+  acceptFriendRequest: async (_: any, { id }: any, { models, user }: any) => {
+    try {
+      if (!user) {
+        throw new AuthenticationError(
+          "You must login to accept a friend request"
+        );
+      }
+      const userTo = await models.User.findById(id);
+      const userFrom = await models.User.findById(user.id);
+      if (userTo.friendRequests.find((f: any) => f.id === userFrom.id)) {
+        userTo.friends.push({
+          // id: userFrom.id,
+          email: userFrom.email,
+          name: userFrom.name,
+          profilePic: userFrom.profilePic,
+          createdAt: new Date().toISOString(),
+        });
+        userTo.friendRequests = userTo.friendRequests.filter(
+          (f: any) => f.id !== userFrom.id
+        );
+        userFrom.friends.push({
+          // id: userTo.id,
+          email: userTo.email,
+          name: userTo.name,
+          profilePic: userTo.profilePic,
+          createdAt: new Date().toISOString(),
+        });
+        await userTo.save();
+        return userTo;
+      } else {
+        throw new Error("Friend request not found");
+      }
+    } catch (error) {
+      throw new Error("Error accepting friend request");
     }
   },
 };
