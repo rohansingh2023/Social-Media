@@ -1,4 +1,4 @@
-import { request } from 'graphql-request'
+import { GraphQLClient, request } from 'graphql-request'
 import {
   GET_POSTS,
   GET_POSTS_BY_USER_ID,
@@ -6,12 +6,18 @@ import {
 } from '../graphql/queries/postQueries'
 import {
   GET_ONLY_USERS,
+  GET_ONLY_USERS_EX_ME,
   GET_USERS,
   GET_USER_BY_ID,
   SEARCH_USERS,
 } from '../graphql/queries/userQueries'
 
 const GRAPHQL_ENDPOINT = 'http://localhost:4000/api'
+// const authClient = new GraphQLClient(GRAPHQL_ENDPOINT, {
+//   headers: {
+//     Authorization: `${localStorage.getItem('authUser').token}`
+//   }
+// })
 
 export const getPosts = async () => {
   const results = await request(GRAPHQL_ENDPOINT, GET_POSTS)
@@ -36,6 +42,11 @@ export const getPostsByUserId = async (id: any) => {
 export const getOnlyUsers = async () => {
   const results = await request(GRAPHQL_ENDPOINT, GET_ONLY_USERS)
   return results.onlyUsers
+}
+
+export const getOnlyUsersExMe = async () => {
+  const results = await request(GRAPHQL_ENDPOINT, GET_ONLY_USERS_EX_ME)
+  return results.onlyUsersExcludingMe
 }
 
 export const getPostById = async (id: any) => {

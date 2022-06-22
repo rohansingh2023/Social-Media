@@ -1,5 +1,6 @@
 import { AuthenticationError } from "apollo-server-express";
 import models from "../../models";
+import User from "../../models/User";
 
 export default {
   hello: () => "Hello world!",
@@ -25,6 +26,21 @@ export default {
 
   users: async (parent: any, args: any, { models }) => {
     const users = await models.User.find();
+    return users.map(async (user: { id: any; posts: any }) => ({
+      user,
+      posts: await models.Post.find({ user: user.id }),
+    }));
+  },
+  onlyUsersExcludingMe: async (_: any, args: any, { models, user }) => {
+    const users = (await models.User.find()).filter(
+      (f: any) => f.id !== user.id
+    );
+    return users;
+  },
+  usersExcludingMe: async (parent: any, args: any, { models, user }) => {
+    const users = (await models.User.find()).filter(
+      (f: any) => f.id !== user.id
+    );
     return users.map(async (user: { id: any; posts: any }) => ({
       user,
       posts: await models.Post.find({ user: user.id }),
@@ -85,18 +101,15 @@ export default {
     try {
       const regex = new RegExp(args.searchTerm, "i");
       const users = await models.User.find({
-        $or: [
-          { name: regex },
-          { email: regex },
-        ],
+        $or: [{ name: regex }, { email: regex }],
       }).sort({ createdAt: -1 });
       return {
         users,
         totalCount: users.length,
-      }
+      };
     } catch (error) {
       console.log(error);
       throw new Error("Error getting users");
     }
-  }
+  },
 };

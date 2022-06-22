@@ -91,6 +91,8 @@ const typeDefs = gql`
     searchUsers(searchTerm: String!): SearchUsers!
     friendRequests: [FriendRequest]!
     friends: [Friend]!
+    onlyUsersExcludingMe: [User!]!
+    usersExcludingMe: [UserData!]!
   }
 
   type Mutation {
@@ -104,7 +106,7 @@ const typeDefs = gql`
       profilePic: String!
       dob: String!
       bio: String!
-    ): String!
+    ): AuthData!
     login(email: String!, password: String!): AuthData!
     likePost(id: ID!): Post!
     createComment(postId: ID!, body: String!): Post!

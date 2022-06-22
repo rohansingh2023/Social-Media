@@ -1,10 +1,18 @@
+import { useMutation } from '@apollo/client'
 import Link from 'next/link'
+import { useRouter } from 'next/router'
 import React, { useState } from 'react'
+import FileBase from 'react-file-base64'
+import toast from 'react-hot-toast'
+import { REGISTER_USER } from '../../graphql/mutations/userMutations'
 
 type FormData = {
   name: string
   email: string
   password: string
+  dob: string
+  bio: string
+  profilePic: string
 }
 
 function register() {
@@ -12,15 +20,40 @@ function register() {
     name: '',
     email: '',
     password: '',
+    dob: '',
+    bio: '',
+    profilePic: '',
+  })
+  const router = useRouter()
+
+  const [register] = useMutation(REGISTER_USER, {
+    variables: {
+      name: formData.name,
+      email: formData.email,
+      password: formData.password,
+      profilePic: formData.profilePic,
+      dob: formData.dob,
+      bio: formData.bio,
+    },
   })
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
+    try {
+      const { data } = await register()
+      localStorage.setItem('authUser', JSON.stringify(data?.register))
+      toast.success('Register successfull')
+      router.push('/auth/login')
+      router.reload()
+    } catch (error) {
+      toast.error(`${error}`)
+      console.log(error)
+    }
   }
 
   return (
     <>
-      <div className="mb-10">
+      <div className="mb-16 -mt-10">
         <div className="flex justify-center">
           <img
             alt=""
@@ -34,14 +67,14 @@ function register() {
         <p className="mt-5 text-center text-sm font-semibold text-gray-600">
           Already have an account?
           <div className="text-md text-purple-600 hover:text-purple-500">
-            <Link href={'/auth/login'}>Login</Link>
+            <Link href={`/auth/login`}>Login</Link>
           </div>
         </p>
       </div>
-      <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
+      <form className="-mt-5" onSubmit={handleSubmit}>
         <div className="flex items-center justify-center">
           <div className="w-[300px] -space-y-px">
-            <div className="my-5">
+            <div className="my-3">
               <label htmlFor="email" className="sr-only">
                 Username
               </label>
@@ -55,7 +88,7 @@ function register() {
                 placeholder="Enter your name"
               />
             </div>
-            <div className="my-5">
+            <div className="my-3">
               <label htmlFor="email" className="sr-only">
                 Email
               </label>
@@ -83,8 +116,50 @@ function register() {
                 // id={id}
                 // name={name}
                 type="password"
-                className="relative mt-5 block w-full appearance-none rounded-md border border-gray-300 px-3 py-2 text-gray-900 placeholder-gray-500 focus:z-10 focus:border-purple-500 focus:outline-none focus:ring-purple-500 sm:text-sm"
+                className="relative mt-3 block w-full appearance-none rounded-md border border-gray-300 px-3 py-2 text-gray-900 placeholder-gray-500 focus:z-10 focus:border-purple-500 focus:outline-none focus:ring-purple-500 sm:text-sm"
                 placeholder="Enter your password"
+              />
+            </div>
+            <div className="my-5">
+              <label htmlFor="email" className="sr-only">
+                Bio
+              </label>
+              <input
+                onChange={(e) => {
+                  setFormData({ ...formData, bio: e.target.value })
+                }}
+                value={formData.bio}
+                type="text"
+                className="relative mt-3 block w-full appearance-none rounded-md border border-gray-300 px-3 py-2 text-gray-900 placeholder-gray-500 focus:z-10 focus:border-purple-500 focus:outline-none focus:ring-purple-500 sm:text-sm"
+                placeholder="Enter bio.."
+              />
+            </div>
+            <div className="my-5">
+              <label htmlFor="email" className="sr-only">
+                Dob
+              </label>
+              <input
+                onChange={(e) => {
+                  setFormData({ ...formData, dob: e.target.value })
+                }}
+                value={formData.dob}
+                type="text"
+                className="relative mt-3 block w-full appearance-none rounded-md border border-gray-300 px-3 py-2 text-gray-900 placeholder-gray-500 focus:z-10 focus:border-purple-500 focus:outline-none focus:ring-purple-500 sm:text-sm"
+                placeholder="Enter your Date of Birth"
+              />
+            </div>
+            <div className="-mb-5">
+              <FileBase
+                type="file"
+                multiple={false}
+                onChange={(e) => {
+                  setFormData({ ...formData, profilePic: e.target.value })
+                }}
+                // ref={fileInputRef}
+                className="upload-btn"
+                onDone={({ base64 }) =>
+                  setFormData({ ...formData, profilePic: base64 })
+                }
               />
             </div>
             <div className=" ">

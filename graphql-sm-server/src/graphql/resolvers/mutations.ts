@@ -208,38 +208,45 @@ export default {
     }
   },
 
-  acceptFriendRequest: async (_: any, { id }: any, { models, user }: any) => {
+  acceptFriendRequest: async (
+    _: any,
+    { email }: any,
+    { models, user }: any
+  ) => {
     try {
       if (!user) {
         throw new AuthenticationError(
           "You must login to accept a friend request"
         );
       }
-      const userTo = await models.User.findById(id);
-      const userFrom = await models.User.findById(user.id);
-      if (userTo.friendRequests.find((f: any) => f.id === userFrom.id)) {
-        userTo.friends.push({
-          // id: userFrom.id,
-          email: userFrom.email,
-          name: userFrom.name,
-          profilePic: userFrom.profilePic,
+      const requestSender = await models.User.findOne({ email });
+      const requestReceiver = await models.User.findById(user.id);
+      if (
+        !requestReceiver.friends.find((f: any) => f.email === email) &&
+        !requestSender.friends.find(
+          (f: any) => f.email === requestReceiver.email
+        )
+      ) {
+        requestReceiver.friends.push({
+          name: requestSender.name,
+          email: requestSender.email,
+          profilePic: requestSender.profilePic,
           createdAt: new Date().toISOString(),
         });
-        userTo.friendRequests = userTo.friendRequests.filter(
-          (f: any) => f.id !== userFrom.id
-        );
-        userFrom.friends.push({
-          // id: userTo.id,
-          email: userTo.email,
-          name: userTo.name,
-          profilePic: userTo.profilePic,
+        requestSender.friends.push({
+          name: requestReceiver.name,
+          email: requestReceiver.email,
+          profilePic: requestReceiver.profilePic,
           createdAt: new Date().toISOString(),
         });
-        await userTo.save();
-        return userTo;
+        // requestReceiver.friendRequests.filter((f: any) => f.email !== email);
+        requestReceiver.friendRequests.pull({ email: email });
       } else {
-        throw new Error("Friend request not found");
+        throw new UserInputError("Already Friends");
       }
+      await requestReceiver.save();
+      await requestSender.save();
+      return requestReceiver;
     } catch (error) {
       throw new Error("Error accepting friend request");
     }

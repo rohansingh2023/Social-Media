@@ -5,6 +5,7 @@ import { BsSignpost } from 'react-icons/bs'
 import Post from './Post'
 import { getPostsByUserId } from '../services'
 import Loading from './Loading'
+import Link from 'next/link'
 
 type Props = {
   userD: {
@@ -68,10 +69,12 @@ function UserProfile({ userD, post }: Props) {
               <GiThreeFriends size={25} className="ml-3" />
               <span className="ml-3">Friends</span>
             </button>
-            <button className=" flex w-36 items-center rounded-full bg-blue-600 p-2 text-white shadow-xl outline-none hover:bg-blue-400">
-              <FcAbout size={25} className="ml-3" />
-              <span className="ml-3">About</span>
-            </button>
+            <Link href={`/user/${userD.id}`}>
+              <button className=" flex w-36 items-center rounded-full bg-blue-600 p-2 text-white shadow-xl outline-none hover:bg-blue-400">
+                <FcAbout size={25} className="ml-3" />
+                <span className="ml-3">About</span>
+              </button>
+            </Link>
             <button className=" flex w-36 items-center rounded-full bg-green-600 p-2 text-white shadow-xl outline-none hover:bg-green-400">
               <BsSignpost size={25} className="ml-3" />
               <span className="ml-3">Posts</span>

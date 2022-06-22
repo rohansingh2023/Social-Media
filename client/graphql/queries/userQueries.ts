@@ -31,6 +31,37 @@ const GET_USERS = gql`
   }
 `
 
+const GET_USERS_EX_ME = gql`
+  query users {
+    usersExcludingMe {
+      user {
+        id
+        name
+        email
+        profilePic
+        dob
+        bio
+      }
+      posts {
+        id
+        content
+        image
+        comments {
+          id
+          body
+          createdAt
+          name
+          email
+        }
+        likes {
+          id
+          createdAt
+        }
+      }
+    }
+  }
+`
+
 const GET_USER_BY_ID = gql`
   query getUserById($id: ID!) {
     userById(id: $id) {
@@ -106,6 +137,19 @@ const GET_ONLY_USERS = gql`
   }
 `
 
+const GET_ONLY_USERS_EX_ME = gql`
+  query onlyUsers {
+    onlyUsersExcludingMe {
+      id
+      name
+      email
+      profilePic
+      bio
+      dob
+    }
+  }
+`
+
 const SEARCH_USERS = gql`
   query searchUsers($searchTerm: String!) {
     searchUsers(searchTerm: $searchTerm) {
@@ -122,4 +166,12 @@ const SEARCH_USERS = gql`
   }
 `
 
-export { GET_USERS, GET_USER_BY_ID, CURRENT_USER, GET_ONLY_USERS, SEARCH_USERS }
+export {
+  GET_USERS,
+  GET_USER_BY_ID,
+  CURRENT_USER,
+  GET_ONLY_USERS,
+  SEARCH_USERS,
+  GET_ONLY_USERS_EX_ME,
+  GET_USERS_EX_ME,
+}

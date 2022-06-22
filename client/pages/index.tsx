@@ -1,6 +1,6 @@
 import React from 'react'
 import { Feed, Leftbar, Navbar, Rightbar } from '../components'
-import { getOnlyUsers, getPosts, getUsers } from '../services'
+import { getOnlyUsers, getOnlyUsersExMe, getPosts, getUsers } from '../services'
 
 const Index = ({ postData, userData }: any) => {
   console.log(postData)

@@ -20,7 +20,7 @@ const Rightbar = ({ userData }: any) => {
           Rohan and 2 others have birthday today
         </p>
       </div>
-      <div className="mx-10 my-7 h-96 w-11/12 rounded-lg bg-gray-300 p-3">
+      <div className="mx-10 my-7 h-96 w-11/12 overflow-y-scroll rounded-lg bg-gray-300 p-5">
         {userData?.map((user: any, i: any) => (
           <Link href={`/user/${user.id}`}>
             <div
