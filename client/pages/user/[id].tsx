@@ -1,5 +1,5 @@
-import React from 'react'
-import { Navbar } from '../../components'
+import React, { useState } from 'react'
+import { Navbar, Post } from '../../components'
 import { getUserById, getUsers } from '../../services'
 
 type Props = {
@@ -12,19 +12,21 @@ type Props = {
       bio: string
       dob: string
     }
-    posts: {
-      id: string
-      content: string
-      image: string
-      likes: [string]
-      comments: [string]
-    }
+    posts: [
+      {
+        id: string
+        content: string
+        image: string
+        likes: [string]
+        comments: [string]
+        createdAt: string
+      }
+    ]
   }
 }
 
 function UserInfo({ userIdData: { user, posts } }: Props) {
-  console.log('user', user)
-  console.log('post', posts)
+  const [isHidden, setIsHidden] = useState<boolean>(false)
 
   return (
     <>
@@ -49,12 +51,8 @@ function UserInfo({ userIdData: { user, posts } }: Props) {
           <div className="mt-24 flex flex-[0.6] flex-col p-3">
             <div className="flex items-center justify-center rounded-lg bg-slate-300 p-5 text-center font-Rubik">
               {/* Bio */}
-              <p>
-                Lorem ipsum dolor sit amet, consectetur adipisicing elit. Vitae
-                nihil, doloribus modi rem et nemo veniam placeat consequuntur
-                iste vel molestias qui provident accusantium atque reprehenderit
-                odit mollitia, nobis beatae? Exercitationem eius illum nulla
-                laboriosam error, quam distinctio quibusdam nihil?
+              <p className={user.bio.length > 100 ? 'text-md' : 'text-xl'}>
+                {user.bio}
               </p>
             </div>
             <div className="flex p-5">
@@ -62,11 +60,20 @@ function UserInfo({ userIdData: { user, posts } }: Props) {
               <button className="w-1/2 rounded-md bg-slate-300  p-3">
                 See Friends
               </button>
-              <button className="ml-3 w-1/2 rounded-md bg-slate-300 p-3">
-                Add Friend
+              <button
+                className="ml-3 w-1/2 rounded-md bg-slate-300 p-3 outline-none"
+                onClick={() => setIsHidden(true)}
+              >
+                See Posts
               </button>
             </div>
-            <div>{/* Posts */}</div>
+            {isHidden && (
+              <div className="flex flex-col items-center justify-center">
+                {posts?.map((post) => (
+                  <Post user={user} post={post} />
+                ))}
+              </div>
+            )}
           </div>
         </div>
       </div>

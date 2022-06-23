@@ -1,7 +1,5 @@
 import React from 'react'
-import client from '../apollo-client'
 import { Leftbar, Navbar, Rightbar, SearchFriends } from '../components'
-import { GET_USERS } from '../graphql/queries/userQueries'
 import { getOnlyUsers, getOnlyUsersExMe, getUsers } from '../services'
 
 const Search = ({ userData, onlyUserData }: any) => {

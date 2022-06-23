@@ -1,8 +1,24 @@
 import Head from 'next/head'
-import React from 'react'
+import { useRouter } from 'next/router'
+import React, { useEffect } from 'react'
 import Navbar from './Navbar'
 
 const Layout = ({ children }: any) => {
+  const router = useRouter()
+
+  useEffect(() => {
+    const checkIsAuthUser = () => {
+      const user = localStorage.getItem('authUser')
+      if (user) {
+        const parsedUser = JSON.parse(user)
+        router.replace('/')
+      } else {
+        router.replace('/auth/login')
+      }
+    }
+    checkIsAuthUser()
+  }, [])
+
   return (
     <div>
       <Head>

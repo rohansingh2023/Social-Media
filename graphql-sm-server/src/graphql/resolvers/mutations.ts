@@ -239,8 +239,8 @@ export default {
           profilePic: requestReceiver.profilePic,
           createdAt: new Date().toISOString(),
         });
-        // requestReceiver.friendRequests.filter((f: any) => f.email !== email);
-        requestReceiver.friendRequests.pull({ email: email });
+        requestReceiver.friendRequests.filter((f: any) => f.email === email);
+        // requestReceiver.friendRequests.pull({ email: email });
       } else {
         throw new UserInputError("Already Friends");
       }

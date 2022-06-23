@@ -14,14 +14,13 @@ const Navbar = () => {
   const { currentUser } = useStateContext()
   const { user } = currentUser
   const { id } = user || {}
-  console.log(id)
   const router = useRouter()
 
   const handleLogout = () => {
     localStorage.clear()
     toast.info('Logged out successfully')
-    router.push('/auth/login')
-    window.location.reload()
+    router.replace('/auth/login')
+    // window.location.reload()
   }
 
   const Dropdown = () => {

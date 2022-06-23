@@ -1,4 +1,5 @@
 import { GraphQLClient, request } from 'graphql-request'
+import { useEffect, useState } from 'react'
 import {
   GET_POSTS,
   GET_POSTS_BY_USER_ID,
@@ -45,7 +46,22 @@ export const getOnlyUsers = async () => {
 }
 
 export const getOnlyUsersExMe = async () => {
-  const results = await request(GRAPHQL_ENDPOINT, GET_ONLY_USERS_EX_ME)
+  const [currentUser, setCurrentUser] = useState([])
+
+  useEffect(() => {
+    const user = localStorage.getItem('authUser')
+    if (user) {
+      setCurrentUser(JSON.parse(user))
+    }
+  }, [])
+
+  const { token }: any = currentUser || {}
+
+  const results = await request(GRAPHQL_ENDPOINT, GET_ONLY_USERS_EX_ME, {
+    Headers: {
+      Authorization: `${token}`,
+    },
+  })
   return results.onlyUsersExcludingMe
 }
 

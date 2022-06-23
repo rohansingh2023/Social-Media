@@ -84,6 +84,7 @@ const GET_USER_BY_ID = gql`
         }
         image
         content
+        createdAt
         likes {
           id
           createdAt

@@ -1,9 +1,16 @@
+import { useQuery } from '@apollo/client'
 import Link from 'next/link'
 import React, { useEffect } from 'react'
 import { FaBirthdayCake } from 'react-icons/fa'
 import { MdOutlineOnlinePrediction } from 'react-icons/md'
+import { useStateContext } from '../context/StateContext'
 
 const Rightbar = ({ userData }: any) => {
+  const { currentUser } = useStateContext()
+  const { user } = currentUser || {}
+  const { id } = user || {}
+  const onlyUserData = userData?.filter((user: any) => user.id !== id)
+
   return (
     // <div className="sticky top-20 h-[100vh] w-1/4">
     <div className=" hidden lg:flex lg:h-full lg:w-1/4 lg:flex-shrink-0 lg:flex-col lg:items-center">
@@ -21,7 +28,7 @@ const Rightbar = ({ userData }: any) => {
         </p>
       </div>
       <div className="mx-10 my-7 h-96 w-11/12 overflow-y-scroll rounded-lg bg-gray-300 p-5">
-        {userData?.map((user: any, i: any) => (
+        {onlyUserData?.map((user: any, i: any) => (
           <Link href={`/user/${user.id}`}>
             <div
               className="flex cursor-pointer items-center justify-between p-3"

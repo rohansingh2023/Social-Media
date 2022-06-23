@@ -33,8 +33,8 @@ function login() {
       console.log(data)
       localStorage.setItem('authUser', JSON.stringify(data?.login))
       toast.success('Login successful!')
-      router.push('/')
-      window.location.reload()
+      router.replace('/')
+      // window.location.reload()
     } catch (error) {
       console.log(error)
     }
