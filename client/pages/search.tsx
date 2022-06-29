@@ -6,16 +6,16 @@ const Search = ({ userData, onlyUserData }: any) => {
   console.log(userData)
 
   return (
-    <>
-      <header className="z-50">
+    <div className="grid-rows-10 grid font-PtSans">
+      <header className="z-50 row-span-1">
         <Navbar />
       </header>
-      <div className="flex">
+      <div className="row-span-9 grid grid-cols-12">
         <Leftbar />
         <SearchFriends userData={userData} />
         <Rightbar userData={onlyUserData} />
       </div>
-    </>
+    </div>
   )
 }
 

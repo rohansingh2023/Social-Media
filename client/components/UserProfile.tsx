@@ -41,7 +41,7 @@ function UserProfile({ userD, post }: Props) {
   }
 
   return (
-    <div className="flex flex-1 flex-col">
+    <div className="col-span-6 flex flex-1 flex-col lg:border-x">
       <div className="flex w-full flex-col ">
         <div className="ml-8 mt-5 h-80 w-11/12 rounded-t-md bg-white opacity-70">
           <img

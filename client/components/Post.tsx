@@ -59,6 +59,17 @@ const Post = ({ post, user }: Props) => {
       },
     },
     refetchQueries: [{ query: GET_POSTS }],
+    // update(cache, { data: { deletePost } }) {
+    //   const { posts }: any = cache.readQuery({
+    //     query: GET_POSTS,
+    //   })
+    //   cache.writeQuery({
+    //     query: GET_POSTS,
+    //     data: {
+    //       posts: posts.filter((p: any) => p.id !== deletePost.id),
+    //     },
+    //   })
+    // },
   })
 
   const handleLike = async () => {

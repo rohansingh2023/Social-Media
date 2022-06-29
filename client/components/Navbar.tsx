@@ -10,7 +10,6 @@ import { toast } from 'react-toastify'
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false)
-  const [dropdown, setDropdown] = useState<boolean>(true)
   const { currentUser } = useStateContext()
   const { user } = currentUser
   const { id } = user || {}
@@ -20,17 +19,6 @@ const Navbar = () => {
     localStorage.clear()
     toast.info('Logged out successfully')
     router.replace('/auth/login')
-    // window.location.reload()
-  }
-
-  const Dropdown = () => {
-    return (
-      <div className="relative top-8 right-20 z-50 rounded-lg bg-white p-3 text-black">
-        <p className="border border-b-black">View Profile</p>
-        <p className="border border-b-black">Check Info</p>
-        <p className="border border-b-black">Logout</p>
-      </div>
-    )
   }
 
   return (
@@ -61,26 +49,11 @@ const Navbar = () => {
         <div className="flex">
           <div className="mr-10 flex items-center justify-between">
             <div className="flex items-center">
-              <p className="hidden  lg:flex lg:text-xl">{user?.name}</p>
-              <MdArrowDropDown size={30} className="mr-5" />
-              {/* <select className="mr-5 bg-inherit text-xl font-semibold outline-none">
-                <option value="" selected disabled hidden className="">
-                  {user?.name}
-                </option>
-                <option value="" className="text-lg text-black">
-                  View Profile
-                </option>
-                <option value="" className="text-lg text-black">
-                  Check Info
-                </option>
-                <option
-                  value=""
-                  className="text-lg text-black"
-                  onClick={handleLogout}
-                >
-                  Logout
-                </option>
-              </select> */}
+              <p className="hidden lg:flex lg:text-xl">{user?.name}</p>
+              <MdArrowDropDown
+                size={30}
+                className="invisible lg:visible lg:mr-5"
+              />
             </div>
             <div className="flex items-center">
               <img
@@ -89,7 +62,7 @@ const Navbar = () => {
                 className="h-10 w-10 rounded-full"
               />
               <RiLogoutBoxLine
-                className="ml-8"
+                className="invisible lg:visible lg:ml-8"
                 size={30}
                 onClick={handleLogout}
               />

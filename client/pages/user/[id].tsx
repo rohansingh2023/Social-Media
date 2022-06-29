@@ -57,7 +57,10 @@ function UserInfo({ userIdData: { user, posts } }: Props) {
             </div>
             <div className="flex p-5">
               {/* FriendsList */}
-              <button className="w-1/2 rounded-md bg-slate-300  p-3">
+              <button
+                className="w-1/2 rounded-md bg-slate-300  p-3"
+                onClick={() => setIsHidden(false)}
+              >
                 See Friends
               </button>
               <button
@@ -68,7 +71,7 @@ function UserInfo({ userIdData: { user, posts } }: Props) {
               </button>
             </div>
             {isHidden && (
-              <div className="flex flex-col items-center justify-center">
+              <div className="flex flex-col items-center justify-center transition-shadow duration-200 ">
                 {posts?.map((post) => (
                   <Post user={user} post={post} />
                 ))}

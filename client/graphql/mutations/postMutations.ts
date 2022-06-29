@@ -6,6 +6,17 @@ const ADD_POST = gql`
       id
       content
       image
+      comments {
+        id
+        name
+        email
+        createdAt
+      }
+      likes {
+        id
+        createdAt
+      }
+      createdAt
     }
   }
 `

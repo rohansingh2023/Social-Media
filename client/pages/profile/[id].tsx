@@ -5,16 +5,16 @@ import { getUserById, getUsers } from '../../services'
 
 const Profile = ({ userIdData }: any) => {
   return (
-    <>
-      <header className="z-50">
+    <div className="grid-rows-10 grid font-PtSans">
+      <header className="z-50 row-span-1">
         <Navbar />
       </header>
-      <div className="flex">
+      <div className="row-span-9 grid grid-cols-12">
         <Leftbar />
         <UserProfile userD={userIdData.user} post={userIdData.posts} />
         <Rightbar />
       </div>
-    </>
+    </div>
   )
 }
 

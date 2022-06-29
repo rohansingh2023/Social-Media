@@ -45,8 +45,8 @@ function SearchFriends({ userData }: Props) {
   }
 
   return (
-    <div className="flex flex-1 flex-col">
-      <div className="mt-5 flex h-16 w-11/12 items-start justify-center rounded-full bg-white p-5 shadow-lg">
+    <div className="col-span-6 flex flex-1 flex-col lg:border-x ">
+      <div className="ml-7 mt-5 flex h-16 w-11/12 items-start justify-center rounded-full bg-white p-5 shadow-lg">
         <AiOutlineSearch size={30} />
         <input
           placeholder="Enter friend's name"
@@ -57,13 +57,13 @@ function SearchFriends({ userData }: Props) {
         />
       </div>
       {searchResults.totalCount <= 0 ? (
-        <div className="flex w-[88%] flex-col items-center p-5">
+        <div className="ml-11 flex w-[88%] flex-col items-center justify-center p-5">
           {onlyUserData?.map((user: any, i: any) => (
             <UserCard key={i} user={user.user} />
           ))}
         </div>
       ) : (
-        <div className="flex w-[88%] flex-col items-center p-5">
+        <div className="ml-11 flex w-[88%] flex-col items-center justify-center p-5">
           {searchResults?.users?.map((user: any, i: any) => (
             <UserCard key={i} user={user} />
           ))}
