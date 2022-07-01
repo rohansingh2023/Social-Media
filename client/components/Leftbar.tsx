@@ -16,7 +16,7 @@ const Leftbar = () => {
   const { id } = user || {}
 
   return (
-    <div className="sticky  z-50 col-span-3 h-96 ">
+    <div className="sticky col-span-3">
       <div className="hidden lg:flex lg:flex-shrink-0  lg:flex-col lg:items-start lg:justify-around lg:p-6 lg:text-2xl">
         <Link href={`/profile/${id}`} passHref>
           <div className="mb-4 flex w-full items-center justify-start rounded-xl p-3  hover:bg-gray-300">

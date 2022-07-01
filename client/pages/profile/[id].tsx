@@ -5,7 +5,7 @@ import { getUserById, getUsers } from '../../services'
 
 const Profile = ({ userIdData }: any) => {
   return (
-    <div className="grid-rows-10 grid font-PtSans">
+    <div className="grid-rows-10 grid max-h-screen overflow-hidden font-PtSans">
       <header className="z-50 row-span-1">
         <Navbar />
       </header>

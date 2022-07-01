@@ -45,6 +45,7 @@ function PostInfo({ postData: { user, posts } }: Props) {
   const [body, setBody] = useState<string>('')
   const { currentUser } = useStateContext()
   const [isOpen, setIsOpen] = useState<boolean>(false)
+  // const [postData, setPostData] = useState(posts)
 
   const { user: cUser, token } = currentUser || {}
   const { id } = cUser || {}
@@ -69,6 +70,15 @@ function PostInfo({ postData: { user, posts } }: Props) {
     ],
   })
 
+  // const handleRefresh = async () => {
+  //   const refreshToast = toast.loading('Refreshing...')
+  //   const post = await getPostById(posts.id)
+  //   setPostData(posts)
+  //   toast.success('Post Updated', {
+  //     id: refreshToast,
+  //   })
+  // }
+
   const handleComment = async () => {
     try {
       await addComment()
@@ -81,15 +91,17 @@ function PostInfo({ postData: { user, posts } }: Props) {
     }
   }
   return (
-    <>
-      <Navbar />
-      <div className="flex-col">
+    <div className="grid-row-10 grid">
+      <div className="row-span-1">
+        <Navbar />
+      </div>
+      <div className="row-span-9 flex-col">
         {isOpen && (
           <Modal isOpen={isOpen} setIsOpen={setIsOpen} postId={posts.id} />
         )}
 
         <div className="flex h-screen w-screen items-center justify-center scroll-smooth">
-          <div className="mt-[700px] flex-col lg:-mt-24 lg:flex lg:h-4/5 lg:w-4/5 lg:flex-row lg:rounded-xl lg:bg-slate-200 lg:shadow-lg">
+          <div className=" mt-24 flex-col lg:-mt-24 lg:flex lg:h-4/5 lg:w-4/5 lg:flex-row lg:rounded-xl lg:bg-slate-200 lg:shadow-lg">
             {/* left */}
             <div className="flex flex-[0.6] flex-col  font-Rubik">
               <div className="flex-[0.45]  p-6">
@@ -106,7 +118,7 @@ function PostInfo({ postData: { user, posts } }: Props) {
               <div className="-mt-8 flex flex-[0.55] flex-col p-4">
                 <h1 className="text-md ml-2 p-2">Comments</h1>
                 <div className="flex flex-row shadow-lg">
-                  <div className="flex h-56 flex-[0.5] flex-col overflow-y-scroll rounded-md border p-3 shadow-lg">
+                  <div className="flex h-56 flex-[0.5] flex-col overflow-y-scroll rounded-md border bg-white p-3 shadow-lg">
                     {posts?.comments?.map((comment: any) => (
                       <div className="flex flex-row items-center ">
                         <p className="p-2 text-left">
@@ -145,7 +157,7 @@ function PostInfo({ postData: { user, posts } }: Props) {
               <img
                 src={posts.image}
                 alt=""
-                className=" mt-20 h-1/2 lg:-mt-20 lg:mr-4 lg:h-2/3 lg:w-11/12 lg:rounded-lg lg:object-cover"
+                className=" mt-20 h-60 rounded-lg object-cover lg:-mt-20 lg:mr-4 lg:h-2/3 lg:w-11/12 lg:rounded-lg lg:object-cover"
               />
               {user.id === id && (
                 <div className="-mb-28 mt-10 flex items-center p-3">
@@ -161,7 +173,7 @@ function PostInfo({ postData: { user, posts } }: Props) {
           </div>
         </div>
       </div>
-    </>
+    </div>
   )
 }
 

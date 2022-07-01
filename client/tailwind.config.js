@@ -18,5 +18,5 @@ module.exports = {
         "url('https://images.unsplash.com/photo-1559963110-71b394e7494d?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=675&q=80')",
     },
   },
-  plugins: [],
+  plugins: [require('tailwind-scrollbar-hide')],
 }

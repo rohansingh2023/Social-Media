@@ -13,7 +13,7 @@ const Rightbar = ({ userData }: any) => {
 
   return (
     // <div className="sticky top-20 h-[100vh] w-1/4">
-    <div className="col-span-3 hidden max-w-full lg:inline">
+    <div className="col-span-3 hidden max-h-screen max-w-full lg:inline">
       <div className="lg:flex lg:h-full lg:flex-shrink-0 lg:flex-col lg:items-center">
         <div className="h-50 mx-5 my-5 w-11/12 rounded-xl bg-gray-300 bg-pack-train p-3 text-white">
           <p className="ml-3 text-xl font-bold">Tuesday</p>

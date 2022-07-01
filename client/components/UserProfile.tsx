@@ -41,7 +41,7 @@ function UserProfile({ userD, post }: Props) {
   }
 
   return (
-    <div className="col-span-6 flex flex-1 flex-col lg:border-x">
+    <div className="col-span-6 flex max-h-screen flex-1 flex-col overflow-scroll scrollbar-hide lg:border-x">
       <div className="flex w-full flex-col ">
         <div className="ml-8 mt-5 h-80 w-11/12 rounded-t-md bg-white opacity-70">
           <img
@@ -85,7 +85,7 @@ function UserProfile({ userD, post }: Props) {
       <div className="p-5">
         <hr className="mt-10 border bg-black" />
       </div>
-      <div className="flex flex-col items-center ">
+      <div className="flex flex-col items-center lg:p-5">
         {userPosts ? (
           userPosts?.map((post: { user: any; posts: any }) => (
             <Post user={post.user} post={post.posts} />
