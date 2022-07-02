@@ -41,11 +41,13 @@ type Props = {
   }
 }
 
-function PostInfo({ postData: { user, posts } }: Props) {
+function PostInfo({ postData }: Props) {
   const [body, setBody] = useState<string>('')
   const { currentUser } = useStateContext()
   const [isOpen, setIsOpen] = useState<boolean>(false)
-  // const [postData, setPostData] = useState(posts)
+  const [post, setPost] = useState(postData)
+
+  const { user, posts } = postData
 
   const { user: cUser, token } = currentUser || {}
   const { id } = cUser || {}
@@ -70,21 +72,22 @@ function PostInfo({ postData: { user, posts } }: Props) {
     ],
   })
 
-  // const handleRefresh = async () => {
-  //   const refreshToast = toast.loading('Refreshing...')
-  //   const post = await getPostById(posts.id)
-  //   setPostData(posts)
-  //   toast.success('Post Updated', {
-  //     id: refreshToast,
-  //   })
-  // }
+  const handleRefresh = async () => {
+    const refreshToast = toast.loading('Refreshing...')
+    const post = await getPostById(posts.id)
+    setPost(post)
+    toast.success('Post Updated', {
+      id: refreshToast,
+    })
+  }
 
   const handleComment = async () => {
     try {
       await addComment()
       setBody('')
       toast.success('Comment added successfully')
-      window.location.reload()
+      await handleRefresh()
+      // window.location.reload()
     } catch (error) {
       toast.error(`${error}`)
       console.log(error)
@@ -97,7 +100,7 @@ function PostInfo({ postData: { user, posts } }: Props) {
       </div>
       <div className="row-span-9 flex-col">
         {isOpen && (
-          <Modal isOpen={isOpen} setIsOpen={setIsOpen} postId={posts.id} />
+          <Modal isOpen={isOpen} setIsOpen={setIsOpen} postId={post.posts.id} />
         )}
 
         <div className="flex h-screen w-screen items-center justify-center scroll-smooth">
@@ -106,20 +109,20 @@ function PostInfo({ postData: { user, posts } }: Props) {
             <div className="flex flex-[0.6] flex-col  font-Rubik">
               <div className="flex-[0.45]  p-6">
                 <h1 className="p-1 text-5xl">Title</h1>
-                <p className="p-2 text-left">{posts.content}</p>
+                <p className="p-2 text-left">{post.posts.content}</p>
                 <p className="p-2 text-xl">
-                  {posts.likes.length > 1
-                    ? `${posts.likes.length} likes`
-                    : `${posts.likes.length} like`}
+                  {post.posts.likes.length > 1
+                    ? `${post.posts.likes.length} likes`
+                    : `${post.posts.likes.length} like`}
                 </p>
-                <p className="p-2 text-2xl">Created By: {user.name}</p>
+                <p className="p-2 text-2xl">Created By: {post.user.name}</p>
                 <hr className="border border-gray-400 px-5" />
               </div>
               <div className="-mt-8 flex flex-[0.55] flex-col p-4">
                 <h1 className="text-md ml-2 p-2">Comments</h1>
                 <div className="flex flex-row shadow-lg">
                   <div className="flex h-56 flex-[0.5] flex-col overflow-y-scroll rounded-md border bg-white p-3 shadow-lg">
-                    {posts?.comments?.map((comment: any) => (
+                    {post?.posts?.comments?.map((comment: any) => (
                       <div className="flex flex-row items-center ">
                         <p className="p-2 text-left">
                           <span className="mr-1 text-lg font-semibold">
@@ -155,7 +158,7 @@ function PostInfo({ postData: { user, posts } }: Props) {
             {/* right */}
             <div className="flex flex-[0.4] flex-col items-center justify-center">
               <img
-                src={posts.image}
+                src={post.posts.image}
                 alt=""
                 className=" mt-20 h-60 rounded-lg object-cover lg:-mt-20 lg:mr-4 lg:h-2/3 lg:w-11/12 lg:rounded-lg lg:object-cover"
               />

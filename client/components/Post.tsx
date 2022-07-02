@@ -132,13 +132,15 @@ const Post = ({ post, user, refresh }: Props) => {
           {`${post.content}`.slice(0, 70).concat('...')}
         </p>
         {/* <div className="flex items-center justify-center"> */}
-        <img
-          src={post.image}
-          alt=""
-          className="w-full rounded-lg p-3"
-          width="550"
-          height="500"
-        />
+        {post.image && (
+          <img
+            src={post.image}
+            alt=""
+            className="w-full rounded-lg p-3"
+            width="550"
+            height="500"
+          />
+        )}
         {/* </div> */}
         <div className="">
           <div className="flex items-center justify-between p-4">

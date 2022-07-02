@@ -41,16 +41,16 @@ function UserProfile({ userD, post }: Props) {
   }
 
   return (
-    <div className="col-span-6 flex max-h-screen flex-1 flex-col overflow-scroll scrollbar-hide lg:border-x">
-      <div className="flex w-full flex-col ">
-        <div className="ml-8 mt-5 h-80 w-11/12 rounded-t-md bg-white opacity-70">
+    <div className="col-span-6 flex max-h-screen flex-1 flex-col overflow-scroll scrollbar-hide lg:border-x lg:p-5">
+      <div className="flex flex-1 flex-shrink-0 flex-col">
+        <div className="h-80 w-full flex-shrink-0 rounded-t-md bg-white opacity-70">
           <img
             src="https://tse3.mm.bing.net/th?id=OIP.zsEgRepQ6Uh5OYkkhJyn2gHaE5&pid=Api&P=0&w=253&h=167"
             alt=""
             className="h-full w-full rounded-t-md object-cover"
           />
         </div>
-        <div className="ml-8  h-40 w-11/12 rounded-b-md bg-white shadow-lg">
+        <div className="h-40 w-full rounded-b-md bg-white shadow-lg">
           <div className="flex">
             <img
               src={userD.profilePic}
@@ -85,17 +85,17 @@ function UserProfile({ userD, post }: Props) {
       <div className="p-5">
         <hr className="mt-10 border bg-black" />
       </div>
-      <div className="flex flex-col items-center lg:p-5">
-        {userPosts ? (
-          userPosts?.map((post: { user: any; posts: any }) => (
-            <Post user={post.user} post={post.posts} />
-          ))
-        ) : (
-          <h1 className="mt-20 text-lg font-bold text-black">
-            No posts to show
-          </h1>
-        )}
-      </div>
+      {/* <div className="flex flex-col items-center lg:p-5"> */}
+      {userPosts.length > 0 ? (
+        userPosts?.map((post: { user: any; posts: any }) => (
+          <Post user={post.user} post={post.posts} />
+        ))
+      ) : (
+        <h1 className="text-center text-lg font-bold text-black">
+          No posts to show
+        </h1>
+      )}
+      {/* </div> */}
     </div>
   )
 }

@@ -17,7 +17,7 @@ const Leftbar = () => {
 
   return (
     <div className="sticky col-span-3">
-      <div className="hidden lg:flex lg:flex-shrink-0  lg:flex-col lg:items-start lg:justify-around lg:p-6 lg:text-2xl">
+      <div className="hidden lg:inline-flex  lg:flex-shrink-0  lg:flex-col lg:items-start lg:justify-around lg:p-6 lg:text-2xl">
         <Link href={`/profile/${id}`} passHref>
           <div className="mb-4 flex w-full items-center justify-start rounded-xl p-3  hover:bg-gray-300">
             <MdAccountCircle size={25} />

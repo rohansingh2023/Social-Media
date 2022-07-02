@@ -1,3 +1,4 @@
+import { GetStaticPaths, GetStaticProps } from 'next'
 import React from 'react'
 import { Leftbar, Navbar, Rightbar } from '../../components'
 import UserProfile from '../../components/UserProfile'
@@ -18,16 +19,17 @@ const Profile = ({ userIdData }: any) => {
   )
 }
 
-export async function getStaticProps({ params }: any) {
+export const getStaticProps: GetStaticProps = async({ params }: any)=>{
   const userIdData = (await getUserById(params.id)) || []
   return {
     props: {
       userIdData,
     },
+    revalidate: 60
   }
 }
 
-export async function getStaticPaths() {
+export const getStaticPaths: GetStaticPaths = async()=>{
   const userData = (await getUsers()) || []
   return {
     paths: userData.map((user: { user: any }) => ({
