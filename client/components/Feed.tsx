@@ -9,7 +9,11 @@ import { useStateContext } from '../context/StateContext'
 import { RefreshIcon } from '@heroicons/react/outline'
 import { getPosts } from '../services'
 
-const Feed = ({ postData: posts }: any) => {
+interface Props{
+  postData: Post[]
+}
+
+const Feed = ({ postData: posts }: Props) => {
   const [formData, setFormData] = useState({
     content: '',
     image: '',
@@ -18,6 +22,8 @@ const Feed = ({ postData: posts }: any) => {
   const { currentUser } = useStateContext()
   const { user } = currentUser || {}
   const { profilePic } = user || {}
+
+
 
   const { token } = currentUser || {}
 

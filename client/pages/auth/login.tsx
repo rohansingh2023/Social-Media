@@ -42,7 +42,7 @@ function login() {
   }
 
   return (
-    <>
+    <div className="font-DMSerif">
       <div className="mb-10">
         <div className="flex justify-center">
           <img
@@ -134,7 +134,7 @@ function login() {
           </div>
         </div>
       </form>
-    </>
+    </div>
   )
 }
 

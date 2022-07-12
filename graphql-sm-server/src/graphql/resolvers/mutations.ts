@@ -3,6 +3,7 @@ import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import { AuthenticationError, UserInputError } from "apollo-server-express";
 import mongoose from "mongoose";
+import User from "../../models/User";
 
 export default {
   addPost: (parent: any, args: any, { models, user }) => {
@@ -239,14 +240,19 @@ export default {
           profilePic: requestReceiver.profilePic,
           createdAt: new Date().toISOString(),
         });
-        requestReceiver.friendRequests.filter((f: any) => f.email === email);
+        // requestReceiver.friendRequests.filter((f: any) => f.email === email);
+        // requestReceiver.friendRequests.remove({ email: email });
+        await models.User.updateOne(
+          { _id: requestReceiver.id },
+          { $pull: { friendRequests: { email: email } } }
+        );
         // requestReceiver.friendRequests.pull({ email: email });
+        await requestReceiver.save();
+        await requestSender.save();
+        return requestReceiver;
       } else {
         throw new UserInputError("Already Friends");
       }
-      await requestReceiver.save();
-      await requestSender.save();
-      return requestReceiver;
     } catch (error) {
       throw new Error("Error accepting friend request");
     }

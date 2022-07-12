@@ -7,37 +7,12 @@ import Modal from '../../components/Modal'
 import { useStateContext } from '../../context/StateContext'
 import { ADD_COMMENT } from '../../graphql/mutations/postMutations'
 import { GET_POST_BY_ID } from '../../graphql/queries/postQueries'
-import { GET_USER_BY_ID } from '../../graphql/queries/userQueries'
 import { getPostById, getPosts } from '../../services'
 
 type Props = {
   postData: {
-    user: {
-      id: string
-      name: string
-      email: string
-      profilePic: string
-    }
-    posts: {
-      id: string
-      content: string
-      createdAt: string
-      image: string
-      likes: [
-        {
-          id: string
-          createdAt: string
-        }
-      ]
-      comments: [
-        {
-          id: string
-          body: string
-          name: string
-          createdAt: string
-        }
-      ]
-    }
+    user: User
+    posts: Post
   }
 }
 
@@ -94,7 +69,7 @@ function PostInfo({ postData }: Props) {
     }
   }
   return (
-    <div className="grid-row-10 grid">
+    <div className="grid-row-10 grid font-DMSerif">
       <div className="row-span-1">
         <Navbar />
       </div>
@@ -106,7 +81,13 @@ function PostInfo({ postData }: Props) {
         <div className="flex h-screen w-screen items-center justify-center scroll-smooth">
           <div className=" mt-24 flex-col lg:-mt-24 lg:flex lg:h-4/5 lg:w-4/5 lg:flex-row lg:rounded-xl lg:bg-slate-200 lg:shadow-lg">
             {/* left */}
-            <div className="flex flex-[0.6] flex-col  font-Rubik">
+            <div
+              className={
+                post.posts.image
+                  ? 'flex flex-[0.6] flex-col  font-Rubik'
+                  : 'flex flex-1 flex-col  font-Rubik'
+              }
+            >
               <div className="flex-[0.45]  p-6">
                 <h1 className="p-1 text-5xl">Title</h1>
                 <p className="p-2 text-left">{post.posts.content}</p>
@@ -156,12 +137,20 @@ function PostInfo({ postData }: Props) {
               </div>
             </div>
             {/* right */}
-            <div className="flex flex-[0.4] flex-col items-center justify-center">
-              <img
-                src={post.posts.image}
-                alt=""
-                className=" mt-20 h-60 rounded-lg object-cover lg:-mt-20 lg:mr-4 lg:h-2/3 lg:w-11/12 lg:rounded-lg lg:object-cover"
-              />
+            <div
+              className={
+                post.posts.image
+                  ? 'flex flex-[0.4] flex-col items-center justify-center'
+                  : 'flex flex-col items-center justify-center'
+              }
+            >
+              {post.posts.image && (
+                <img
+                  src={post.posts.image}
+                  alt=""
+                  className=" mt-20 h-60 rounded-lg object-cover lg:-mt-20 lg:mr-4 lg:h-2/3 lg:w-11/12 lg:rounded-lg lg:object-cover"
+                />
+              )}
               {user.id === id && (
                 <div className="-mb-28 mt-10 flex items-center p-3">
                   <button

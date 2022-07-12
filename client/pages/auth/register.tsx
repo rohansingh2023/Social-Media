@@ -52,7 +52,7 @@ function register() {
   }
 
   return (
-    <>
+    <div className="font-DMSerif">
       <div className="mb-16 -mt-10">
         <div className="flex justify-center">
           <img
@@ -173,7 +173,7 @@ function register() {
           </div>
         </div>
       </form>
-    </>
+    </div>
   )
 }
 

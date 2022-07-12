@@ -40,9 +40,61 @@ const LOGIN_USER = gql`
         profilePic
         dob
         bio
+        friendRequests {
+          id
+          email
+          name
+          profilePic
+          createdAt
+        }
+        friends {
+          id
+          name
+          email
+          profilePic
+          createdAt
+        }
       }
       token
     }
   }
 `
-export { REGISTER_USER, LOGIN_USER }
+
+const SEND_FRIEND_REQUEST = gql`
+  mutation friendReq($id: ID!) {
+    friendRequest(id: $id) {
+      id
+      name
+      email
+      profilePic
+      friendRequests {
+        id
+        name
+        email
+        profilePic
+      }
+    }
+  }
+`
+
+const ACCEPT_FRIEND_REQUEST = gql`
+  mutation acceptFriendReq($email: String!) {
+    acceptFriendRequest(email: $email) {
+      id
+      name
+      email
+      friendRequests {
+        id
+        name
+        email
+      }
+      friends {
+        id
+        name
+        email
+      }
+    }
+  }
+`
+
+export { REGISTER_USER, LOGIN_USER, ACCEPT_FRIEND_REQUEST, SEND_FRIEND_REQUEST }

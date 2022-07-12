@@ -6,8 +6,8 @@ import UserCard from './UserCard'
 import { searchUsers } from '../services'
 import { useStateContext } from '../context/StateContext'
 
-type Props = {
-  userData: any
+interface Props {
+  userData: User[]
 }
 
 function SearchFriends({ userData }: Props) {
@@ -20,9 +20,11 @@ function SearchFriends({ userData }: Props) {
   const { user } = currentUser || {}
   const { id } = user || {}
 
-  const onlyUserData = userData?.filter((user: any) => user?.user.id !== id)
+  const onlyUserData: User[] = userData?.filter(
+    (user: any) => user?.user.id !== id
+  )
 
-  const handleEnter = async (e: any) => {
+  const handleEnter = async (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter') {
       e.preventDefault()
       e.stopPropagation()

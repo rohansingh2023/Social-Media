@@ -7,6 +7,7 @@ import { RiLogoutBoxLine } from 'react-icons/ri'
 import { MdArrowDropDown } from 'react-icons/md'
 import { useRouter } from 'next/router'
 import { toast } from 'react-toastify'
+import { IoIosPersonAdd } from 'react-icons/io'
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false)
@@ -23,7 +24,7 @@ const Navbar = () => {
 
   return (
     <>
-      <div className=" fixed top-0 z-50 flex w-screen items-center justify-between bg-purple-600 py-5 px-10 text-white">
+      <div className="fixed top-0 z-50 flex w-screen items-center justify-between bg-purple-600 py-5 px-10 font-DMSerif text-white">
         <div className="flex items-center justify-around ">
           <Link href={'/'} passHref>
             <p className="cursor-pointer text-3xl font-bold italic">
@@ -35,12 +36,15 @@ const Navbar = () => {
             className="lg:w-200 hidden lg:ml-5 lg:flex lg:rounded-3xl lg:border-0 lg:bg-white  lg:p-2 lg:text-black lg:outline-none"
           />
         </div>
-        <div className="hidden lg:flex lg:items-center lg:justify-items-stretch">
+        <div className="hidden md:justify-center lg:flex lg:items-center lg:justify-items-stretch">
           <Link href={'/'} passHref>
             <FaHome className="mr-20" size={35} />
           </Link>
           <Link href={'/search'} passHref>
             <FaSearch className="mr-20" size={30} />
+          </Link>
+          <Link href={'/friendRequest'} passHref>
+            <IoIosPersonAdd className="mr-20" size={35} />
           </Link>
           <Link href={`/profile/${id}`} passHref>
             <FaFortAwesomeAlt className="mr-20" size={35} />

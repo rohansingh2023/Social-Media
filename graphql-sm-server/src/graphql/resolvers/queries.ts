@@ -1,4 +1,5 @@
 import { AuthenticationError } from "apollo-server-express";
+import { model } from "mongoose";
 import models from "../../models";
 import User from "../../models/User";
 
@@ -110,6 +111,52 @@ export default {
     } catch (error) {
       console.log(error);
       throw new Error("Error getting users");
+    }
+  },
+  friendRequests: async (_: any, args: any, { models }) => {
+    try {
+      const userDet = await models.User.findById(args.id);
+      // if (userDet.friendRequests.length > 0) {
+      return userDet.map((f: any) => ({
+        id: f.id,
+        name: f.name,
+        email: f.email,
+        createdAt: f.createdAt,
+        profilePic: f.profilePic,
+      }));
+      // } else {
+      //   return "No friend Requests";
+      // }
+    } catch (error) {
+      console.log(error);
+      throw new Error("Error getting users");
+    }
+  },
+  friends: async (_: any, args: any, { models }) => {
+    try {
+      const userDet = await models.User.findById(args.id);
+      return userDet.friends.map((f: any) => ({
+        id: f.id,
+        name: f.name,
+        email: f.email,
+        createdAt: f.createdAt,
+        profilePic: f.profilePic,
+      }));
+    } catch (error) {
+      console.log(error);
+      throw new Error("Error getting users");
+    }
+  },
+  onlyMyFriendsPost: async (_: any, args: any, { models, user }) => {
+    try {
+      if (!user) {
+        throw new AuthenticationError(
+          "You must login to send a friend request"
+        );
+      }
+    } catch (error) {
+      console.log(error);
+      throw new Error("Error getting posts");
     }
   },
 };

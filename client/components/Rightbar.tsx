@@ -5,11 +5,14 @@ import { FaBirthdayCake } from 'react-icons/fa'
 import { MdOutlineOnlinePrediction } from 'react-icons/md'
 import { useStateContext } from '../context/StateContext'
 
-const Rightbar = ({ userData }: any) => {
+interface IProps {
+  userData?: User[]
+}
+
+const Rightbar = ({ userData }: IProps) => {
   const { currentUser } = useStateContext()
   const { user } = currentUser || {}
   const { id } = user || {}
-  const onlyUserData = userData?.filter((user: any) => user.id !== id)
 
   return (
     // <div className="sticky top-20 h-[100vh] w-1/4">
@@ -28,29 +31,34 @@ const Rightbar = ({ userData }: any) => {
             Rohan and 2 others have birthday today
           </p>
         </div>
-        <div className="mx-10 my-7 h-96 w-11/12 overflow-y-scroll rounded-lg bg-gray-300 p-5">
-          {onlyUserData?.map((user: any, i: any) => (
-            <Link href={`/user/${user.id}`}>
-              <div
-                className="flex cursor-pointer items-center justify-between p-3"
-                key={user.id}
-              >
-                <div className="flex items-center justify-between">
-                  <img
-                    src={user.profilePic}
-                    alt=""
-                    width="40"
-                    height="40"
-                    className="rounded-full"
-                  />
-                  <p className="ml-5 text-lg font-semibold">{user.name}</p>
-                </div>
-                <div>
-                  <MdOutlineOnlinePrediction size={30} />
-                </div>
-              </div>
-            </Link>
-          ))}
+        <div className="mx-10 my-7 max-h-96 w-11/12 overflow-y-scroll rounded-lg bg-gray-300 p-5">
+          {user &&
+            user?.friends?.map(
+              (u: any) => (
+                // user.friends?.map((u) => (
+                <Link href={`/user/${u.id}`}>
+                  <div
+                    className="flex cursor-pointer items-center justify-between p-3"
+                    key={u.id}
+                  >
+                    <div className="flex items-center justify-between">
+                      <img
+                        src={u.profilePic}
+                        alt=""
+                        width="40"
+                        height="40"
+                        className="rounded-full"
+                      />
+                      <p className="ml-5 text-lg font-semibold">{u.name}</p>
+                    </div>
+                    <div>
+                      <MdOutlineOnlinePrediction size={30} />
+                    </div>
+                  </div>
+                </Link>
+              )
+              // ))
+            )}
         </div>
       </div>
     </div>

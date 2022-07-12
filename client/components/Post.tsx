@@ -12,22 +12,8 @@ import toast from 'react-hot-toast'
 import { useRouter } from 'next/router'
 
 type Props = {
-  post: {
-    id: string
-    content: string
-    image: string
-    comments: string[]
-    likes: string[]
-    createdAt: string
-  }
-  user: {
-    id: string
-    name: string
-    email: string
-    profilePic: string
-    dob: string
-    bio: string
-  }
+  post: Post
+  user: User
   refresh: () => Promise<void>
 }
 

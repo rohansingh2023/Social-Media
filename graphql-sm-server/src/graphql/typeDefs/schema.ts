@@ -64,7 +64,7 @@ const typeDefs = gql`
 
   type FriendRequest {
     id: ID!
-    userId: ID!
+    # userId: ID!
     name: String!
     email: String!
     createdAt: String!
@@ -89,10 +89,11 @@ const typeDefs = gql`
     postByUserId(id: ID!): [AllPostData!]!
     onlyUsers: [User!]!
     searchUsers(searchTerm: String!): SearchUsers!
-    friendRequests: [FriendRequest]!
-    friends: [Friend]!
+    friendRequests(id: ID!): [FriendRequest]!
+    friends(id: ID!): [Friend]!
     onlyUsersExcludingMe: [User!]!
     usersExcludingMe: [UserData!]!
+    onlyMyFriendsPost: [AllPostData]!
   }
 
   type Mutation {

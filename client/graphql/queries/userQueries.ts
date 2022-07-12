@@ -10,6 +10,20 @@ const GET_USERS = gql`
         profilePic
         dob
         bio
+        friendRequests {
+          id
+          email
+          name
+          profilePic
+          createdAt
+        }
+        friends {
+          id
+          name
+          email
+          profilePic
+          createdAt
+        }
       }
       posts {
         id
@@ -72,6 +86,20 @@ const GET_USER_BY_ID = gql`
         profilePic
         dob
         bio
+        friendRequests {
+          id
+          email
+          name
+          profilePic
+          createdAt
+        }
+        friends {
+          id
+          name
+          email
+          profilePic
+          createdAt
+        }
       }
       posts {
         id
@@ -134,6 +162,13 @@ const GET_ONLY_USERS = gql`
       profilePic
       bio
       dob
+      friends {
+        id
+        name
+        email
+        profilePic
+        createdAt
+      }
     }
   }
 `
@@ -167,6 +202,22 @@ const SEARCH_USERS = gql`
   }
 `
 
+const GET_FRIEND_REQUESTS = gql`
+  query getFriendRequests($id: ID!) {
+    userById(id: $id) {
+      user {
+        friendRequests {
+          id
+          name
+          email
+          profilePic
+          createdAt
+        }
+      }
+    }
+  }
+`
+
 export {
   GET_USERS,
   GET_USER_BY_ID,
@@ -175,4 +226,5 @@ export {
   SEARCH_USERS,
   GET_ONLY_USERS_EX_ME,
   GET_USERS_EX_ME,
+  GET_FRIEND_REQUESTS,
 }

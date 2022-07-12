@@ -12,6 +12,9 @@ module.exports = {
       Ubuntu: ['Ubuntu', ...defaultTheme.fontFamily.sans],
       Roboto: ['Roboto', ...defaultTheme.fontFamily.sans],
       PtSans: ['PT Sans', ...defaultTheme.fontFamily.sans],
+      DMSerif: ['DM Sans', ...defaultTheme.fontFamily.sans],
+      Inter: ['Inter', ...defaultTheme.fontFamily.sans],
+      Segoe: ['Segoe UI Historic', ...defaultTheme.fontFamily.sans],
     },
     backgroundImage: {
       'pack-train':

@@ -5,6 +5,8 @@ type User = {
   profilePic: string
   dob: string
   bio: string
+  friendRequests: friendRequests[]
+  friends: friends[]
 }
 
 type Post = {
@@ -12,5 +14,36 @@ type Post = {
   title: string
   content: string
   image: string
-  user: User
+  createdAt: string
+  comments: comment[]
+  likes: likes[]
+}
+
+type friendRequests = {
+  id: string
+  name: string
+  email: string
+  profilePic: string
+  createdAt: string
+}
+
+type friends = {
+  id: string
+  name: string
+  email: string
+  profilePic: string
+  createdAt: string
+}
+
+type comment = {
+  id: string
+  name: string
+  email: string
+  createdAt: string
+  body: string
+}
+
+type likes = {
+  id: string
+  createdAt: string
 }

@@ -2,26 +2,10 @@ import React, { useState } from 'react'
 import { Navbar, Post } from '../../components'
 import { getUserById, getUsers } from '../../services'
 
-type Props = {
+interface Props {
   userIdData: {
-    user: {
-      id: string
-      name: string
-      email: string
-      profilePic: string
-      bio: string
-      dob: string
-    }
-    posts: [
-      {
-        id: string
-        content: string
-        image: string
-        likes: [string]
-        comments: [string]
-        createdAt: string
-      }
-    ]
+    user: User
+    posts: Post[]
   }
 }
 
@@ -29,7 +13,7 @@ function UserInfo({ userIdData: { user, posts } }: Props) {
   const [isHidden, setIsHidden] = useState<boolean>(false)
 
   return (
-    <div className="grid-row-10 grid">
+    <div className="grid-row-10 grid font-DMSerif">
       <div className="row-span-1">
         <Navbar />
       </div>

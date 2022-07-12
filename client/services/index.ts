@@ -6,6 +6,7 @@ import {
   GET_POST_BY_ID,
 } from '../graphql/queries/postQueries'
 import {
+  GET_FRIEND_REQUESTS,
   GET_ONLY_USERS,
   GET_ONLY_USERS_EX_ME,
   GET_USERS,
@@ -73,4 +74,9 @@ export const getPostById = async (id: any) => {
 export const searchUsers = async (searchTerm: any) => {
   const results = await request(GRAPHQL_ENDPOINT, SEARCH_USERS, { searchTerm })
   return results.searchUsers
+}
+
+export const getFriendRequests = async (id: any) => {
+  const results = await request(GRAPHQL_ENDPOINT, GET_FRIEND_REQUESTS, { id })
+  return results.userById.user.friendRequests
 }

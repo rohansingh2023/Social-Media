@@ -5,8 +5,10 @@ import UserProfile from '../../components/UserProfile'
 import { getUserById, getUsers } from '../../services'
 
 const Profile = ({ userIdData }: any) => {
+  console.log(userIdData)
+
   return (
-    <div className="grid-rows-10 grid max-h-screen overflow-hidden font-PtSans">
+    <div className="grid-rows-10 grid max-h-screen overflow-hidden font-DMSerif">
       <header className="z-50 row-span-1">
         <Navbar />
       </header>
@@ -19,17 +21,17 @@ const Profile = ({ userIdData }: any) => {
   )
 }
 
-export const getStaticProps: GetStaticProps = async({ params }: any)=>{
+export const getStaticProps: GetStaticProps = async ({ params }: any) => {
   const userIdData = (await getUserById(params.id)) || []
   return {
     props: {
       userIdData,
     },
-    revalidate: 60
+    revalidate: 60,
   }
 }
 
-export const getStaticPaths: GetStaticPaths = async()=>{
+export const getStaticPaths: GetStaticPaths = async () => {
   const userData = (await getUsers()) || []
   return {
     paths: userData.map((user: { user: any }) => ({

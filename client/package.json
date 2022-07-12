@@ -16,6 +16,7 @@
     "graphql-request": "^4.3.0",
     "moment": "^2.29.3",
     "next": "latest",
+    "nprogress": "^0.2.0",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
     "react-file-base64": "^1.0.3",
@@ -27,6 +28,7 @@
   },
   "devDependencies": {
     "@types/node": "17.0.4",
+    "@types/nprogress": "^0.2.0",
     "@types/react": "17.0.38",
     "autoprefixer": "^10.4.0",
     "postcss": "^8.4.5",
