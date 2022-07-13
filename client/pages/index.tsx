@@ -6,7 +6,7 @@ import { authorized } from '../services/auth'
 
 const Index = ({ postData, userData }: any) => {
   return (
-    <div className="grid-rows-10 grid max-h-screen overflow-hidden font-Segoe">
+    <div className="grid-rows-10 relative  grid max-h-screen overflow-hidden bg-gray-100 font-Segoe">
       <header className="z-50 row-span-1">
         <Navbar />
       </header>

@@ -16,6 +16,12 @@ module.exports = {
       Inter: ['Inter', ...defaultTheme.fontFamily.sans],
       Segoe: ['Segoe UI Historic', ...defaultTheme.fontFamily.sans],
     },
+    // backgroundColor: {
+    //   orange: '#FF8080',
+    // },
+    // color: {
+    //   redOrange: '#FF8080',
+    // },
     backgroundImage: {
       'pack-train':
         "url('https://images.unsplash.com/photo-1559963110-71b394e7494d?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=675&q=80')",

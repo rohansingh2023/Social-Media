@@ -8,7 +8,7 @@ const Profile = ({ userIdData }: any) => {
   console.log(userIdData)
 
   return (
-    <div className="grid-rows-10 grid max-h-screen overflow-hidden font-DMSerif">
+    <div className="grid-rows-10 grid max-h-screen overflow-hidden font-DMSerif bg-gray-100">
       <header className="z-50 row-span-1">
         <Navbar />
       </header>

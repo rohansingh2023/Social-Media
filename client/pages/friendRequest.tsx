@@ -28,7 +28,7 @@ const friendRequest = () => {
   // }
 
   return (
-    <div className="grid-rows-10 grid max-h-screen overflow-hidden font-DMSerif">
+    <div className="grid-rows-10 grid max-h-screen overflow-hidden bg-gray-100 font-DMSerif">
       <header className="z-50 row-span-1">
         <Navbar />
       </header>

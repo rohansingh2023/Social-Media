@@ -5,6 +5,7 @@ const GET_POSTS = gql`
     posts {
       posts {
         id
+        user
         content
         image
         comments {
@@ -36,6 +37,7 @@ const GET_POSTS_BY_USER_ID = gql`
     postByUserId(id: $id) {
       posts {
         id
+        user
         content
         image
         comments {
@@ -73,6 +75,7 @@ const GET_POST_BY_ID = gql`
       }
       posts {
         id
+        user
         content
         createdAt
         image

@@ -257,4 +257,32 @@ export default {
       throw new Error("Error accepting friend request");
     }
   },
+  unFriend: async (_: any, { id }: any, { models, user }: any) => {
+    try {
+      if (!user) {
+        throw new AuthenticationError(
+          "You must login to accept a friend request"
+        );
+      }
+      const friend = await models.User.findById(id);
+      const currentUser = await models.User.findById(user.id);
+      if (currentUser.friends.find((f: any) => f.email === friend.email)) {
+        await models.User.updateOne(
+          { _id: currentUser.id },
+          { $pull: { friends: { email: friend.email } } }
+        );
+        await models.User.updateOne(
+          { _id: friend.id },
+          { $pull: { friends: { email: currentUser.email } } }
+        );
+        await friend.save();
+        await currentUser.save();
+        return friend;
+      } else {
+        throw new UserInputError("Not in my friends List");
+      }
+    } catch (error) {
+      throw new Error("Error in unfriending");
+    }
+  },
 };

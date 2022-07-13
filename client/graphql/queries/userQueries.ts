@@ -29,6 +29,7 @@ const GET_USERS = gql`
         id
         content
         image
+        user
         comments {
           id
           body
@@ -58,6 +59,7 @@ const GET_USERS_EX_ME = gql`
       }
       posts {
         id
+        user
         content
         image
         comments {
@@ -103,6 +105,7 @@ const GET_USER_BY_ID = gql`
       }
       posts {
         id
+        user
         comments {
           id
           body
@@ -135,6 +138,7 @@ const CURRENT_USER = gql`
       }
       posts {
         id
+        user
         comments {
           id
           body

@@ -4,6 +4,7 @@ const typeDefs = gql`
   scalar Date
   type Post {
     id: ID!
+    user: ID!
     content: String!
     image: String!
     likes: [like]!
@@ -114,7 +115,7 @@ const typeDefs = gql`
     deleteComment(postId: ID!, commentId: ID!): Post!
     friendRequest(id: ID!): User!
     acceptFriendRequest(email: String!): User!
-    # deleteFriendRequest(id: ID!): User!
+    unFriend(id: ID!): User!
   }
 `;
 

@@ -86,55 +86,56 @@ function UserProfile({ userD, post }: Props) {
       <div className={userPosts.length > 0 ? 'p-5' : 'mt-10 p-5'}>
         <hr className="mt-10 border bg-black" />
       </div>
-      {userD.friends.length > 0 && (
-        <div className="mx-auto flex w-11/12 flex-col bg-slate-100 p-5">
-          <h1 className="text-2xl font-bold">FriendsList</h1>
-          <div className="mt-2 ml-32 max-h-40 max-w-sm overflow-y-scroll rounded-md bg-white p-3">
-            {userD.friends.map((u) => (
-              // <Link href={`/user/${u.id}`}>
-              <div className="mt-2 flex cursor-pointer items-center rounded-sm py-2 px-2 hover:bg-gray-200">
-                <img
-                  src={u.profilePic}
-                  alt=""
-                  className="h-7 w-7 rounded-full object-fill"
-                />
-                <h1 className="ml-3 font-thin text-gray-700">{u.name}</h1>
-              </div>
-              // </Link>
-            ))}
+      <div className="mx-auto max-w-xl">
+        {userD.friends.length > 0 && (
+          <div className="mx-auto flex w-11/12 flex-col bg-slate-100 p-5">
+            <h1 className="text-2xl font-bold">FriendsList</h1>
+            <div className="mt-2 max-h-40 max-w-xl overflow-y-scroll rounded-md bg-white p-3">
+              {userD.friends.map((u) => (
+                // <Link href={`/user/${u.id}`}>
+                <div className="mt-2 flex cursor-pointer items-center rounded-sm py-2 px-2 hover:bg-gray-200">
+                  <img
+                    src={u.profilePic}
+                    alt=""
+                    className="h-7 w-7 rounded-full object-fill"
+                  />
+                  <h1 className="ml-3 font-thin text-gray-700">{u.name}</h1>
+                </div>
+                // </Link>
+              ))}
+            </div>
           </div>
-        </div>
-      )}
-      {userD.friendRequests.length > 0 && (
-        <div className="mx-auto mt-3 flex w-11/12 flex-col bg-slate-100 p-5">
-          <h1 className="text-2xl font-bold">FriendsRequests</h1>
-          <div className="mt-2 ml-32 max-h-40 max-w-sm overflow-y-scroll rounded-md bg-white p-3">
-            {userD.friendRequests.map((u) => (
-              // <Link href={`/user/${u.id}`}>
-              <div className="mt-2 flex cursor-pointer items-center rounded-sm py-2 px-2 hover:bg-gray-200">
-                <img
-                  src={u.profilePic}
-                  alt=""
-                  className="h-7 w-7 rounded-full object-fill"
-                />
-                <h1 className="ml-3 font-thin text-gray-700">{u.name}</h1>
-              </div>
-              // </Link>
-            ))}
+        )}
+        {userD.friendRequests.length > 0 && (
+          <div className="mx-auto mt-3 flex w-11/12 flex-col bg-slate-100 p-5">
+            <h1 className="text-2xl font-bold">FriendsRequests</h1>
+            <div className="mt-2 ml-32 max-h-40 max-w-sm overflow-y-scroll rounded-md bg-white p-3">
+              {userD.friendRequests.map((u) => (
+                // <Link href={`/user/${u.id}`}>
+                <div className="mt-2 flex cursor-pointer items-center rounded-sm py-2 px-2 hover:bg-gray-200">
+                  <img
+                    src={u.profilePic}
+                    alt=""
+                    className="h-7 w-7 rounded-full object-fill"
+                  />
+                  <h1 className="ml-3 font-thin text-gray-700">{u.name}</h1>
+                </div>
+                // </Link>
+              ))}
+            </div>
           </div>
-        </div>
-      )}
-      {/* <div className="flex flex-col items-center lg:p-5"> */}
-      {userPosts.length > 0 ? (
-        userPosts?.map((post: { user: User; posts: Post }) => (
-          <Post user={post.user} post={post.posts} />
-        ))
-      ) : (
-        <h1 className="mt-5 text-center text-lg font-bold text-black">
-          No posts to show
-        </h1>
-      )}
-      {/* </div> */}
+        )}
+        {/* <div className="flex flex-col items-center lg:p-5"> */}
+        {userPosts.length > 0 ? (
+          userPosts?.map((post: { user: User; posts: Post }) => (
+            <Post user={post.user} post={post.posts} />
+          ))
+        ) : (
+          <h1 className="mt-5 text-center text-lg font-bold text-black">
+            No posts to show
+          </h1>
+        )}
+      </div>
     </div>
   )
 }

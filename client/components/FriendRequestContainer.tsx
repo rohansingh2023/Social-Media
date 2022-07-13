@@ -53,7 +53,7 @@ const FriendRequestContainer = ({ user: u }: Props) => {
         <div>
           <h1 className="text-2xl font-bold">
             Pending Requests{' '}
-            <span className="ml-3 rounded-full bg-purple-500 px-2 text-white shadow-md">
+            <span className="ml-3 rounded-full bg-[#FF8080] px-2 text-white shadow-md">
               {fRequests.length}
             </span>
           </h1>
@@ -61,7 +61,7 @@ const FriendRequestContainer = ({ user: u }: Props) => {
         <div>
           <RefreshIcon
             onClick={handleRefresh}
-            className="h-8 w-8 cursor-pointer text-purple-600 transition-all duration-500 ease-out hover:rotate-180 active:scale-125"
+            className="h-8 w-8 cursor-pointer text-[#FF8080] transition-all duration-500 ease-out hover:rotate-180 active:scale-125"
           />
         </div>
       </div>

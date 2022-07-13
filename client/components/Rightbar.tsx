@@ -13,6 +13,7 @@ const Rightbar = ({ userData }: IProps) => {
   const { currentUser } = useStateContext()
   const { user } = currentUser || {}
   const { id } = user || {}
+  console.log(user)
 
   return (
     // <div className="sticky top-20 h-[100vh] w-1/4">
@@ -25,14 +26,43 @@ const Rightbar = ({ userData }: IProps) => {
           <p className="ml-3 mt-10 text-5xl font-extrabold">29 C</p>
           <p className="ml-3 text-lg font-semibold">Sunny</p>
         </div>
-        <div className="mx-5 my-5 flex h-20 w-11/12 items-center justify-between rounded-lg bg-gray-300 p-3">
+        <div className="mx-5 my-5 flex h-20 w-11/12 items-center justify-between rounded-lg bg-white p-3">
           <FaBirthdayCake size={25} />
           <p className="ml-5 text-lg font-bold">
             Rohan and 2 others have birthday today
           </p>
         </div>
-        <div className="mx-10 my-7 max-h-96 w-11/12 overflow-y-scroll rounded-lg bg-gray-300 p-5">
-          {user &&
+        <div className="mx-10 my-7 max-h-96 w-11/12 overflow-y-scroll rounded-lg bg-white p-5">
+          {
+            user?.friendRequests.length > 0 &&
+              user?.friendRequests?.map((u: any) => (
+                // user.friends?.map((u) => (
+                <Link href={`/user/${u.id}`}>
+                  <div
+                    className="flex cursor-pointer items-center justify-between p-3"
+                    key={u.id}
+                  >
+                    <div className="flex items-center justify-between">
+                      <img
+                        src={u.profilePic}
+                        alt=""
+                        width="40"
+                        height="40"
+                        className="rounded-full"
+                      />
+                      <p className="ml-5 text-lg font-semibold">{u.name}</p>
+                    </div>
+                    <div>
+                      <MdOutlineOnlinePrediction size={30} />
+                    </div>
+                  </div>
+                </Link>
+              ))
+            // ))
+          }
+        </div>
+        <div className="mx-10 my-7 max-h-96 w-11/12 overflow-y-scroll rounded-lg bg-white p-5">
+          {user?.friends.length > 0 &&
             user?.friends?.map(
               (u: any) => (
                 // user.friends?.map((u) => (

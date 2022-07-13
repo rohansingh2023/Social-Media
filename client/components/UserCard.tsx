@@ -66,7 +66,7 @@ function UserCard({ user }: Props) {
 
   return (
     // <Link href={`/user/${user.id}`}>
-    <div className="mt-10 flex flex-1 cursor-pointer flex-col rounded-3xl bg-slate-200 p-2 shadow-lg">
+    <div className="mt-10 flex flex-1 cursor-pointer flex-col rounded-3xl bg-white p-2 shadow-lg">
       <div className="flex items-center p-2">
         <img
           src={user.profilePic}
@@ -98,7 +98,7 @@ function UserCard({ user }: Props) {
         </button>
         <button
           className="m-5 flex items-center rounded-full bg-blue-600 p-1 text-white shadow-xl hover:bg-blue-400"
-          onClick={() => router.push('/')}
+          onClick={() => router.push(`/user/${user.id}`)}
         >
           <HiViewList color={'#fff'} size={20} />
           <span className="ml-2 pr-2 text-lg">View Profile</span>
