@@ -4,7 +4,7 @@ import Sidebar from './Sidebar'
 import Link from 'next/link'
 import { useStateContext } from '../context/StateContext'
 import { RiLogoutBoxLine } from 'react-icons/ri'
-import { MdArrowDropDown } from 'react-icons/md'
+import { MdArrowDropDown, MdMessage } from 'react-icons/md'
 import { useRouter } from 'next/router'
 import { toast } from 'react-toastify'
 import { IoIosPersonAdd } from 'react-icons/io'
@@ -24,62 +24,64 @@ const Navbar = () => {
 
   return (
     <>
-      <div className=" fixed left-0 top-0 z-50 flex w-screen items-center justify-between bg-[#FF8080] py-4 px-10 font-DMSerif text-white">
-        <div className="flex items-center justify-around ">
+      <div className="fixed left-0 top-0 z-50 grid w-screen grid-cols-12 items-center justify-between border-b-2 py-2 px-5 font-DMSerif text-white">
+        <div className="col-span-6 flex flex-1 items-start justify-start lg:col-span-3 lg:items-center lg:justify-around">
           <Link href={'/'} passHref>
-            <p className="cursor-pointer text-3xl font-bold italic">
+            <img
+              src="https://cdn.dribbble.com/users/24078/screenshots/15522433/media/e92e58ec9d338a234945ae3d3ffd5be3.jpg?compress=1&resize=400x300"
+              alt=""
+              className="h-10 w-10 rounded-full"
+            />
+            {/* <p className="cursor-pointer text-3xl font-bold italic">
               Social Media
-            </p>
+            </p> */}
           </Link>
           <input
             placeholder="Search Posts"
-            className="lg:w-200 hidden lg:ml-5 lg:flex lg:rounded-3xl lg:border-0 lg:bg-white  lg:p-2 lg:text-black lg:outline-none"
+            className="lg:w-200 hidden lg:ml-5 lg:flex lg:flex-1 lg:rounded-lg lg:border-0 lg:bg-slate-200  lg:p-2 lg:text-black lg:placeholder-slate-400 lg:outline-none"
           />
         </div>
-        <div className="hidden md:justify-center lg:flex lg:items-center lg:justify-items-stretch">
+        <div className="hidden flex-1 items-center justify-center lg:col-span-7 lg:inline-flex">
           <Link href={'/'} passHref>
-            <FaHome className="mr-20" size={35} />
+            <FaHome className="mr-20" size={35} color="#FF8080" />
           </Link>
           <Link href={'/search'} passHref>
-            <FaSearch className="mr-20" size={30} />
+            <FaSearch className="mr-20" size={30} color="#FF8080" />
           </Link>
           <Link href={'/friendRequest'} passHref>
-            <IoIosPersonAdd className="mr-20" size={35} />
+            <IoIosPersonAdd className="mr-20" size={35} color="#FF8080" />
           </Link>
           <Link href={`/profile/${id}`} passHref>
-            <FaFortAwesomeAlt className="mr-20" size={35} />
+            <FaFortAwesomeAlt className="mr-20" size={35} color="#FF8080" />
           </Link>
         </div>
-        <div className="flex">
-          <div className="mr-10 flex items-center justify-between">
-            <div className="flex items-center">
-              <p className="hidden lg:flex lg:text-xl">{user?.name}</p>
-              <MdArrowDropDown
-                size={30}
-                className="invisible lg:visible lg:mr-5"
-              />
-            </div>
-            <div className="flex items-center">
-              <img
-                src={user?.profilePic}
-                alt=""
-                className="h-10 w-10 rounded-full"
-              />
-              <RiLogoutBoxLine
-                className="invisible lg:visible lg:ml-8"
-                size={30}
-                onClick={handleLogout}
-              />
-              {/* <p>xkcnsknca</p> */}
-            </div>
-            <FaListUl
-              size={25}
-              className="lg:hidden"
-              onClick={() => setIsOpen(true)}
-            />
-          </div>
+        <div className="col-span-6 mr-1 flex flex-1 items-center justify-end lg:col-span-2 lg:mr-10 lg:justify-between">
+          {/* <div className="flex items-center"> */}
+          <img
+            src={user?.profilePic}
+            alt=""
+            className="mr-5 h-10 w-10 rounded-full bg-gray-400 lg:mr-0"
+          />
+          <MdMessage
+            color="#111"
+            size={45}
+            className="hidden rounded-full bg-gray-300 p-3 hover:bg-gray-400 lg:inline"
+          />
+          <RiLogoutBoxLine
+            className="hidden rounded-full bg-gray-300 p-3 hover:bg-gray-400 lg:inline"
+            size={45}
+            onClick={handleLogout}
+            color="#111"
+          />
+          {/* </div> */}
+          <FaListUl
+            size={45}
+            className="rounded-full bg-gray-300 p-3 hover:bg-gray-400 lg:hidden"
+            color="#FF8080"
+            onClick={() => setIsOpen(true)}
+          />
         </div>
-        {isOpen && <Sidebar />}
+        {isOpen && <Sidebar isOpen={isOpen} setIsOpen={setIsOpen} />}
       </div>
     </>
   )

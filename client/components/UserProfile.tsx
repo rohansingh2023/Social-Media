@@ -3,11 +3,15 @@ import { GiThreeFriends } from 'react-icons/gi'
 import { FcAbout } from 'react-icons/fc'
 import { BsSignpost } from 'react-icons/bs'
 import Post from './Post'
-import { getPostsByUserId } from '../services'
+import { getPostById, getPostsByUserId, getUserById } from '../services'
 import Loading from './Loading'
 import Link from 'next/link'
 import { NextRouter, useRouter } from 'next/router'
 import { IoPencilSharp } from 'react-icons/io5'
+import { useMutation } from '@apollo/client'
+import { UNFRIEND } from '../graphql/mutations/userMutations'
+import FriendCard from './FriendCard'
+import toast from 'react-hot-toast'
 
 interface Props {
   userD: User
@@ -21,7 +25,23 @@ interface Props2 {
 
 function UserProfile({ userD, post }: Props) {
   const [userPosts, setUserPosts] = useState<Props2[]>([])
+  const [userData, setUserData] = useState<User>(userD)
   const router: NextRouter = useRouter()
+
+  // const [unFriend] = useMutation(UNFRIEND, {
+  //   variables:{
+  //     id: userD.id
+  //   }
+  // })
+
+  const handleRefresh = async () => {
+    const refreshToast = toast.loading('Refreshing...')
+    const users = await getUserById(userD.id)
+    setUserData(users)
+    toast.success('User Updated', {
+      id: refreshToast,
+    })
+  }
 
   useEffect(() => {
     const getUserById = async () => {
@@ -86,27 +106,18 @@ function UserProfile({ userD, post }: Props) {
       <div className={userPosts.length > 0 ? 'p-5' : 'mt-10 p-5'}>
         <hr className="mt-10 border bg-black" />
       </div>
-      <div className="mx-auto max-w-xl">
-        {userD.friends.length > 0 && (
+      <div className="mx-auto max-w-3xl">
+        {userData?.friends?.length > 0 && (
           <div className="mx-auto flex w-11/12 flex-col bg-slate-100 p-5">
             <h1 className="text-2xl font-bold">FriendsList</h1>
-            <div className="mt-2 max-h-40 max-w-xl overflow-y-scroll rounded-md bg-white p-3">
+            <div className="mt-2 max-h-40 w-96 overflow-y-scroll rounded-md bg-white p-3">
               {userD.friends.map((u) => (
-                // <Link href={`/user/${u.id}`}>
-                <div className="mt-2 flex cursor-pointer items-center rounded-sm py-2 px-2 hover:bg-gray-200">
-                  <img
-                    src={u.profilePic}
-                    alt=""
-                    className="h-7 w-7 rounded-full object-fill"
-                  />
-                  <h1 className="ml-3 font-thin text-gray-700">{u.name}</h1>
-                </div>
-                // </Link>
+                <FriendCard user={u} key={u.email} refresh={handleRefresh} />
               ))}
             </div>
           </div>
         )}
-        {userD.friendRequests.length > 0 && (
+        {userData?.friendRequests?.length > 0 && (
           <div className="mx-auto mt-3 flex w-11/12 flex-col bg-slate-100 p-5">
             <h1 className="text-2xl font-bold">FriendsRequests</h1>
             <div className="mt-2 ml-32 max-h-40 max-w-sm overflow-y-scroll rounded-md bg-white p-3">

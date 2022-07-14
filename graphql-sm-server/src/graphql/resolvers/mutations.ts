@@ -196,6 +196,7 @@ export default {
         );
       } else {
         userTo.friendRequests.push({
+          userId: userFrom.id,
           email: userFrom.email,
           name: userFrom.name,
           profilePic: userFrom.profilePic,
@@ -229,12 +230,14 @@ export default {
         )
       ) {
         requestReceiver.friends.push({
+          userId: requestSender.id,
           name: requestSender.name,
           email: requestSender.email,
           profilePic: requestSender.profilePic,
           createdAt: new Date().toISOString(),
         });
         requestSender.friends.push({
+          userId: requestReceiver.id,
           name: requestReceiver.name,
           email: requestReceiver.email,
           profilePic: requestReceiver.profilePic,
@@ -257,14 +260,14 @@ export default {
       throw new Error("Error accepting friend request");
     }
   },
-  unFriend: async (_: any, { id }: any, { models, user }: any) => {
+  unFriend: async (_: any, { email }: any, { models, user }: any) => {
     try {
       if (!user) {
         throw new AuthenticationError(
           "You must login to accept a friend request"
         );
       }
-      const friend = await models.User.findById(id);
+      const friend = await models.User.findOne({ email });
       const currentUser = await models.User.findById(user.id);
       if (currentUser.friends.find((f: any) => f.email === friend.email)) {
         await models.User.updateOne(

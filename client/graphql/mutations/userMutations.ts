@@ -97,4 +97,23 @@ const ACCEPT_FRIEND_REQUEST = gql`
   }
 `
 
-export { REGISTER_USER, LOGIN_USER, ACCEPT_FRIEND_REQUEST, SEND_FRIEND_REQUEST }
+const UNFRIEND = gql`
+  mutation unFriend($email: String!) {
+    unFriend(email: $email) {
+      id
+      name
+      friends {
+        id
+        name
+      }
+    }
+  }
+`
+
+export {
+  REGISTER_USER,
+  LOGIN_USER,
+  ACCEPT_FRIEND_REQUEST,
+  SEND_FRIEND_REQUEST,
+  UNFRIEND,
+}

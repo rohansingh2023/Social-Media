@@ -42,98 +42,103 @@ function login() {
   }
 
   return (
-    <div className="font-DMSerif">
-      <div className="mb-10">
-        <div className="flex justify-center">
-          <img
-            alt=""
-            className="h-14 w-14"
-            src="https://ik.imagekit.io/pibjyepn7p9/Lilac_Navy_Simple_Line_Business_Logo_CGktk8RHK.png?ik-sdk-version=javascript-1.4.3&updatedAt=1649962071315"
-          />
+    <div className="relative -mt-20 flex h-screen items-center justify-center bg-login bg-cover bg-center bg-no-repeat">
+      <div
+        className="absolute top-1/4 rounded-md
+      bg-slate-200 px-5 py-7 font-DMSerif shadow-md"
+      >
+        <div className="mb-10">
+          <div className="flex justify-center">
+            <img
+              alt=""
+              className="h-14 w-14 rounded-full"
+              src="https://cdn.dribbble.com/users/24078/screenshots/15522433/media/e92e58ec9d338a234945ae3d3ffd5be3.jpg?compress=1&resize=400x300"
+            />
+          </div>
+          <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
+            Login
+          </h2>
+          <p className="ml-2 mt-5 text-center text-sm font-semibold text-gray-600">
+            Don't have an account?
+            {/* <div > */}
+            <span className="text-md mx-2 text-[#FF8080] transition-all duration-150 ease-in-out hover:text-orange-400 hover:underline">
+              <Link href={'/auth/register'}>Register</Link>
+            </span>
+            {/* </div> */}
+          </p>
         </div>
-        <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
-          Login
-        </h2>
-        <p className="mt-5 text-center text-sm font-semibold text-gray-600">
-          Don't have an account?
-          {/* <div > */}
-          <span className='className="text-md hover:text-purple-500" text-purple-600'>
-            <Link href={'/'}>Back to home</Link>
-          </span>
-          {/* </div> */}
-        </p>
-      </div>
-      <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
-        <div className="flex items-center justify-center">
-          <div className="w-[300px] -space-y-px">
-            <div className="my-5">
-              <label htmlFor="email" className="sr-only">
-                Email
-              </label>
-              <input
-                onChange={(e) => {
-                  setFormData({ ...formData, email: e.target.value })
-                }}
-                value={formData.email}
-                // id={id}
-                // name={name}
-                type="email"
-                className="relative block w-full appearance-none rounded-md border border-gray-300 px-3 py-2 text-gray-900 placeholder-gray-500 focus:z-10 focus:border-purple-500 focus:outline-none focus:ring-purple-500 sm:text-sm"
-                placeholder="Enter your email"
-              />
-            </div>
-            <div className="my-5">
-              <label htmlFor="password" className="sr-only">
-                Password
-              </label>
-              <input
-                onChange={(e) => {
-                  setFormData({ ...formData, password: e.target.value })
-                }}
-                value={formData.password}
-                // id={id}
-                // name={name}
-                type="password"
-                className="relative block w-full appearance-none rounded-md border border-gray-300 px-3 py-2 text-gray-900 placeholder-gray-500 focus:z-10 focus:border-purple-500 focus:outline-none focus:ring-purple-500 sm:text-sm"
-                placeholder="Enter your password"
-              />
-            </div>
-            <div className=" flex items-center justify-between">
-              <div className="mt-7 flex items-center">
-                <input
-                  id="remember-me"
-                  name="remember-me"
-                  type="checkbox"
-                  className="h-4 w-4 rounded border-gray-300 text-purple-600 focus:ring-purple-500"
-                />
-                <label
-                  htmlFor="remember-me"
-                  className="ml-2 block text-sm text-gray-900"
-                >
-                  Remember me
+        <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
+          <div className="flex items-center justify-center">
+            <div className="w-[300px] -space-y-px">
+              <div className="my-5">
+                <label htmlFor="email" className="sr-only">
+                  Email
                 </label>
+                <input
+                  onChange={(e) => {
+                    setFormData({ ...formData, email: e.target.value })
+                  }}
+                  value={formData.email}
+                  // id={id}
+                  // name={name}
+                  type="email"
+                  className="relative block w-full appearance-none rounded-md border border-gray-300 px-3 py-2 text-gray-900 placeholder-gray-500 focus:z-10 focus:border-[#FF8080] focus:outline-none focus:ring-[#FF8080] sm:text-sm"
+                  placeholder="Enter your email"
+                />
               </div>
+              <div className="my-5 mb-3">
+                <label htmlFor="password" className="sr-only">
+                  Password
+                </label>
+                <input
+                  onChange={(e) => {
+                    setFormData({ ...formData, password: e.target.value })
+                  }}
+                  value={formData.password}
+                  // id={id}
+                  // name={name}
+                  type="password"
+                  className="relative block w-full appearance-none rounded-md border border-gray-300 px-3 py-2 text-gray-900 placeholder-gray-500 focus:z-10 focus:border-[#FF8080] focus:outline-none focus:ring-[#FF8080] sm:text-sm"
+                  placeholder="Enter your password"
+                />
+              </div>
+              <div className="flex items-center justify-between">
+                <div className="mt-7 hidden items-center">
+                  <input
+                    id="remember-me"
+                    name="remember-me"
+                    type="checkbox"
+                    className="h-4 w-4 rounded border-gray-300 text-purple-600 focus:ring-purple-500"
+                  />
+                  <label
+                    htmlFor="remember-me"
+                    className="ml-2 block text-sm text-gray-900"
+                  >
+                    Remember me
+                  </label>
+                </div>
 
-              <div className="mt-7 text-sm">
-                <a
-                  href="#"
-                  className="font-medium text-purple-600 hover:text-purple-500"
-                >
-                  Forgot your password?
-                </a>
+                <div className="mt-7 text-sm">
+                  <a
+                    href="#"
+                    className="hidden font-medium text-purple-600 hover:text-purple-500"
+                  >
+                    Forgot your password?
+                  </a>
+                </div>
               </div>
-            </div>
-            <div className="mt-6 ">
-              <button
-                type="submit"
-                className=" group relative flex w-full justify-center rounded-md border border-transparent bg-purple-600 py-2 px-4 text-sm font-medium text-white hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2"
-              >
-                Submit
-              </button>
+              <div className="my-6">
+                <button
+                  type="submit"
+                  className=" group relative flex w-full justify-center rounded-md border border-transparent bg-[#FF8080] py-2 px-4 text-sm font-medium text-white transition-all duration-200 ease-in-out hover:bg-orange-700 focus:outline-none focus:ring-2 focus:ring-[#FF8080] focus:ring-offset-2"
+                >
+                  Submit
+                </button>
+              </div>
             </div>
           </div>
-        </div>
-      </form>
+        </form>
+      </div>
     </div>
   )
 }

@@ -65,7 +65,7 @@ const typeDefs = gql`
 
   type FriendRequest {
     id: ID!
-    # userId: ID!
+    userId: ID!
     name: String!
     email: String!
     createdAt: String!
@@ -74,6 +74,7 @@ const typeDefs = gql`
 
   type Friend {
     id: ID!
+    userId: ID!
     name: String!
     email: String!
     createdAt: String!
@@ -115,7 +116,7 @@ const typeDefs = gql`
     deleteComment(postId: ID!, commentId: ID!): Post!
     friendRequest(id: ID!): User!
     acceptFriendRequest(email: String!): User!
-    unFriend(id: ID!): User!
+    unFriend(email: String!): User!
   }
 `;
 

@@ -16,46 +16,51 @@ const Leftbar = () => {
   const { id } = user || {}
 
   return (
-    <div className="sticky col-span-3">
-      <div className="hidden lg:inline-flex  lg:flex-shrink-0  lg:flex-col lg:items-start lg:justify-around lg:p-6 lg:text-2xl">
+    <div className="sticky col-span-3 flex-1 bg-gray-100">
+      <div className="hidden font-Inter lg:inline-flex lg:flex-1 lg:flex-col lg:items-start lg:justify-around lg:p-3 lg:text-lg">
         <Link href={`/profile/${id}`} passHref>
-          <div className="mb-4 flex w-full items-center justify-start rounded-xl p-3  hover:bg-gray-300">
-            <MdAccountCircle size={25} />
-            <p className="ml-4 cursor-pointer text-lg font-semibold">
-              My Account
+          <div className="mb-4 flex flex-1 items-center justify-start rounded-xl py-2  px-1 hover:bg-gray-200">
+            {/* <MdAccountCircle size={35} /> */}
+            <img
+              src={user?.profilePic}
+              alt=""
+              className="w-1h-12 h-12 rounded-full"
+            />
+            <p className="ml-4 cursor-pointer text-base font-semibold">
+              {user?.name}
             </p>
           </div>
         </Link>
-        <div className="mb-4 flex w-full items-center justify-start rounded-xl p-3 hover:bg-gray-300">
-          <MdAddShoppingCart size={25} />
-          <p className="ml-4 cursor-pointer text-lg font-semibold">
+        <div className="mb-4 flex w-full items-center justify-start rounded-xl py-2 px-1 hover:bg-gray-200">
+          <MdAddShoppingCart size={35} />
+          <p className="ml-4 cursor-pointer text-base font-semibold">
             Shooping Cart
           </p>
         </div>
-        <div className="mb-4 flex w-full items-center justify-start rounded-xl p-3 hover:bg-gray-300">
-          <MdAnnouncement size={25} />
-          <p className="ml-4 cursor-pointer text-lg font-semibold">
+        <div className="mb-4 flex w-full items-center justify-start rounded-xl py-2 px-1 hover:bg-gray-200">
+          <MdAnnouncement size={35} />
+          <p className="ml-4 cursor-pointer text-base font-semibold">
             {' '}
             Daily News
           </p>
         </div>
-        <div className="mb-4 flex w-full items-center justify-start rounded-xl p-3 hover:bg-gray-300">
-          <MdBuild size={25} />
-          <p className="ml-4 cursor-pointer text-lg font-semibold">
+        <div className="mb-4 flex w-full items-center justify-start rounded-xl py-2 px-1 hover:bg-gray-200">
+          <MdBuild size={35} />
+          <p className="ml-4 cursor-pointer text-base font-semibold">
             Account Settings
           </p>
         </div>
         <Link href={'/search'} passHref>
-          <div className="mb-4 flex w-full items-center justify-start rounded-xl p-3 hover:bg-gray-300">
-            <MdSearch size={25} />
-            <p className="ml-4 cursor-pointer text-lg font-semibold">
+          <div className="mb-4 flex w-full items-center justify-start rounded-xl py-2 px-1 hover:bg-gray-200">
+            <MdSearch size={35} />
+            <p className="ml-4 cursor-pointer text-base font-semibold">
               Search Friends
             </p>
           </div>
         </Link>
-        <div className="mb-4 flex w-full items-center justify-start rounded-xl p-3 hover:bg-gray-300">
-          <MdQuestionAnswer size={25} />
-          <p className="ml-4 cursor-pointer  text-xl font-semibold">
+        <div className="mb-4 flex w-full items-center justify-start rounded-xl py-2 px-1 hover:bg-gray-200">
+          <MdQuestionAnswer size={35} />
+          <p className="ml-4 cursor-pointer text-base  font-semibold">
             Messenger
           </p>
         </div>

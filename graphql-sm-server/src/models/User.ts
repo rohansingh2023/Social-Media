@@ -39,6 +39,7 @@ const UserSchema = new Schema(
     },
     friendRequests: [
       {
+        userId: String,
         name: String,
         email: String,
         profilePic: String,
@@ -47,6 +48,7 @@ const UserSchema = new Schema(
     ],
     friends: [
       {
+        userId: String,
         name: String,
         email: String,
         profilePic: String,

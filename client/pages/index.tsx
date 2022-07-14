@@ -6,11 +6,11 @@ import { authorized } from '../services/auth'
 
 const Index = ({ postData, userData }: any) => {
   return (
-    <div className="grid-rows-10 relative  grid max-h-screen overflow-hidden bg-gray-100 font-Segoe">
-      <header className="z-50 row-span-1">
+    <div className="relative max-h-screen overflow-hidden bg-slate-50 font-Segoe">
+      <header className="z-50 ">
         <Navbar />
       </header>
-      <div className="row-span-9 grid grid-cols-12">
+      <div className="grid grid-cols-12">
         <Leftbar />
         <Feed postData={postData} />
         <Rightbar userData={userData} />
