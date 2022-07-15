@@ -43,7 +43,7 @@ function register() {
       const { data } = await register()
       localStorage.setItem('authUser', JSON.stringify(data?.register))
       toast.success('Register successfull')
-      router.push('/auth/login')
+      router.replace('/')
       router.reload()
     } catch (error) {
       toast.error(`${error}`)
@@ -52,7 +52,7 @@ function register() {
   }
 
   return (
-    <div className="relative -mt-20 flex h-screen items-center justify-center bg-register bg-cover bg-center bg-no-repeat font-DMSerif">
+    <div className="relative -mt-16 flex h-screen items-center justify-center bg-register bg-cover bg-center bg-no-repeat font-DMSerif">
       <div className="absolute top-20 rounded-md bg-slate-200 py-7 px-5">
         <div className=" mb-16">
           <div className="flex justify-center">

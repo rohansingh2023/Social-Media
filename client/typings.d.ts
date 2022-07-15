@@ -21,6 +21,7 @@ type Post = {
 
 type friendRequests = {
   id: string
+  userId: string
   name: string
   email: string
   profilePic: string
@@ -29,6 +30,7 @@ type friendRequests = {
 
 type friends = {
   id: string
+  userId: string
   name: string
   email: string
   profilePic: string

@@ -91,6 +91,7 @@ const GET_USER_BY_ID = gql`
         friendRequests {
           id
           email
+          userId
           name
           profilePic
           createdAt
@@ -98,6 +99,7 @@ const GET_USER_BY_ID = gql`
         friends {
           id
           name
+          userId
           email
           profilePic
           createdAt

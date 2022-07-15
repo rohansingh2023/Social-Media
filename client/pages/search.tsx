@@ -9,7 +9,7 @@ interface Props {
 
 const Search = ({ userData, onlyUserData }: Props) => {
   return (
-    <div className="grid-rows-10 grid max-h-screen overflow-hidden bg-gray-100 font-DMSerif">
+    <div className="grid-rows-10 grid max-h-screen overflow-hidden font-DMSerif">
       <header className="z-50 row-span-1">
         <Navbar />
       </header>

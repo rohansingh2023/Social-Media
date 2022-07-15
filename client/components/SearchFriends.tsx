@@ -47,12 +47,12 @@ function SearchFriends({ userData }: Props) {
   }
 
   return (
-    <div className="col-span-6 flex max-h-screen flex-1 flex-col overflow-scroll scrollbar-hide lg:border-x ">
-      <div className="ml-7 mt-5 flex h-16 w-11/12 items-start justify-center rounded-full bg-white p-5 shadow-lg">
+    <div className="col-span-12 flex max-h-screen flex-1 flex-col overflow-scroll scrollbar-hide lg:col-span-8 lg:border-x xl:col-span-6 ">
+      <div className="ml-7 mt-5 flex h-16 w-11/12 items-start justify-center rounded-full p-5 shadow-lg">
         <AiOutlineSearch size={30} />
         <input
           placeholder="Enter friend's name"
-          className="ml-3 flex flex-1 p-0.5 outline-none"
+          className="ml-3 flex flex-1 bg-slate-200 p-0.5 outline-none"
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
           onKeyPress={handleEnter}

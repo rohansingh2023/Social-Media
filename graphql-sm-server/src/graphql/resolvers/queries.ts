@@ -147,20 +147,20 @@ export default {
       throw new Error("Error getting users");
     }
   },
-  onlyMyFriendsPost: async (_: any, args: any, { models, user }) => {
+  onlyMyFriendsPost: async (_: any, { id }: any, { models, user }: any) => {
     try {
       if (!user) {
         throw new AuthenticationError(
           "You must login to send a friend request"
         );
       }
-      const me = await models.User.findById(user.id);
+      const me = await models.User.findById(id);
       const posts2 = await models.Post.find();
-      posts2.map(async (p: any) => {
-        const user = await models.User.findById(p.user);
-        // return me.friends.map((u:any)=>{
-        //   posts:
-        // })
+      me?.friends?.map(async (f: any) => {
+        return {
+          posts: posts2.filter((p: any) => p.user === f.userId),
+          user: await models.User.findById(f.userId),
+        };
       });
     } catch (error) {
       console.log(error);

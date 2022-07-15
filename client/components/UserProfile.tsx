@@ -58,7 +58,7 @@ function UserProfile({ userD, post }: Props) {
   }
 
   return (
-    <div className="col-span-6 flex max-h-screen flex-1 flex-col overflow-scroll scrollbar-hide lg:border-x lg:p-5">
+    <div className="col-span-12 flex max-h-screen max-w-screen-sm flex-1 flex-col overflow-scroll p-3 scrollbar-hide md:max-w-screen-md lg:col-span-8 lg:max-w-screen-lg lg:border-x lg:p-5 xl:col-span-6 xl:max-w-screen-xl">
       <div className="mt-5 flex flex-1 flex-shrink-0 flex-col lg:mt-0">
         <div className="h-80 w-full flex-shrink-0 rounded-t-md bg-white opacity-70">
           <img
@@ -73,7 +73,7 @@ function UserProfile({ userD, post }: Props) {
             <img
               src={userD.profilePic}
               alt=""
-              className="z-50 -mt-10 ml-14 h-40 w-40 rounded-full object-fill md:ml-10 lg:ml-5"
+              className="z-50 -mt-10 ml-14 h-40 w-40 rounded-full object-cover md:ml-10 lg:ml-5"
             />
             {/* </div> */}
             <div className="relative ml-5 flex flex-1 flex-col ">
@@ -82,7 +82,9 @@ function UserProfile({ userD, post }: Props) {
               <div className=" flex flex-1">
                 <div className="flex flex-1 flex-col">
                   <p className="text-md mt-3 font-semibold text-gray-400">
-                    {userD.friends.length} friends
+                    {userD.friends.length > 1
+                      ? `${userD.friends.length} friends`
+                      : `${userD.friends.length} friend`}
                   </p>
                   <div className="flex items-center">
                     {userD?.friends.map((u) => (

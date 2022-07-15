@@ -86,7 +86,7 @@ const Feed = ({ postData: posts }: Props) => {
   }
 
   return (
-    <div className="col-span-6 max-h-screen overflow-scroll bg-gray-100 scrollbar-hide lg:border-x lg:p-5">
+    <div className="col-span-12 max-h-screen overflow-scroll bg-gray-100 p-3 scrollbar-hide lg:col-span-8 lg:border-x lg:p-5 xl:col-span-6">
       <div className="mx-auto max-w-xl">
         <div className="flex items-center justify-between">
           <h1 className="text-3xl font-bold ">Explore</h1>
@@ -95,7 +95,7 @@ const Feed = ({ postData: posts }: Props) => {
             className="mr-5 mt-5 h-8 w-8 cursor-pointer text-[#FF8080] transition-all duration-500 ease-out hover:rotate-180 active:scale-125"
           />
         </div>
-        <div className="flex flex-1 items-center justify-center space-x-2 lg:p-5">
+        <div className="mt-3 flex flex-1 items-center justify-center space-x-2 lg:mt-0 lg:p-5">
           <img
             src={profilePic}
             alt=""
@@ -131,7 +131,7 @@ const Feed = ({ postData: posts }: Props) => {
             </div>
           </div>
         </div>
-        <div className="flex flex-col items-center justify-center">
+        <div className="mx-auto ml-12 flex flex-col items-center justify-center px-3 lg:ml-0">
           {postData.length > 0 ? (
             postData?.map((post: any, i: any) => (
               <Post

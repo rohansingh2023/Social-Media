@@ -37,35 +37,37 @@ const FriendRequestCard = ({ user, refresh }: Props) => {
   }
 
   return (
-    <div className="mt-10 flex flex-1 items-center rounded-lg bg-slate-200 p-5">
+    <div className="mt-10 flex flex-1 items-center rounded-md border border-gray-200 bg-white p-5">
       <div className="flex-[0.2]">
         <img
           src={user.profilePic}
           alt=""
-          className="h-36 w-36 rounded-full bg-white object-contain"
+          className="h-20 w-20 rounded-full bg-white object-contain md:h-32 md:w-32"
         />
       </div>
       <div className="ml-5 flex flex-[0.8] flex-col">
         <div className="flex flex-1 items-center justify-between border-b-[1px] border-b-gray-400">
           <div>
-            <p className="text-xl font-bold">{user.name}</p>
-            <p className="text-md font-semibold text-gray-500">{user.email}</p>
+            <p className="text-lg font-bold md:text-xl">{user.name}</p>
+            <p className="md:text-md text-sm font-semibold text-gray-500">
+              {user.email}
+            </p>
           </div>
-          <div className="font-sm font-light text-gray-400">
+          <div className="text-sm font-light text-gray-400">
             {moment(user.createdAt).fromNow()}
           </div>
         </div>
         <div className="mt-5 flex items-center justify-between">
           <button
-            className="m-2 flex flex-1 items-center justify-center rounded-lg bg-blue-700 px-4 py-2 text-white hover:bg-blue-500"
+            className="m-2 flex flex-1 items-center justify-center rounded-lg bg-blue-700 px-2 py-1 text-white hover:bg-blue-500 md:px-4 md:py-2"
             onClick={handleRequest}
           >
             Accept
           </button>
-          <button className="m-2 flex flex-1 items-center justify-center rounded-lg bg-purple-600 px-4 py-2 text-white hover:bg-purple-400 ">
+          <button className="m-2 flex flex-1 items-center justify-center rounded-lg bg-purple-600 px-2 py-1 text-white hover:bg-purple-400 md:px-4 md:py-2 ">
             View
           </button>
-          <button className="m-2 flex flex-1 items-center justify-center rounded-lg bg-red-600 px-4 py-2 text-white hover:bg-red-400">
+          <button className="m-2 flex flex-1 items-center justify-center rounded-lg bg-red-600 px-2 py-1 text-white hover:bg-red-400 md:px-4 md:py-2">
             Decline
           </button>
         </div>

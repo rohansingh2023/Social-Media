@@ -28,11 +28,11 @@ const friendRequest = () => {
   // }
 
   return (
-    <div className="grid-rows-10 grid max-h-screen overflow-hidden bg-gray-100 font-DMSerif">
-      <header className="z-50 row-span-1">
+    <div className="max-h-screen overflow-hidden bg-gray-100 font-DMSerif">
+      <header className="z-50 ">
         <Navbar />
       </header>
-      <div className="row-span-9 grid grid-cols-12">
+      <div className="grid grid-cols-12">
         <Leftbar />
         {/* <SearchFriends userData={userData} /> */}
         <FriendRequestContainer user={userData} />

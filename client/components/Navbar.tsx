@@ -24,7 +24,7 @@ const Navbar = () => {
 
   return (
     <>
-      <div className="fixed left-0 top-0 z-50 grid w-screen grid-cols-12 items-center justify-between border-b-2 py-2 px-5 font-DMSerif text-white">
+      <div className="fixed left-0 top-0 z-50 grid w-screen grid-cols-12 items-center justify-between border-b-2 bg-white py-2 px-5 font-DMSerif text-white">
         <div className="col-span-6 flex flex-1 items-start justify-start lg:col-span-3 lg:items-center lg:justify-around">
           <Link href={'/'} passHref>
             <img
@@ -60,7 +60,7 @@ const Navbar = () => {
           <img
             src={user?.profilePic}
             alt=""
-            className="mr-5 h-10 w-10 rounded-full bg-gray-400 lg:mr-0"
+            className="mr-5 h-10 w-10 rounded-full bg-gray-400 object-cover lg:mr-0"
           />
           <MdMessage
             color="#111"

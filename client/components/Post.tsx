@@ -85,8 +85,8 @@ const Post = ({ post, user, refresh }: Props) => {
 
   return (
     <div>
-      <div className="my-14 mb-5 flex h-auto w-full flex-col rounded-md border border-gray-200 bg-white shadow-sm">
-        <div className="mt-3 flex items-center justify-between px-4 py-2">
+      <div className="my-14 mb-5 flex h-auto w-11/12 flex-col rounded-md border border-gray-200 bg-white font-Inter shadow-sm lg:w-full">
+        <div className="mt-2 flex items-center justify-between px-4 py-2">
           <Link
             href={user.id === id ? `/profile/${id}` : `/user/${user.id}`}
             // className="flex flex-1 p-2"
@@ -97,13 +97,13 @@ const Post = ({ post, user, refresh }: Props) => {
                 alt=""
                 className="h-10 w-10 rounded-full object-cover"
               />
-              <p className="ml-3 cursor-pointer text-xl font-bold">
+              <p className="ml-3 cursor-pointer text-lg font-semibold">
                 {user.name}
               </p>
-              <p className=" mt-0.5 hidden text-gray-500 lg:inline">
+              <p className="hidden text-base font-normal text-gray-400 lg:inline">
                 {user.email}
               </p>
-              <p className="ml-3 mt-0.5 text-gray-500">
+              <p className="ml-3 mt-0.5 text-base font-normal text-gray-400">
                 • {moment(post.createdAt).fromNow()}
               </p>
             </div>
@@ -114,15 +114,15 @@ const Post = ({ post, user, refresh }: Props) => {
             </div>
           )}
         </div>
-        <p className="ml-2 p-4 text-lg">
-          {`${post.content}`.slice(0, 70).concat('...')}
+        <p className="ml-2 px-2 text-base font-normal">
+          {`${post.content}`.slice(0, 200).concat('...')}
         </p>
         {/* <div className="flex items-center justify-center"> */}
         {post.image && (
           <img
             src={post.image}
             alt=""
-            className="w-full rounded-lg p-3"
+            className="w-full rounded-lg py-3"
             width="550"
             height="500"
           />

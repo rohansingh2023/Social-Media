@@ -95,7 +95,7 @@ const typeDefs = gql`
     friends(id: ID!): [Friend]!
     onlyUsersExcludingMe: [User!]!
     usersExcludingMe: [UserData!]!
-    onlyMyFriendsPost: [AllPostData]!
+    onlyMyFriendsPost(id: ID!): [AllPostData]
   }
 
   type Mutation {

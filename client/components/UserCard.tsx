@@ -9,6 +9,8 @@ import { useRouter } from 'next/router'
 import { useMutation } from '@apollo/client'
 import { SEND_FRIEND_REQUEST } from '../graphql/mutations/userMutations'
 import toast from 'react-hot-toast'
+import client from '../apollo-client'
+import { GET_USER_BY_ID } from '../graphql/queries/userQueries'
 
 interface Props {
   user: User
@@ -17,9 +19,12 @@ interface Props {
 function UserCard({ user }: Props) {
   const router = useRouter()
   const [isFriend, setIsFriend] = useState<boolean>(false)
+  const [friends, setFriends] = useState<User>()
+  const [friendInfo, setFriendInfo] = useState<User>()
 
   const { currentUser } = useStateContext()
   const { user: u, token } = currentUser || {}
+  const { id } = u || {}
 
   const [friendRequest] = useMutation(SEND_FRIEND_REQUEST, {
     variables: {
@@ -33,23 +38,47 @@ function UserCard({ user }: Props) {
   })
 
   useEffect(() => {
-    u?.friends.forEach((f: any) =>
-      f.email === user.email ? setIsFriend(true) : setIsFriend(false)
-    )
-  }, [u])
+    const getUserFriend = async () => {
+      try {
+        const { data } = await client.query({
+          query: GET_USER_BY_ID,
+          variables: {
+            id: id,
+          },
+        })
+        setFriends(data?.userById?.user)
+      } catch (error) {}
+    }
+    getUserFriend()
+  }, [])
 
-  const myFriend: User[] = u?.friends.filter(
-    (fr: { email: string }) => fr.email === user.email
+  useEffect(() => {
+    const getUserFriend = async () => {
+      try {
+        const { data } = await client.query({
+          query: GET_USER_BY_ID,
+          variables: {
+            id: user.id,
+          },
+        })
+        setFriendInfo(data?.userById?.user)
+      } catch (error) {}
+    }
+    getUserFriend()
+  }, [])
+
+  const myFriend = friends?.friends?.findIndex(
+    (f) => f.userId.toString() === user.id.toString()
   )
-  console.log(myFriend)
-  console.log(u)
 
-  // const fUsers = u?.friends.filter((f: any) => f.email === user.email)
+  const isRequestSent = friendInfo?.friendRequests?.findIndex(
+    (f) => f.userId.toString() === id.toString()
+  )
+  // const myFriend = friends?.friends?.every((f: friends) => f.userId === user.id)
 
-  // console.log(fUsers)
-  // console.log(u?.friends)
-  // console.log(user.email)
-  console.log(isFriend)
+  console.log(isRequestSent)
+  // console.log(myFriend)
+  // console.log(isRequestSent)
 
   const handleRequest = async () => {
     try {
@@ -66,12 +95,12 @@ function UserCard({ user }: Props) {
 
   return (
     // <Link href={`/user/${user.id}`}>
-    <div className="mt-10 flex flex-1 cursor-pointer flex-col rounded-3xl bg-white p-2 shadow-lg">
+    <div className="mt-10 flex flex-1 cursor-pointer flex-col rounded-md bg-white p-2 font-Inter shadow-lg">
       <div className="flex items-center p-2">
         <img
           src={user.profilePic}
           alt=""
-          className="h-10 w-10 rounded-full object-cover"
+          className="h-16 w-16 rounded-full object-cover"
         />
         <div className="ml-3">
           <h2 className="text-xl font-bold text-gray-600">{user.name}</h2>
@@ -80,11 +109,13 @@ function UserCard({ user }: Props) {
       </div>
       <div className=" flex flex-1 items-center justify-evenly">
         <button
-          disabled={isFriend}
+          disabled={myFriend !== -1 || isRequestSent !== -1}
           className={
-            !isFriend
-              ? 'm-2 flex items-center rounded-full bg-blue-600 p-1 text-white shadow-xl outline-none hover:bg-blue-400'
-              : 'm-2 flex items-center rounded-full bg-gray-300 p-1 text-black shadow-xl outline-none '
+            myFriend !== -1
+              ? 'm-2 flex items-center rounded-full bg-gray-300 p-1 text-black shadow-xl outline-none '
+              : isRequestSent !== -1
+              ? 'm-2 flex items-center rounded-full bg-green-600 p-1 text-white shadow-xl outline-none hover:bg-green-400'
+              : 'm-2 flex items-center rounded-full bg-[#FF8080] p-1 text-white shadow-xl outline-none hover:bg-orange-400'
           }
           onClick={handleRequest}
         >
@@ -93,7 +124,11 @@ function UserCard({ user }: Props) {
             size={20}
           />
           <span className="ml-2 pr-2 text-lg">
-            {isFriend ? 'Already Friends' : 'Add Friend'}
+            {myFriend !== -1
+              ? 'Already Friends'
+              : isRequestSent !== -1
+              ? 'Request Sent'
+              : 'Add Friend'}
           </span>
         </button>
         <button

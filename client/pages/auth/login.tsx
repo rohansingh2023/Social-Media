@@ -42,7 +42,7 @@ function login() {
   }
 
   return (
-    <div className="relative -mt-20 flex h-screen items-center justify-center bg-login bg-cover bg-center bg-no-repeat">
+    <div className="relative -mt-16 flex h-screen items-center justify-center bg-login bg-cover bg-center bg-no-repeat">
       <div
         className="absolute top-1/4 rounded-md
       bg-slate-200 px-5 py-7 font-DMSerif shadow-md"

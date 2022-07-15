@@ -24,7 +24,9 @@ const Layout = ({ children }: any) => {
         <title>Social Media</title>
       </Head>
 
-      <main className="relative top-20 z-0">{children}</main>
+      <main className="relative top-16 z-0 h-screen bg-gray-200">
+        {children}
+      </main>
     </div>
   )
 }
