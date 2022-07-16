@@ -47,7 +47,7 @@ function SearchFriends({ userData }: Props) {
   }
 
   return (
-    <div className="col-span-12 flex max-h-screen flex-1 flex-col overflow-scroll scrollbar-hide lg:col-span-8 lg:border-x xl:col-span-6 ">
+    <div className="col-span-12 flex max-h-[91vh] flex-1 flex-col overflow-scroll scrollbar-hide lg:col-span-8 lg:border-x xl:col-span-6 ">
       <div className="ml-7 mt-5 flex h-16 w-11/12 items-start justify-center rounded-full p-5 shadow-lg">
         <AiOutlineSearch size={30} />
         <input

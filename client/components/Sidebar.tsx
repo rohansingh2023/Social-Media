@@ -6,9 +6,10 @@ import { useStateContext } from '../context/StateContext'
 interface Props {
   isOpen: boolean
   setIsOpen: Dispatch<SetStateAction<boolean>>
+  logout: () => void
 }
 
-const Sidebar = ({ isOpen, setIsOpen }) => {
+const Sidebar = ({ isOpen, setIsOpen, logout }) => {
   const { currentUser } = useStateContext()
   const { user } = currentUser
   const { id } = user || {}
@@ -43,11 +44,14 @@ const Sidebar = ({ isOpen, setIsOpen }) => {
               <p className="ml-3 text-2xl">Profile</p>
             </div>
           </Link>
-          <Link href={'/'}>
-            <div className="m-4 w-full cursor-pointer rounded-md p-2 text-base uppercase transition-all duration-200 ease-in-out hover:bg-gray-500  hover:text-white ">
-              <p className="ml-3 text-2xl">Logout</p>
-            </div>
-          </Link>
+          {/* <Link href={'/'}> */}
+          <div
+            className="m-4 w-full cursor-pointer rounded-md p-2 text-base uppercase transition-all duration-200 ease-in-out hover:bg-gray-500  hover:text-white "
+            onClick={logout}
+          >
+            <p className="ml-3 text-2xl">Logout</p>
+          </div>
+          {/* </Link> */}
         </div>
       </div>
     </div>

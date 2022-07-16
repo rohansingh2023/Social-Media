@@ -78,14 +78,14 @@ function PostInfo({ postData }: Props) {
           <Modal isOpen={isOpen} setIsOpen={setIsOpen} postId={post.posts.id} />
         )}
 
-        <div className="flex h-screen w-screen items-center justify-center scroll-smooth">
-          <div className=" mt-24 flex-col lg:-mt-24 lg:flex lg:h-4/5 lg:w-4/5 lg:flex-row lg:rounded-xl lg:bg-slate-200 lg:shadow-lg">
+        <div className="flex h-screen w-screen items-center justify-center scroll-smooth lg:h-[91vh]">
+          <div className=" lg:h-11/12  flex-col lg:-mt-3 lg:flex lg:w-4/5 lg:flex-row lg:rounded-xl lg:bg-slate-200 lg:shadow-lg">
             {/* left */}
             <div
               className={
                 post.posts.image
-                  ? 'flex flex-[0.6] flex-col  font-Rubik'
-                  : 'flex flex-1 flex-col  font-Rubik'
+                  ? 'flex flex-[0.6] flex-col  font-Inter'
+                  : 'flex flex-1 flex-col  font-Inter'
               }
             >
               <div className="flex-[0.45]  p-6">

@@ -86,7 +86,7 @@ const Feed = ({ postData: posts }: Props) => {
   }
 
   return (
-    <div className="col-span-12 max-h-screen overflow-scroll bg-gray-100 p-3 scrollbar-hide lg:col-span-8 lg:border-x lg:p-5 xl:col-span-6">
+    <div className="col-span-12 max-h-[91vh] overflow-scroll bg-gray-100 p-3 scrollbar-hide lg:col-span-8 lg:border-x lg:p-5 xl:col-span-6">
       <div className="mx-auto max-w-xl">
         <div className="flex items-center justify-between">
           <h1 className="text-3xl font-bold ">Explore</h1>

@@ -62,11 +62,13 @@ const Navbar = () => {
             alt=""
             className="mr-5 h-10 w-10 rounded-full bg-gray-400 object-cover lg:mr-0"
           />
-          <MdMessage
-            color="#111"
-            size={45}
-            className="hidden rounded-full bg-gray-300 p-3 hover:bg-gray-400 lg:inline"
-          />
+          <Link href={`/chat/${id}`}>
+            <MdMessage
+              color="#111"
+              size={45}
+              className="hidden rounded-full bg-gray-300 p-3 hover:bg-gray-400 lg:inline"
+            />
+          </Link>
           <RiLogoutBoxLine
             className="hidden rounded-full bg-gray-300 p-3 hover:bg-gray-400 lg:inline"
             size={45}
@@ -81,7 +83,13 @@ const Navbar = () => {
             onClick={() => setIsOpen(true)}
           />
         </div>
-        {isOpen && <Sidebar isOpen={isOpen} setIsOpen={setIsOpen} />}
+        {isOpen && (
+          <Sidebar
+            isOpen={isOpen}
+            setIsOpen={setIsOpen}
+            logout={handleLogout}
+          />
+        )}
       </div>
     </>
   )

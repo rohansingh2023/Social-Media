@@ -170,6 +170,7 @@ const GET_ONLY_USERS = gql`
       dob
       friends {
         id
+        userId
         name
         email
         profilePic

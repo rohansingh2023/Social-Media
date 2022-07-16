@@ -85,7 +85,7 @@ const Post = ({ post, user, refresh }: Props) => {
 
   return (
     <div>
-      <div className="my-14 mb-5 flex h-auto w-11/12 flex-col rounded-md border border-gray-200 bg-white font-Inter shadow-sm lg:w-full">
+      <div className="mb-5 flex h-auto w-11/12 flex-col rounded-md border border-gray-200 bg-white font-Inter shadow-sm lg:w-full">
         <div className="mt-2 flex items-center justify-between px-4 py-2">
           <Link
             href={user.id === id ? `/profile/${id}` : `/user/${user.id}`}

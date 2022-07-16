@@ -43,6 +43,7 @@ const LOGIN_USER = gql`
         friendRequests {
           id
           email
+          userId
           name
           profilePic
           createdAt
@@ -51,6 +52,7 @@ const LOGIN_USER = gql`
           id
           name
           email
+          userId
           profilePic
           createdAt
         }

@@ -17,7 +17,7 @@ const Rightbar = ({ userData }: IProps) => {
 
   return (
     // <div className="sticky top-20 h-[100vh] w-1/4">
-    <div className="hidden max-h-screen max-w-full overflow-scroll scrollbar-hide lg:col-span-2 lg:inline xl:col-span-3">
+    <div className="hidden max-h-[91vh] max-w-full overflow-scroll scrollbar-hide lg:col-span-2 lg:inline xl:col-span-3">
       <div className="font-Inter lg:flex lg:h-full lg:flex-shrink-0 lg:flex-col lg:items-center">
         <div className="h-50 mx-5 my-5 w-11/12 rounded-xl border border-b-2 border-gray-300 bg-gray-300 bg-pack-train p-3 text-white">
           <p className="ml-3 text-xl font-bold">Tuesday</p>
@@ -41,9 +41,9 @@ const Rightbar = ({ userData }: IProps) => {
           <div className="mt-3 max-h-96 w-full overflow-y-scroll">
             {
               user?.friendRequests.length > 0 ? (
-                user?.friendRequests?.map((u: any) => (
+                user?.friendRequests?.map((u: friendRequests) => (
                   // user.friends?.map((u) => (
-                  <Link href={`/user/${u.id}`}>
+                  <Link href={`/user/${u.userId}`}>
                     <div
                       className="flex cursor-pointer items-center justify-between p-3"
                       key={u.id}
@@ -76,9 +76,9 @@ const Rightbar = ({ userData }: IProps) => {
           <div className="mt-3 max-h-96 w-full overflow-y-scroll">
             {user?.friends.length > 0 ? (
               user?.friends?.map(
-                (u: any) => (
+                (u: friends) => (
                   // user.friends?.map((u) => (
-                  <Link href={`/user/${u.id}`}>
+                  <Link href={`/user/${u.userId}`}>
                     <div
                       className="flex cursor-pointer items-center justify-between rounded-md p-3 hover:bg-gray-200"
                       key={u.id}

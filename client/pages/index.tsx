@@ -5,6 +5,8 @@ import { getOnlyUsers, getOnlyUsersExMe, getPosts, getUsers } from '../services'
 import { authorized } from '../services/auth'
 
 const Index = ({ postData, userData }: any) => {
+  console.log(userData)
+
   return (
     <div className="relative bg-slate-50 font-Segoe">
       <header className="z-50 ">
