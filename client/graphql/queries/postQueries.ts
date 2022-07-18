@@ -11,6 +11,7 @@ const GET_POSTS = gql`
         comments {
           id
           name
+          body
           email
           createdAt
         }

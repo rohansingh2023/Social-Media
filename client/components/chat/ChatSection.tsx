@@ -23,7 +23,7 @@ const ChatSection = ({ isChatOpen, setIsChatOpen }: IProps) => {
             }
           >
             {/* Chat Header */}
-            <div className="flex flex-[0.05] items-center justify-between border-x border-b-2 border-gray-300 bg-white px-3 py-1">
+            {/* <div className="flex flex-[0.05] items-center justify-between border-x border-b-2 border-gray-300 bg-white px-3 py-1">
               <div className="flex items-center">
                 <img
                   src="https://tse3.mm.bing.net/th?id=OIP.zXrPNOOO6yjo5RuG7sKTwAHaLH&pid=Api&P=0&w=120&h=180"
@@ -50,10 +50,10 @@ const ChatSection = ({ isChatOpen, setIsChatOpen }: IProps) => {
                   className="mx-1 rounded-full p-2 hover:bg-gray-200 "
                 />
               </div>
-            </div>
+            </div> */}
 
             {/* Chats */}
-            <div className="flex-[0.85] overflow-y-scroll border-x bg-white">
+            <div className="flex-[0.90] overflow-y-scroll border-x bg-white">
               <div className="flex flex-col items-end">
                 <div className="float-right flex w-1/2 items-start space-x-2 p-2 text-left">
                   <img

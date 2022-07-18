@@ -11,6 +11,7 @@ import { SEND_FRIEND_REQUEST } from '../graphql/mutations/userMutations'
 import toast from 'react-hot-toast'
 import client from '../apollo-client'
 import { GET_USER_BY_ID } from '../graphql/queries/userQueries'
+import { getUserById, getUsers } from '../services'
 
 interface Props {
   user: User
@@ -18,6 +19,7 @@ interface Props {
 
 function UserCard({ user }: Props) {
   const router = useRouter()
+  const [userD, setUserD] = useState<User>(user)
   const [isFriend, setIsFriend] = useState<boolean>(false)
   const [friends, setFriends] = useState<User>()
   const [friendInfo, setFriendInfo] = useState<User>()
@@ -80,6 +82,15 @@ function UserCard({ user }: Props) {
   // console.log(myFriend)
   // console.log(isRequestSent)
 
+  const handleRefresh = async () => {
+    const refreshToast = toast.loading('Refreshing...')
+    const u: User = await getUserById(user.id)
+    setUserD(u)
+    toast.success('Search Section Updated', {
+      id: refreshToast,
+    })
+  }
+
   const handleRequest = async () => {
     try {
       const refresh = toast.loading('Sending friend Request...')
@@ -87,6 +98,7 @@ function UserCard({ user }: Props) {
       toast.success('Request Sent', {
         id: refresh,
       })
+      router.reload()
     } catch (error) {
       toast.error(`${error}`)
       console.log(error)

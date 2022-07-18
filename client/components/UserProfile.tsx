@@ -73,7 +73,7 @@ function UserProfile({ userD, post }: Props) {
             <img
               src={userD.profilePic}
               alt=""
-              className="z-50 -mt-10 ml-14 h-40 w-40 rounded-full object-cover md:ml-10 lg:ml-5"
+              className="z-50 mx-auto -mt-10  h-40 w-40 rounded-full object-cover md:ml-10 lg:ml-5"
             />
             {/* </div> */}
             <div className="relative ml-5 flex flex-1 flex-col ">
@@ -108,36 +108,36 @@ function UserProfile({ userD, post }: Props) {
       <div className={userPosts.length > 0 ? 'p-5' : 'mt-10 p-5'}>
         <hr className="mt-10 border bg-black" />
       </div>
-      <div className="mx-auto max-w-3xl">
-        {userData?.friends?.length > 0 && (
-          <div className="mx-auto flex w-11/12 flex-col bg-slate-100 p-5">
-            <h1 className="text-2xl font-bold">FriendsList</h1>
-            <div className="mt-2 max-h-40 w-96 overflow-y-scroll rounded-md bg-white p-3">
-              {userD.friends.map((u) => (
-                <FriendCard user={u} key={u.email} refresh={handleRefresh} />
+      <div className="mx-auto max-w-xl">
+        {userData?.friends.length > 0 && (
+          <div className="m-5 w-[90%] rounded-md bg-white p-3">
+            <h1 className="text-xl font-bold">Friends</h1>
+            <div className="mt-3">
+              {userData?.friends?.map((f) => (
+                <FriendCard user={f} key={f.id} refresh={handleRefresh} />
               ))}
             </div>
           </div>
         )}
-        {userData?.friendRequests?.length > 0 && (
-          <div className="mx-auto mt-3 flex w-11/12 flex-col bg-slate-100 p-5">
-            <h1 className="text-2xl font-bold">FriendsRequests</h1>
-            <div className="mt-2 ml-32 max-h-40 max-w-sm overflow-y-scroll rounded-md bg-white p-3">
-              {userD.friendRequests.map((u) => (
-                // <Link href={`/user/${u.id}`}>
+
+        {userData?.friendRequests.length > 0 && (
+          <div className="m-5 w-[90%] rounded-md bg-white p-3">
+            <h1 className="text-xl font-bold">Friend Requests</h1>
+            <div className="mt-3">
+              {userData?.friendRequests?.map((u) => (
                 <div className="mt-2 flex cursor-pointer items-center rounded-sm py-2 px-2 hover:bg-gray-200">
                   <img
                     src={u.profilePic}
                     alt=""
                     className="h-7 w-7 rounded-full object-fill"
                   />
-                  <h1 className="ml-3 font-thin text-gray-700">{u.name}</h1>
+                  <h1 className="ml-3 text-base text-gray-500">{u.name}</h1>
                 </div>
-                // </Link>
               ))}
             </div>
           </div>
         )}
+
         {/* <div className="flex flex-col items-center lg:p-5"> */}
         {userPosts.length > 0 ? (
           userPosts?.map((post: { user: User; posts: Post }) => (

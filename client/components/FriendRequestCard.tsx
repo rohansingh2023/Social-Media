@@ -4,6 +4,8 @@ import { useMutation } from '@apollo/client'
 import { ACCEPT_FRIEND_REQUEST } from '../graphql/mutations/userMutations'
 import toast from 'react-hot-toast'
 import { useStateContext } from '../context/StateContext'
+import Link from 'next/link'
+import { useRouter } from 'next/router'
 
 interface Props {
   user: friendRequests
@@ -13,6 +15,7 @@ interface Props {
 const FriendRequestCard = ({ user, refresh }: Props) => {
   const { currentUser } = useStateContext()
   const { token } = currentUser || {}
+  const router = useRouter()
 
   const [acceptFriendRequest] = useMutation(ACCEPT_FRIEND_REQUEST, {
     variables: {
@@ -25,11 +28,14 @@ const FriendRequestCard = ({ user, refresh }: Props) => {
     },
   })
 
+  console.log(user)
+
   const handleRequest = async () => {
     try {
       await acceptFriendRequest()
       toast.success(`${user.name}'s friend Request accepted Successfully!!`)
-      await refresh()
+      // await refresh()
+      router.reload()
     } catch (error) {
       toast.error(`${error}`)
       console.log(error)
@@ -64,9 +70,11 @@ const FriendRequestCard = ({ user, refresh }: Props) => {
           >
             Accept
           </button>
-          <button className="m-2 flex flex-1 items-center justify-center rounded-lg bg-purple-600 px-2 py-1 text-white hover:bg-purple-400 md:px-4 md:py-2 ">
-            View
-          </button>
+          <Link href={`/user/${user.userId}`}>
+            <button className="m-2 flex flex-1 items-center justify-center rounded-lg bg-purple-600 px-2 py-1 text-white hover:bg-purple-400 md:px-4 md:py-2 ">
+              View
+            </button>
+          </Link>
           <button className="m-2 flex flex-1 items-center justify-center rounded-lg bg-red-600 px-2 py-1 text-white hover:bg-red-400 md:px-4 md:py-2">
             Decline
           </button>

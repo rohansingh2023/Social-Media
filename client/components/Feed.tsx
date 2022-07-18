@@ -95,14 +95,14 @@ const Feed = ({ postData: posts }: Props) => {
             className="mr-5 mt-5 h-8 w-8 cursor-pointer text-[#FF8080] transition-all duration-500 ease-out hover:rotate-180 active:scale-125"
           />
         </div>
-        <div className="mt-3 flex flex-1 items-center justify-center space-x-2 lg:mt-0 lg:p-5">
+        <div className="mt-3 flex items-center justify-center space-x-0 lg:mt-0 lg:flex-1 lg:space-x-2 lg:p-5 ">
           <img
             src={profilePic}
             alt=""
-            className="mt-14 h-14 w-14 rounded-full object-cover"
+            className="mt-14 hidden h-14 w-14 rounded-full object-cover lg:inline"
           />
-          <div className="flex flex-1 items-center">
-            <div className=" flex flex-1 flex-shrink-0 flex-col rounded-lg bg-white ">
+          <div className=" flex items-center lg:flex-1">
+            <div className="flex flex-col rounded-lg bg-white lg:flex-1 ">
               <input
                 className="w-full bg-white p-3 placeholder-black outline-none"
                 placeholder="Share your Knowledge"
@@ -131,7 +131,7 @@ const Feed = ({ postData: posts }: Props) => {
             </div>
           </div>
         </div>
-        <div className="mx-auto ml-12 flex flex-col items-center justify-center px-3 lg:ml-0">
+        <div className=" mt-5 flex flex-col items-center justify-center px-3 lg:ml-0">
           {postData.length > 0 ? (
             postData?.map((post: any, i: any) => (
               <Post

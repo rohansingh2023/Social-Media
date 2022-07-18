@@ -216,6 +216,7 @@ const GET_FRIEND_REQUESTS = gql`
         friendRequests {
           id
           name
+          userId
           email
           profilePic
           createdAt
