@@ -8,6 +8,7 @@ import { MdArrowDropDown, MdMessage } from 'react-icons/md'
 import { useRouter } from 'next/router'
 import { toast } from 'react-toastify'
 import { IoIosPersonAdd } from 'react-icons/io'
+import { socket } from '../socket'
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false)
@@ -22,9 +23,13 @@ const Navbar = () => {
     router.replace('/auth/login')
   }
 
+  const joinChat = (e: React.MouseEvent<SVGElement, MouseEvent>) => {
+    socket.emit('join_chat')
+  }
+
   return (
     <>
-      <div className="fixed left-0 top-0 z-50 grid w-screen grid-cols-12 items-center justify-between border-b-2 bg-white py-2 px-5 font-DMSerif text-white">
+      <div className="fixed left-0 top-0 z-50 grid w-screen grid-cols-12 items-center justify-between border-b-2 bg-white py-2 px-2 font-DMSerif text-white lg:px-5">
         <div className="col-span-6 flex flex-1 items-start justify-start lg:col-span-3 lg:items-center lg:justify-around">
           <Link href={'/'} passHref>
             <img
@@ -38,7 +43,8 @@ const Navbar = () => {
           </Link>
           <input
             placeholder="Search Posts"
-            className="lg:w-200 hidden lg:ml-5 lg:flex lg:flex-1 lg:rounded-lg lg:border-0 lg:bg-slate-200  lg:p-2 lg:text-black lg:placeholder-slate-400 lg:outline-none"
+            // className="lg:w-200 hidden lg:ml-5 lg:flex lg:flex-1 lg:rounded-lg lg:border-0 lg:bg-slate-200  lg:p-2 lg:text-black lg:placeholder-slate-400 lg:outline-none"
+            className="w-200 ml-1 flex flex-1 rounded-lg border-0 bg-slate-200 p-2  text-black placeholder-slate-400 outline-none lg:ml-5"
           />
         </div>
         <div className="hidden flex-1 items-center justify-center lg:col-span-7 lg:inline-flex">
@@ -55,7 +61,7 @@ const Navbar = () => {
             <FaFortAwesomeAlt className="mr-20" size={35} color="#FF8080" />
           </Link>
         </div>
-        <div className="col-span-6 mr-1 flex flex-1 items-center justify-end lg:col-span-2 lg:mr-10 lg:justify-between">
+        <div className="col-span-6 mr-0 flex flex-1 items-center justify-end lg:col-span-2 lg:mr-10 lg:justify-between">
           {/* <div className="flex items-center"> */}
           <img
             src={user?.profilePic}
@@ -67,6 +73,7 @@ const Navbar = () => {
               color="#111"
               size={45}
               className="hidden rounded-full bg-gray-300 p-3 hover:bg-gray-400 lg:inline"
+              onClick={joinChat}
             />
           </Link>
           <RiLogoutBoxLine

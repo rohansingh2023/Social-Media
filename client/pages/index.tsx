@@ -3,9 +3,14 @@ import React from 'react'
 import { Feed, Leftbar, Navbar, Rightbar } from '../components'
 import { getOnlyUsers, getOnlyUsersExMe, getPosts, getUsers } from '../services'
 import { authorized } from '../services/auth'
+import { socket } from '../socket'
 
 const Index = ({ postData, userData }: any) => {
   console.log(userData)
+
+  socket.on('friend_request', (data) => {
+    console.log(data)
+  })
 
   return (
     <div className="relative bg-slate-50 font-Segoe">

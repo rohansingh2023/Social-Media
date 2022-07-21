@@ -167,4 +167,15 @@ export default {
       throw new Error("Error getting posts");
     }
   },
+  getConversations: async (_: any, { id }: any, { models }: any) => {
+    try {
+      const conversation = await models.Conversation.find({
+        $in: id,
+      });
+      return conversation;
+    } catch (error) {
+      console.log(error);
+      throw new Error("Error getting conversations");
+    }
+  },
 };

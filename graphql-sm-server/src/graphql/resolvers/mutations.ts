@@ -288,4 +288,21 @@ export default {
       throw new Error("Error in unfriending");
     }
   },
+
+  createConversation: async (
+    _: any,
+    { sender, receiver }: any,
+    { models }: any
+  ) => {
+    const conv = new models.Conversation({
+      members: [{ sender, receiver }],
+    });
+    try {
+      const saveConv = await conv.save();
+      return saveConv;
+    } catch (error) {
+      console.log(error);
+      throw new Error("Error in creating conversation");
+    }
+  },
 };

@@ -131,7 +131,7 @@ const Feed = ({ postData: posts }: Props) => {
             </div>
           </div>
         </div>
-        <div className=" mt-5 flex flex-col items-center justify-center px-3 lg:ml-0">
+        <div className="mt-5 flex flex-1 flex-col items-center justify-center px-3 lg:ml-0">
           {postData.length > 0 ? (
             postData?.map((post: any, i: any) => (
               <Post

@@ -1,5 +1,6 @@
 import { GraphQLClient, request } from 'graphql-request'
 import { useEffect, useState } from 'react'
+import { GET_CONVERSATIONS_OF_A_USER } from '../graphql/queries/convQueries'
 import {
   GET_POSTS,
   GET_POSTS_BY_USER_ID,
@@ -79,4 +80,11 @@ export const searchUsers = async (searchTerm: any) => {
 export const getFriendRequests = async (id: any) => {
   const results = await request(GRAPHQL_ENDPOINT, GET_FRIEND_REQUESTS, { id })
   return results.userById.user.friendRequests
+}
+
+export const getConversationsOfAUser = async (id: any) => {
+  const results = await request(GRAPHQL_ENDPOINT, GET_CONVERSATIONS_OF_A_USER, {
+    id,
+  })
+  return results.getConversations
 }

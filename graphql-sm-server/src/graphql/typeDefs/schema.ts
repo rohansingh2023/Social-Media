@@ -27,6 +27,17 @@ const typeDefs = gql`
     # posts: [Post]
   }
 
+  type Conversation {
+    id: ID!
+    members: [member]!
+    createdAt: String!
+  }
+
+  type member {
+    sender: String!
+    receiver: String!
+  }
+
   type AuthData {
     token: String
     user: User
@@ -96,6 +107,7 @@ const typeDefs = gql`
     onlyUsersExcludingMe: [User!]!
     usersExcludingMe: [UserData!]!
     onlyMyFriendsPost(id: ID!): [AllPostData]
+    getConversations(id: ID!): [Conversation]!
   }
 
   type Mutation {
@@ -117,6 +129,7 @@ const typeDefs = gql`
     friendRequest(id: ID!): User!
     acceptFriendRequest(email: String!): User!
     unFriend(email: String!): User!
+    createConversation(sender: String!, receiver: String!): Conversation!
   }
 `;
 

@@ -2,14 +2,25 @@ import React, { Dispatch, SetStateAction } from 'react'
 import { FiMoreHorizontal } from 'react-icons/fi'
 import { AiOutlineSearch } from 'react-icons/ai'
 import ChatListCard from './ChatListCard'
+import Loading from '../Loading'
 
 interface IProps {
   user: User
   isChatOpen: boolean
   setIsChatOpen: Dispatch<SetStateAction<boolean>>
+  conversations: Conversation[]
 }
 
-const ChatSidebar = ({ user, isChatOpen, setIsChatOpen }: IProps) => {
+const ChatSidebar = ({
+  user,
+  isChatOpen,
+  setIsChatOpen,
+  conversations,
+}: IProps) => {
+  if (!conversations) {
+    return <Loading />
+  }
+
   return (
     <div
       className={
@@ -40,8 +51,8 @@ const ChatSidebar = ({ user, isChatOpen, setIsChatOpen }: IProps) => {
 
       {/* Chat List */}
       <div className="h-[77vh] cursor-pointer overflow-y-scroll py-2">
-        {user?.friends?.map((u) => (
-          <ChatListCard key={u.id} user={u} setIsChatOpen={setIsChatOpen} />
+        {conversations?.map((u) => (
+          <ChatListCard key={u.id} conv={u} setIsChatOpen={setIsChatOpen} />
         ))}
       </div>
     </div>

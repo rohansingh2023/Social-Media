@@ -19,6 +19,12 @@ type Post = {
   likes: likes[]
 }
 
+type Conversation = {
+  id: string
+  members: any[]
+  createdAt: string
+}
+
 type friendRequests = {
   id: string
   userId: string
@@ -48,4 +54,10 @@ type comment = {
 type likes = {
   id: string
   createdAt: string
+}
+
+type member = {
+  [x: string]: any
+  sender: string
+  receiver: string
 }

@@ -12,6 +12,7 @@ import toast from 'react-hot-toast'
 import client from '../apollo-client'
 import { GET_USER_BY_ID } from '../graphql/queries/userQueries'
 import { getUserById, getUsers } from '../services'
+import { socket } from '../socket'
 
 interface Props {
   user: User
@@ -92,6 +93,16 @@ function UserCard({ user }: Props) {
   }
 
   const handleRequest = async () => {
+    socket.emit('sent_request', {
+      cUser: {
+        name: u?.name,
+        id: u?.id,
+        img: u?.profilePic,
+      },
+      name: user.name,
+      id: user.id,
+    })
+
     try {
       const refresh = toast.loading('Sending friend Request...')
       await friendRequest()

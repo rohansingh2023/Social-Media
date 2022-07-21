@@ -58,12 +58,14 @@ const Leftbar = () => {
             </p>
           </div>
         </Link>
-        <div className="mb-4 flex w-full items-center justify-start rounded-xl py-2 px-1 hover:bg-gray-200">
-          <MdQuestionAnswer size={35} />
-          <p className="ml-4 cursor-pointer text-base  font-semibold">
-            Messenger
-          </p>
-        </div>
+        <Link href={`/chat/${id}`}>
+          <div className="mb-4 flex w-full items-center justify-start rounded-xl py-2 px-1 hover:bg-gray-200">
+            <MdQuestionAnswer size={35} />
+            <p className="ml-4 cursor-pointer text-base  font-semibold">
+              Messenger
+            </p>
+          </div>
+        </Link>
       </div>
     </div>
   )

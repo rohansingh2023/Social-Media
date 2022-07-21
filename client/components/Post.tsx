@@ -6,7 +6,11 @@ import moment from 'moment'
 import Link from 'next/link'
 import { useStateContext } from '../context/StateContext'
 import { useMutation } from '@apollo/client'
-import { DELETE_POST, LIKE_POST } from '../graphql/mutations/postMutations'
+import {
+  ADD_COMMENT,
+  DELETE_POST,
+  LIKE_POST,
+} from '../graphql/mutations/postMutations'
 import { GET_POSTS } from '../graphql/queries/postQueries'
 import toast from 'react-hot-toast'
 import { useRouter } from 'next/router'
@@ -20,6 +24,7 @@ type Props = {
 
 const Post = ({ post, user, refresh }: Props) => {
   const [isOpen, setIsOpen] = useState<boolean>(false)
+  const [body, setBody] = useState<string>('')
   const route = useRouter()
   const { currentUser } = useStateContext()
   const { user: cUser, token } = currentUser || {}
@@ -46,18 +51,18 @@ const Post = ({ post, user, refresh }: Props) => {
         Authorization: `${token}`,
       },
     },
-    // refetchQueries: [{ query: GET_POSTS }],
-    // update(cache, { data: { deletePost } }) {
-    //   const { posts }: any = cache.readQuery({
-    //     query: GET_POSTS,
-    //   })
-    //   cache.writeQuery({
-    //     query: GET_POSTS,
-    //     data: {
-    //       posts: posts.filter((p: any) => p.id !== deletePost.id),
-    //     },
-    //   })
-    // },
+  })
+
+  const [addComment] = useMutation(ADD_COMMENT, {
+    variables: {
+      postId: post.id,
+      body: body,
+    },
+    context: {
+      headers: {
+        Authorization: `${token}`,
+      },
+    },
   })
 
   const handleLike = async () => {
@@ -81,6 +86,22 @@ const Post = ({ post, user, refresh }: Props) => {
     } catch (error) {
       toast.error(`${error}`)
       console.log(error)
+    }
+  }
+
+  const handleComment = async (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter') {
+      e.preventDefault()
+      e.stopPropagation()
+      try {
+        await addComment()
+        toast.success('Comment added successfully')
+        await refresh()
+        setBody('')
+      } catch (error) {
+        toast.error(`${error}`)
+        console.log(error)
+      }
     }
   }
 
@@ -176,14 +197,20 @@ const Post = ({ post, user, refresh }: Props) => {
                 alt=""
                 className="h-10 w-10 rounded-full"
               />
-              <input
-                type="text"
-                placeholder="Comment..."
-                className="flex-1 rounded-full bg-gray-200 px-4 py-2 outline-none "
-              />
+              <div className="flex flex-1 flex-col">
+                <input
+                  type="text"
+                  placeholder="Comment..."
+                  className="flex-1 rounded-full bg-gray-200 px-4 py-2 outline-none "
+                  value={body}
+                  onChange={(e) => setBody(e.target.value)}
+                  onKeyPress={handleComment}
+                />
+                <p className="text-xs">Press enter to add comment</p>
+              </div>
             </div>
             {post?.comments.length > 0 && (
-              <div className="mt-3 ">
+              <div className="mt-3 max-h-52 overflow-y-scroll">
                 {post?.comments?.map((c) => (
                   <div
                     className="flex items-start space-x-2 py-3 px-5"
