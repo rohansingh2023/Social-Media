@@ -14,8 +14,6 @@ interface IProps {
 }
 
 const Chat = ({ userData: { user, posts, conv } }: IProps) => {
-  console.log(conv)
-
   return (
     <div>
       <Navbar />

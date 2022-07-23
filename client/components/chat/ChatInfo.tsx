@@ -1,22 +1,23 @@
+import axios from 'axios'
 import React from 'react'
-import ChatListCard from './ChatListCard'
+import { useStateContext } from '../../context/StateContext'
+import ChatInfoCard from './ChatInfoCard'
 
-const ChatInfo = () => {
+interface IProps {
+  user: User
+  conv: Conversation[]
+}
+
+const ChatInfo = ({ user, conv }: IProps) => {
   return (
-    <div className="hidden max-h-[91vh] bg-white lg:col-span-2 lg:inline">
+    <div className="hidden max-h-[91vh] bg-white md:col-span-3 md:inline">
       <div className=" px-3 py-2 font-Inter">
         <h1 className="text-2xl font-bold">Active Users</h1>
       </div>
-      <div className="max-h-[83vh] overflow-y-scroll scrollbar-hide">
-        <ChatListCard />
-        <ChatListCard />
-        <ChatListCard />
-        <ChatListCard />
-        <ChatListCard />
-        <ChatListCard />
-        <ChatListCard />
-        <ChatListCard />
-        <ChatListCard />
+      <div className="max-h-[83vh] cursor-pointer overflow-y-scroll scrollbar-hide">
+        {user.friends.map((u) => (
+          <ChatInfoCard key={u.id} friendInfo={u} />
+        ))}
       </div>
     </div>
   )

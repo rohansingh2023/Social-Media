@@ -2,13 +2,15 @@ import React, { Dispatch, SetStateAction, useEffect, useState } from 'react'
 import client from '../../apollo-client'
 import { useStateContext } from '../../context/StateContext'
 import { GET_USER_BY_ID } from '../../graphql/queries/userQueries'
+import { socket } from '../../socket'
 
 interface IProps {
   conv: Conversation
   setIsChatOpen: Dispatch<SetStateAction<boolean>>
+  setCurrentChat: Dispatch<any>
 }
 
-const ChatListCard = ({ setIsChatOpen, conv }: IProps) => {
+const ChatListCard = ({ setIsChatOpen, conv, setCurrentChat }: IProps) => {
   const { currentUser } = useStateContext()
   const [convChats, setConvChats] = useState<User>()
 
@@ -29,10 +31,18 @@ const ChatListCard = ({ setIsChatOpen, conv }: IProps) => {
     getUser()
   }, [currentUser, conv])
 
+  const setCreds = () => {
+    setIsChatOpen(true)
+    setCurrentChat(conv)
+    socket.emit('addUser', { room: conv?._id })
+  }
+
+  console.log(conv?._id)
+
   return (
     <div
       className="m-3 flex flex-1 items-center rounded-md p-2 font-Inter hover:bg-gray-100"
-      onClick={() => setIsChatOpen(true)}
+      onClick={setCreds}
     >
       <img
         src={convChats?.profilePic}

@@ -20,7 +20,7 @@ type Post = {
 }
 
 type Conversation = {
-  id: string
+  _id: string
   members: any[]
   createdAt: string
 }
@@ -60,4 +60,12 @@ type member = {
   [x: string]: any
   sender: string
   receiver: string
+}
+
+type Message = {
+  _id: string
+  conversationId: string
+  sender: string
+  text: string
+  createdAt: string
 }

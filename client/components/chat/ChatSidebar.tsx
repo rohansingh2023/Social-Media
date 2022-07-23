@@ -1,14 +1,18 @@
-import React, { Dispatch, SetStateAction } from 'react'
+import React, { Dispatch, SetStateAction, useState } from 'react'
 import { FiMoreHorizontal } from 'react-icons/fi'
 import { AiOutlineSearch } from 'react-icons/ai'
 import ChatListCard from './ChatListCard'
 import Loading from '../Loading'
-
+import { RefreshIcon } from '@heroicons/react/outline'
+import toast from 'react-hot-toast'
+import axios from 'axios'
 interface IProps {
   user: User
   isChatOpen: boolean
   setIsChatOpen: Dispatch<SetStateAction<boolean>>
   conversations: Conversation[]
+  currentChat: Conversation | undefined
+  setCurrentChat: Dispatch<any>
 }
 
 const ChatSidebar = ({
@@ -16,7 +20,26 @@ const ChatSidebar = ({
   isChatOpen,
   setIsChatOpen,
   conversations,
+  setCurrentChat,
 }: IProps) => {
+  const [convs, setConvs] = useState<Conversation[]>(conversations)
+
+  const handleRefresh = async () => {
+    try {
+      const refreshToast = toast.loading('Refreshing...')
+      const res = await axios.get(
+        `http://localhost:3001/api/conversation/${user.id}`
+      )
+      setConvs(res.data)
+      toast.success('ChatList Updated', {
+        id: refreshToast,
+      })
+    } catch (error) {
+      toast.error(`${error}`)
+      console.log(error)
+    }
+  }
+
   if (!conversations) {
     return <Loading />
   }
@@ -26,16 +49,15 @@ const ChatSidebar = ({
       className={
         isChatOpen
           ? 'hidden bg-white font-Inter md:col-span-3 md:inline'
-          : 'col-span-10 bg-white font-Inter md:col-span-3'
+          : 'col-span-12 bg-white font-Inter md:col-span-3'
       }
     >
       {/* Chat header */}
       <div className="flex items-center justify-between px-3 py-2">
         <h1 className="text-2xl font-bold">Chats</h1>
-        <FiMoreHorizontal
-          size={30}
-          color="gray"
-          className="rounded-full p-1 hover:bg-gray-300"
+        <RefreshIcon
+          onClick={handleRefresh}
+          className="mr-5 h-6 w-6 cursor-pointer text-[#FF8080] transition-all duration-500 ease-out hover:rotate-180 active:scale-125"
         />
       </div>
 
@@ -51,8 +73,13 @@ const ChatSidebar = ({
 
       {/* Chat List */}
       <div className="h-[77vh] cursor-pointer overflow-y-scroll py-2">
-        {conversations?.map((u) => (
-          <ChatListCard key={u.id} conv={u} setIsChatOpen={setIsChatOpen} />
+        {convs?.map((u) => (
+          <ChatListCard
+            key={u._id}
+            conv={u}
+            setIsChatOpen={setIsChatOpen}
+            setCurrentChat={setCurrentChat}
+          />
         ))}
       </div>
     </div>

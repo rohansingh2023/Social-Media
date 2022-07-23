@@ -15,5 +15,5 @@ app.use("/api/conversation", convRoute);
 app.use("/api/message", messageRoute);
 
 app.listen(3001, () => {
-  console.log("Chat Server running at port 6000");
+  console.log("Chat Server running at port 3001");
 });

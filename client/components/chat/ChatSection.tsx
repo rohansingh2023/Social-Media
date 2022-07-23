@@ -1,16 +1,116 @@
-import React, { Dispatch, SetStateAction } from 'react'
+import React, {
+  Dispatch,
+  SetStateAction,
+  useEffect,
+  useRef,
+  useState,
+} from 'react'
 import { IoCall } from 'react-icons/io5'
 import { BsFillCameraVideoFill } from 'react-icons/bs'
 import { AiOutlineMore } from 'react-icons/ai'
 import { RiSendPlaneFill } from 'react-icons/ri'
 import { IoMdPhotos } from 'react-icons/io'
+import axios from 'axios'
+import { useStateContext } from '../../context/StateContext'
+import MessageCard from './MessageCard'
+import Loading from '../Loading'
+import { socket } from '../../socket'
 
 interface IProps {
   isChatOpen: boolean
   setIsChatOpen: Dispatch<SetStateAction<boolean>>
+  currentChat: Conversation | undefined
+  setCurrentChat: Dispatch<any>
 }
 
-const ChatSection = ({ isChatOpen, setIsChatOpen }: IProps) => {
+const ChatSection = ({ isChatOpen, setIsChatOpen, currentChat }: IProps) => {
+  const [messages, setMessages] = useState<Message[]>([])
+  const [msgInput, setMsgInput] = useState<string>('')
+  const [arrivalMessage, setArrivalMessage] = useState<{
+    sender: any
+    text: any
+    createdAt: number
+  }>({
+    sender: '',
+    text: '',
+    createdAt: 0,
+  })
+  const { currentUser } = useStateContext()
+  const scrollRef = useRef<null | HTMLDivElement>(null)
+
+  useEffect(() => {
+    socket.on('getMessage', (data) => {
+      setMessages((prev) => [...prev, data])
+    })
+  }, [socket])
+
+  useEffect(() => {
+    socket.emit('addUser', currentUser?.user?.id)
+  }, [currentUser?.user?.id, socket])
+
+  useEffect(() => {
+    const getMessages = async () => {
+      try {
+        const res = await axios.get(
+          `http://localhost:3001/api/message/${currentChat?._id}`
+        )
+        setMessages(res.data)
+      } catch (error) {
+        console.log(error)
+      }
+    }
+    getMessages()
+  }, [currentChat])
+
+  const receiverId = currentChat?.members.find(
+    (m) => m !== currentUser?.user?.id
+  )
+
+  const handleMessage = async (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter') {
+      e.preventDefault()
+      e.stopPropagation
+      try {
+        const message = {
+          conversationId: currentChat?._id,
+          sender: currentUser?.user?.id,
+          text: msgInput,
+        }
+
+        const receiverId = currentChat?.members.find(
+          (m) => m !== currentUser?.user?.id
+        )
+
+        await socket.emit('sendMessage', {
+          conversationId: currentChat?._id,
+          sender: currentUser?.user?.id,
+          receiverId,
+          text: msgInput,
+          createdAt: Date.now(),
+        })
+
+        const res = await axios.post(
+          'http://localhost:3001/api/message/',
+          message
+        )
+        setMessages([...messages, res.data])
+        setMsgInput('')
+      } catch (error) {}
+    }
+  }
+
+  useEffect(() => {
+    scrollRef.current?.scrollIntoView({ behavior: 'smooth' })
+  }, [messages])
+
+  if (!messages) {
+    return <Loading />
+  }
+
+  const socketTest = () => {
+    socket.emit('test', { message: 'Hello' })
+  }
+
   return (
     <>
       {isChatOpen ? (
@@ -18,8 +118,8 @@ const ChatSection = ({ isChatOpen, setIsChatOpen }: IProps) => {
           <div
             className={
               isChatOpen
-                ? 'col-span-10 flex max-h-[91vh] flex-col font-Inter transition-all duration-300 ease-in-out md:col-span-5'
-                : 'hidden max-h-[91vh] flex-col font-Inter transition-all duration-300 ease-in-out md:col-span-5 md:inline-flex'
+                ? 'col-span-12 flex max-h-[91vh] flex-col font-Inter transition-all duration-300 ease-in-out md:col-span-6'
+                : 'hidden max-h-[91vh] flex-col font-Inter transition-all duration-300 ease-in-out md:col-span-6 md:inline-flex'
             }
           >
             {/* Chat Header */}
@@ -54,120 +154,15 @@ const ChatSection = ({ isChatOpen, setIsChatOpen }: IProps) => {
 
             {/* Chats */}
             <div className="flex-[0.90] overflow-y-scroll border-x bg-white">
-              <div className="flex flex-col items-end">
-                <div className="float-right flex w-1/2 items-start space-x-2 p-2 text-left">
-                  <img
-                    src="https://tse3.mm.bing.net/th?id=OIP.zXrPNOOO6yjo5RuG7sKTwAHaLH&pid=Api&P=0&w=120&h=180"
-                    alt=""
-                    className="h-10 w-10 flex-[0.12] rounded-full object-cover"
+              {messages?.map((m) => (
+                <div ref={scrollRef}>
+                  <MessageCard
+                    key={m._id}
+                    message={m}
+                    receiverId={receiverId}
                   />
-                  <div className="flex-[0.88]">
-                    <p className="rounded-r-md rounded-b-md bg-[#FF8080] p-2 text-white">
-                      Lorem ipsum dolor sit amet consectetur, adipisicing elit.
-                      Fuga voluptatem tempore alias ducimus quod neque sed
-                      quaerat dolore. Maxime, minus!
-                    </p>
-                    <p className="text-sm font-light text-gray-500">
-                      2 min ago
-                    </p>
-                  </div>
                 </div>
-              </div>
-              <div className="flex flex-col items-end">
-                <div className="float-right flex w-1/2 items-start space-x-2 p-2 text-left">
-                  <img
-                    src="https://tse3.mm.bing.net/th?id=OIP.zXrPNOOO6yjo5RuG7sKTwAHaLH&pid=Api&P=0&w=120&h=180"
-                    alt=""
-                    className="h-10 w-10 flex-[0.12] rounded-full object-cover"
-                  />
-                  <div className="flex-[0.88]">
-                    <p className="rounded-r-md rounded-b-md bg-[#FF8080] p-2 text-white">
-                      Lorem ipsum dolor sit amet consectetur, adipisicing elit.
-                      Fuga voluptatem tempore alias ducimus quod neque sed
-                      quaerat dolore. Maxime, minus!
-                    </p>
-                    <p className="text-sm font-light text-gray-500">
-                      2 min ago
-                    </p>
-                  </div>
-                </div>
-              </div>
-              <div className="flex flex-col items-start">
-                <div className="float-right flex w-1/2 items-start space-x-2 p-2 text-left">
-                  <img
-                    src="https://tse3.mm.bing.net/th?id=OIP.zXrPNOOO6yjo5RuG7sKTwAHaLH&pid=Api&P=0&w=120&h=180"
-                    alt=""
-                    className="h-10 w-10 flex-[0.12] rounded-full object-cover"
-                  />
-                  <div className="flex-[0.88]">
-                    <p className="rounded-r-md rounded-b-md bg-gray-200 p-2 text-left">
-                      Lorem ipsum dolor sit amet consectetur, adipisicing elit.
-                      Fuga voluptatem tempore alias ducimus quod neque sed
-                      quaerat dolore. Maxime, minus!
-                    </p>
-                    <p className="text-sm font-light text-gray-500">
-                      2 min ago
-                    </p>
-                  </div>
-                </div>
-              </div>
-              <div className="flex flex-col items-end">
-                <div className="float-right flex w-1/2 items-start space-x-2 p-2 text-left">
-                  <img
-                    src="https://tse3.mm.bing.net/th?id=OIP.zXrPNOOO6yjo5RuG7sKTwAHaLH&pid=Api&P=0&w=120&h=180"
-                    alt=""
-                    className="h-10 w-10 flex-[0.12] rounded-full object-cover"
-                  />
-                  <div className="flex-[0.88]">
-                    <p className="rounded-r-md rounded-b-md bg-[#FF8080] p-2 text-white">
-                      Lorem ipsum dolor sit amet consectetur, adipisicing elit.
-                      Fuga voluptatem tempore alias ducimus quod neque sed
-                      quaerat dolore. Maxime, minus!
-                    </p>
-                    <p className="text-sm font-light text-gray-500">
-                      2 min ago
-                    </p>
-                  </div>
-                </div>
-              </div>
-              <div className="flex flex-col items-start">
-                <div className="float-right flex w-1/2 items-start space-x-2 p-2 text-left">
-                  <img
-                    src="https://tse3.mm.bing.net/th?id=OIP.zXrPNOOO6yjo5RuG7sKTwAHaLH&pid=Api&P=0&w=120&h=180"
-                    alt=""
-                    className="h-10 w-10 flex-[0.12] rounded-full object-cover"
-                  />
-                  <div className="flex-[0.88]">
-                    <p className="rounded-r-md rounded-b-md bg-gray-200 p-2 text-left">
-                      Lorem ipsum dolor sit amet consectetur, adipisicing elit.
-                      Fuga voluptatem tempore alias ducimus quod neque sed
-                      quaerat dolore. Maxime, minus!
-                    </p>
-                    <p className="text-sm font-light text-gray-500">
-                      2 min ago
-                    </p>
-                  </div>
-                </div>
-              </div>
-              <div className="flex flex-col items-start">
-                <div className="float-right flex w-1/2 items-start space-x-2 p-2 text-left">
-                  <img
-                    src="https://tse3.mm.bing.net/th?id=OIP.zXrPNOOO6yjo5RuG7sKTwAHaLH&pid=Api&P=0&w=120&h=180"
-                    alt=""
-                    className="h-10 w-10 flex-[0.12] rounded-full object-cover"
-                  />
-                  <div className="flex-[0.88]">
-                    <p className="rounded-r-md rounded-b-md bg-gray-200 p-2 text-left">
-                      Lorem ipsum dolor sit amet consectetur, adipisicing elit.
-                      Fuga voluptatem tempore alias ducimus quod neque sed
-                      quaerat dolore. Maxime, minus!
-                    </p>
-                    <p className="text-sm font-light text-gray-500">
-                      2 min ago
-                    </p>
-                  </div>
-                </div>
-              </div>
+              ))}
             </div>
 
             {/* Chat Footer */}
@@ -177,10 +172,14 @@ const ChatSection = ({ isChatOpen, setIsChatOpen }: IProps) => {
                 type="text"
                 placeholder="Type your message.."
                 className="mx-3 flex-1 rounded-full bg-gray-200 p-2 outline-none"
+                value={msgInput}
+                onChange={(e) => setMsgInput(e.target.value)}
+                onKeyPress={handleMessage}
               />
               <RiSendPlaneFill
                 size={40}
                 color="#FF8080"
+                onClick={socketTest}
                 className="mr-2 rounded-full bg-gray-300 p-2 hover:bg-gray-400"
               />
             </div>

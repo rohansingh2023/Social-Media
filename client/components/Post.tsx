@@ -121,15 +121,20 @@ const Post = ({ post, user, refresh }: Props) => {
                 alt=""
                 className="h-10 w-10 rounded-full object-cover"
               />
-              <p className="ml-3 cursor-pointer text-lg font-semibold">
-                {user.name}
-              </p>
-              <p className="hidden text-base font-normal text-gray-400 lg:inline">
-                {user.email}
-              </p>
-              <p className="ml-3 mt-0.5 text-base font-normal text-gray-400">
-                • {moment(post.createdAt).fromNow()}
-              </p>
+              <div className="flex flex-col items-start">
+                <div className="flex items-center space-x-2">
+                  <p className=" cursor-pointer text-lg font-semibold">
+                    {user.name}
+                  </p>
+
+                  <p className="hidden text-base font-normal text-gray-400 lg:inline">
+                    {user.email}
+                  </p>
+                </div>
+                <p className="text-sm font-light text-gray-600">
+                  • {moment(post.createdAt).fromNow()}
+                </p>
+              </div>
             </div>
           </Link>
           {user.id === id && (
