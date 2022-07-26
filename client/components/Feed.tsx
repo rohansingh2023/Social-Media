@@ -8,6 +8,8 @@ import { ADD_POST } from '../graphql/mutations/postMutations'
 import { useStateContext } from '../context/StateContext'
 import { RefreshIcon } from '@heroicons/react/outline'
 import { getPosts } from '../services'
+import { useSelector } from 'react-redux'
+import { selectCurrentUser } from '../redux/activities/userRedux'
 
 interface Props {
   postData: Post[]

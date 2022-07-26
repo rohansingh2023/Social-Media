@@ -186,7 +186,7 @@ const ChatSection = ({ isChatOpen, setIsChatOpen, currentChat }: IProps) => {
           </div>
         </>
       ) : (
-        <div className="hidden max-h-[91vh] items-center justify-center font-Inter md:col-span-5 md:inline-flex">
+        <div className="hidden max-h-[91vh] items-center justify-center font-Inter md:col-span-6 md:inline-flex">
           <span className="text-3xl font-bold italic ">
             Tap on chat to start messaging
           </span>

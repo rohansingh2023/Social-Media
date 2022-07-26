@@ -3,17 +3,13 @@ import Link from 'next/link'
 import React, { useEffect } from 'react'
 import { FaBirthdayCake } from 'react-icons/fa'
 import { MdOutlineOnlinePrediction } from 'react-icons/md'
+import { useSelector } from 'react-redux'
 import { useStateContext } from '../context/StateContext'
+import { selectCurrentUser } from '../redux/activities/userRedux'
 
-interface IProps {
-  userData?: User[]
-}
-
-const Rightbar = ({ userData }: IProps) => {
-  const { currentUser } = useStateContext()
-  const { user } = currentUser || {}
-  const { id } = user || {}
-  console.log(user)
+const Rightbar = () => {
+  const currentUser = useSelector(selectCurrentUser)
+  console.log(currentUser)
 
   return (
     // <div className="sticky top-20 h-[100vh] w-1/4">
@@ -40,8 +36,8 @@ const Rightbar = ({ userData }: IProps) => {
           <h1 className="text-lg font-medium text-gray-500">Friend Requests</h1>
           <div className="mt-3 max-h-96 w-full overflow-y-scroll">
             {
-              user?.friendRequests.length > 0 ? (
-                user?.friendRequests?.map((u: friendRequests) => (
+              currentUser?.friendRequests.length > 0 ? (
+                currentUser?.friendRequests?.map((u: friendRequests) => (
                   // user.friends?.map((u) => (
                   <Link href={`/user/${u.userId}`}>
                     <div
@@ -74,8 +70,8 @@ const Rightbar = ({ userData }: IProps) => {
         <div className="flex w-11/12 flex-1 flex-col items-start justify-evenly rounded-lg border-gray-300 p-3 font-Inter">
           <h1 className="text-lg font-medium text-gray-500">My Friends</h1>
           <div className="mt-3 max-h-96 w-full overflow-y-scroll">
-            {user?.friends.length > 0 ? (
-              user?.friends?.map(
+            {currentUser?.friends.length > 0 ? (
+              currentUser?.friends?.map(
                 (u: friends) => (
                   // user.friends?.map((u) => (
                   <Link href={`/user/${u.userId}`}>

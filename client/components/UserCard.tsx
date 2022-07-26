@@ -77,11 +77,6 @@ function UserCard({ user }: Props) {
   const isRequestSent = friendInfo?.friendRequests?.findIndex(
     (f) => f.userId.toString() === id.toString()
   )
-  // const myFriend = friends?.friends?.every((f: friends) => f.userId === user.id)
-
-  console.log(isRequestSent)
-  // console.log(myFriend)
-  // console.log(isRequestSent)
 
   const handleRefresh = async () => {
     const refreshToast = toast.loading('Refreshing...')

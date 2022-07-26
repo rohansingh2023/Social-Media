@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import toast from 'react-hot-toast'
 import { AiOutlineSearch } from 'react-icons/ai'
 import Loading from './Loading'
@@ -24,23 +24,41 @@ function SearchFriends({ userData }: Props) {
     (user: any) => user?.user.id !== id
   )
 
-  const handleEnter = async (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === 'Enter') {
-      e.preventDefault()
-      e.stopPropagation()
+  useEffect(() => {
+    const getSearchResults = async () => {
       try {
         const data = (await searchUsers(searchTerm)) || []
         setSearchResults({
           users: data.users,
           totalCount: data.totalCount,
         })
-        toast.success(`Found ${data?.users.length} users`)
       } catch (error) {
         toast.error(`${error}`)
         console.log(error)
       }
     }
-  }
+    getSearchResults()
+  }, [])
+
+  // const handleEnter = async (e: React.KeyboardEvent<HTMLInputElement>) => {
+  //   if (e.key === 'Enter') {
+  //     e.preventDefault()
+  //     e.stopPropagation()
+  //     try {
+  //       const data = (await searchUsers(searchTerm)) || []
+  //       setSearchResults({
+  //         users: data.users,
+  //         totalCount: data.totalCount,
+  //       })
+  //       toast.success(`Found ${data?.users.length} users`)
+  //     } catch (error) {
+  //       toast.error(`${error}`)
+  //       console.log(error)
+  //     }
+  //   }
+  // }
+
+  // console.log(onlyUserData.filter((u) => u?.name?.includes('Ro')))
 
   if (!userData) {
     return <Loading />
@@ -55,22 +73,26 @@ function SearchFriends({ userData }: Props) {
           className="ml-3 flex flex-1 bg-slate-200 p-0.5 outline-none"
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
-          onKeyPress={handleEnter}
+          // onKeyPress={handleEnter}
         />
       </div>
-      {searchResults.totalCount <= 0 ? (
+      {/* {searchTerm === null ? (
         <div className="ml-11 flex w-[88%] flex-col items-center justify-center p-5">
           {onlyUserData?.map((user: any, i: any) => (
             <UserCard key={i} user={user.user} />
           ))}
         </div>
-      ) : (
-        <div className="ml-11 flex w-[88%] flex-col items-center justify-center p-5">
-          {searchResults?.users?.map((user: any, i: any) => (
+      ) : ( */}
+      <div className="ml-11 flex w-[88%] flex-col items-center justify-center p-5">
+        {searchResults?.users
+          ?.filter((u: { name: string }) =>
+            u.name.toLowerCase().includes(searchTerm)
+          )
+          .map((user: any, i: any) => (
             <UserCard key={i} user={user} />
           ))}
-        </div>
-      )}
+      </div>
+      {/* )} */}
     </div>
   )
 }

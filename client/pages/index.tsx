@@ -1,13 +1,13 @@
 import { GetServerSideProps, GetStaticProps } from 'next'
 import React from 'react'
+import { useSelector } from 'react-redux'
 import { Feed, Leftbar, Navbar, Rightbar } from '../components'
+import { selectCurrentUser } from '../redux/activities/userRedux'
 import { getOnlyUsers, getOnlyUsersExMe, getPosts, getUsers } from '../services'
 import { authorized } from '../services/auth'
 import { socket } from '../socket'
 
 const Index = ({ postData, userData }: any) => {
-  console.log(userData)
-
   socket.on('friend_request', (data) => {
     console.log(data)
   })
@@ -20,7 +20,7 @@ const Index = ({ postData, userData }: any) => {
       <div className="grid grid-cols-12">
         <Leftbar />
         <Feed postData={postData} />
-        <Rightbar userData={userData} />
+        <Rightbar />
       </div>
     </div>
   )

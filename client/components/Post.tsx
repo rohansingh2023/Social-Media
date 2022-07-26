@@ -15,6 +15,8 @@ import { GET_POSTS } from '../graphql/queries/postQueries'
 import toast from 'react-hot-toast'
 import { useRouter } from 'next/router'
 import { MdModeComment } from 'react-icons/md'
+import { useSelector } from 'react-redux'
+import { selectCurrentUser } from '../redux/activities/userRedux'
 
 type Props = {
   post: Post
@@ -29,6 +31,7 @@ const Post = ({ post, user, refresh }: Props) => {
   const { currentUser } = useStateContext()
   const { user: cUser, token } = currentUser || {}
   const { id } = cUser || {}
+  const cuser = useSelector(selectCurrentUser)
 
   const [likePost] = useMutation(LIKE_POST, {
     variables: {
@@ -104,8 +107,6 @@ const Post = ({ post, user, refresh }: Props) => {
       }
     }
   }
-
-  console.log(post.comments)
 
   return (
     <div>
@@ -198,7 +199,7 @@ const Post = ({ post, user, refresh }: Props) => {
           <div className="transition-all duration-300 ease-out">
             <div className="flex items-center space-x-2 p-3">
               <img
-                src="https://cdn.dribbble.com/users/24078/screenshots/15522433/media/e92e58ec9d338a234945ae3d3ffd5be3.jpg?compress=1&resize=400x300"
+                src={cuser.profilePic}
                 alt=""
                 className="h-10 w-10 rounded-full"
               />

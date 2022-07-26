@@ -6,6 +6,11 @@ import client from '../../apollo-client'
 import { GET_USERS } from '../../graphql/queries/userQueries'
 import { LOGIN_USER } from '../../graphql/mutations/userMutations'
 import toast from 'react-hot-toast'
+import { useDispatch, useSelector } from 'react-redux'
+import {
+  addCurrentUser,
+  selectCurrentUser,
+} from '../../redux/activities/userRedux'
 
 type FormData = {
   email: string
@@ -13,6 +18,8 @@ type FormData = {
 }
 
 function login() {
+  const dispatch = useDispatch()
+  const currentUser = useSelector(selectCurrentUser)
   const [formData, setFormData] = useState<FormData>({
     email: '',
     password: '',
@@ -32,6 +39,7 @@ function login() {
       const { data } = await loginUser()
       console.log(data)
       localStorage.setItem('authUser', JSON.stringify(data?.login))
+      dispatch(addCurrentUser(data?.login))
       toast.success('Login successful!')
       router.replace('/')
       router.reload()

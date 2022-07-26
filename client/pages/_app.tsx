@@ -6,8 +6,11 @@ import { ApolloProvider } from '@apollo/client'
 import client from '../apollo-client'
 import { Toaster } from 'react-hot-toast'
 import { StateContextProvider } from '../context/StateContext'
+import { Provider } from 'react-redux'
 import Router from 'next/router'
 import nProgress from 'nprogress'
+import { store, persistor } from '../redux/store'
+import { PersistGate } from 'redux-persist/integration/react'
 
 Router.events.on('routeChangeStart', nProgress.start)
 Router.events.on('routeChangeError', nProgress.done)
@@ -16,12 +19,16 @@ Router.events.on('routeChangeComplete', nProgress.done)
 function MyApp({ Component, pageProps }: AppProps) {
   return (
     <ApolloProvider client={client}>
-      <StateContextProvider>
-        <Toaster />
-        <Layout>
-          <Component {...pageProps} />
-        </Layout>
-      </StateContextProvider>
+      <Provider store={store}>
+        <PersistGate persistor={persistor}>
+          <StateContextProvider>
+            <Toaster />
+            <Layout>
+              <Component {...pageProps} />
+            </Layout>
+          </StateContextProvider>
+        </PersistGate>
+      </Provider>
     </ApolloProvider>
   )
 }

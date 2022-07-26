@@ -26,7 +26,7 @@ const ChatMain = ({ user }: IProps) => {
       } catch (error) {}
     }
     getConv()
-  }, [user.id])
+  }, [])
 
   useEffect(() => {
     socket.on('test2', (data) => {

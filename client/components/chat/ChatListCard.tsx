@@ -15,7 +15,7 @@ const ChatListCard = ({ setIsChatOpen, conv, setCurrentChat }: IProps) => {
   const [convChats, setConvChats] = useState<User>()
 
   useEffect(() => {
-    const friendId = conv?.members.find((m) => m !== currentUser?.user?.id)
+    const friendId = conv?.members?.find((m) => m !== currentUser?.user?.id)
 
     const getUser = async () => {
       try {
@@ -36,8 +36,6 @@ const ChatListCard = ({ setIsChatOpen, conv, setCurrentChat }: IProps) => {
     setCurrentChat(conv)
     socket.emit('addUser', { room: conv?._id })
   }
-
-  console.log(conv?._id)
 
   return (
     <div

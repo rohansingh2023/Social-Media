@@ -24,13 +24,18 @@ const ChatSidebar = ({
 }: IProps) => {
   const [convs, setConvs] = useState<Conversation[]>(conversations)
 
+  console.log(convs)
+  console.log(conversations)
+
   const handleRefresh = async () => {
     try {
       const refreshToast = toast.loading('Refreshing...')
       const res = await axios.get(
         `http://localhost:3001/api/conversation/${user.id}`
       )
-      setConvs(res.data)
+      // setConvs(res.data)
+      // console.log(res.data)
+
       toast.success('ChatList Updated', {
         id: refreshToast,
       })
@@ -73,7 +78,7 @@ const ChatSidebar = ({
 
       {/* Chat List */}
       <div className="h-[77vh] cursor-pointer overflow-y-scroll py-2">
-        {convs?.map((u) => (
+        {conversations?.map((u) => (
           <ChatListCard
             key={u._id}
             conv={u}
