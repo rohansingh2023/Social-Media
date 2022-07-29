@@ -3,6 +3,8 @@ import { useStateContext } from '../../context/StateContext'
 import moment from 'moment'
 import client from '../../apollo-client'
 import { GET_USER_BY_ID } from '../../graphql/queries/userQueries'
+import { useSelector } from 'react-redux'
+import { selectCurrentUser } from '../../redux/activities/userRedux'
 
 interface IProps {
   message: Message
@@ -10,7 +12,7 @@ interface IProps {
 }
 
 const MessageCard = ({ message, receiverId }: IProps) => {
-  const { currentUser } = useStateContext()
+  const currentUser = useSelector(selectCurrentUser)
   const [otherUser, setOtherUser] = useState<User>()
 
   useEffect(() => {
@@ -30,11 +32,11 @@ const MessageCard = ({ message, receiverId }: IProps) => {
 
   return (
     <>
-      {message.sender === currentUser?.user?.id ? (
+      {message.sender === currentUser?.id ? (
         <div className="flex flex-col items-end">
           <div className="float-right flex w-1/2 items-start space-x-2 p-2 text-left">
             <img
-              src={currentUser?.user?.profilePic}
+              src={currentUser?.profilePic}
               alt=""
               className="h-10 w-10 flex-[0.12] rounded-full object-cover"
             />

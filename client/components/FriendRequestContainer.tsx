@@ -2,9 +2,11 @@ import { useQuery } from '@apollo/client'
 import { RefreshIcon } from '@heroicons/react/outline'
 import React, { useEffect, useState } from 'react'
 import toast from 'react-hot-toast'
+import { useSelector } from 'react-redux'
 import client from '../apollo-client'
 import { useStateContext } from '../context/StateContext'
 import { GET_FRIEND_REQUESTS } from '../graphql/queries/userQueries'
+import { selectCurrentUser } from '../redux/activities/userRedux'
 import { getFriendRequests } from '../services'
 import FriendRequestCard from './FriendRequestCard'
 import Loading from './Loading'
@@ -15,13 +17,11 @@ interface Props {
 
 const FriendRequestContainer = ({ user: u }: Props) => {
   const [fRequests, setFRequests] = useState<friendRequests[]>(u)
-  const { currentUser } = useStateContext()
-  const { user } = currentUser || {}
-  const { id } = user || {}
+  const currentUser = useSelector(selectCurrentUser)
 
   const { data, loading, error } = useQuery(GET_FRIEND_REQUESTS, {
     variables: {
-      id,
+      id: currentUser?.id,
     },
   })
 
@@ -32,7 +32,7 @@ const FriendRequestContainer = ({ user: u }: Props) => {
 
   const handleRefresh = async () => {
     const refreshToast = toast.loading('Refreshing...')
-    const userInfo = await getFriendRequests(id)
+    const userInfo = await getFriendRequests(currentUser?.id)
     setFRequests(userInfo)
     toast.success('Friend Requests Updated', {
       id: refreshToast,
@@ -40,7 +40,11 @@ const FriendRequestContainer = ({ user: u }: Props) => {
   }
 
   if (!fRequests) {
-    return <Loading />
+    return (
+      <div className="col-span-12 lg:col-span-8 xl:col-span-6">
+        <Loading />
+      </div>
+    )
   }
 
   if (loading) {

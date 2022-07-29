@@ -9,7 +9,6 @@ import { selectCurrentUser } from '../redux/activities/userRedux'
 
 const Rightbar = () => {
   const currentUser = useSelector(selectCurrentUser)
-  console.log(currentUser)
 
   return (
     // <div className="sticky top-20 h-[100vh] w-1/4">

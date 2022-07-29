@@ -9,7 +9,7 @@ import { useStateContext } from '../context/StateContext'
 import { RefreshIcon } from '@heroicons/react/outline'
 import { getPosts } from '../services'
 import { useSelector } from 'react-redux'
-import { selectCurrentUser } from '../redux/activities/userRedux'
+import { selectCurrentUser, selectToken } from '../redux/activities/userRedux'
 
 interface Props {
   postData: Post[]
@@ -21,11 +21,11 @@ const Feed = ({ postData: posts }: Props) => {
     image: '',
   })
   const [postData, setPostData] = useState(posts)
-  const { currentUser } = useStateContext()
-  const { user } = currentUser || {}
-  const { profilePic } = user || {}
-
-  const { token } = currentUser || {}
+  const currentUser = useSelector(selectCurrentUser)
+  // const {
+  //   currentUser: { token },
+  // } = useStateContext()
+  const token = useSelector(selectToken)
 
   const [addPost] = useMutation(ADD_POST, {
     variables: {
@@ -99,7 +99,7 @@ const Feed = ({ postData: posts }: Props) => {
         </div>
         <div className="mt-3 flex items-center justify-center space-x-0 lg:mt-0 lg:flex-1 lg:space-x-2 lg:p-5 ">
           <img
-            src={profilePic}
+            src={currentUser?.profilePic}
             alt=""
             className="mt-14 hidden h-14 w-14 rounded-full object-cover lg:inline"
           />

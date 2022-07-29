@@ -1,7 +1,9 @@
 import React, { Dispatch, SetStateAction, useEffect, useState } from 'react'
+import { useSelector } from 'react-redux'
 import client from '../../apollo-client'
 import { useStateContext } from '../../context/StateContext'
 import { GET_USER_BY_ID } from '../../graphql/queries/userQueries'
+import { selectCurrentUser } from '../../redux/activities/userRedux'
 import { socket } from '../../socket'
 
 interface IProps {
@@ -11,11 +13,12 @@ interface IProps {
 }
 
 const ChatListCard = ({ setIsChatOpen, conv, setCurrentChat }: IProps) => {
-  const { currentUser } = useStateContext()
+  // const { currentUser } = useStateContext()
+  const currentUser = useSelector(selectCurrentUser)
   const [convChats, setConvChats] = useState<User>()
 
   useEffect(() => {
-    const friendId = conv?.members?.find((m) => m !== currentUser?.user?.id)
+    const friendId = conv?.members?.find((m) => m !== currentUser?.id)
 
     const getUser = async () => {
       try {

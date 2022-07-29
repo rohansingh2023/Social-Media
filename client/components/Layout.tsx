@@ -10,10 +10,11 @@ const Layout = ({ children }: any) => {
       const user = localStorage.getItem('authUser')
       if (user) {
         const parsedUser = JSON.parse(user)
-        router.replace('/')
+        // router.replace('/')
       } else {
         router.replace('/auth/login')
       }
+      // !user && router.replace('/auth/login')
     }
     checkIsAuthUser()
   }, [])

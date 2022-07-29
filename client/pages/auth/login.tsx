@@ -1,7 +1,7 @@
 import { useMutation, useQuery } from '@apollo/client'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import client from '../../apollo-client'
 import { GET_USERS } from '../../graphql/queries/userQueries'
 import { LOGIN_USER } from '../../graphql/mutations/userMutations'
@@ -40,14 +40,19 @@ function login() {
       console.log(data)
       localStorage.setItem('authUser', JSON.stringify(data?.login))
       dispatch(addCurrentUser(data?.login))
+
       toast.success('Login successful!')
       router.replace('/')
-      router.reload()
+      // router.reload()
       // window.location.reload()
     } catch (error) {
       console.log(error)
     }
   }
+
+  useEffect(() => {
+    currentUser === null && router.replace('/')
+  }, [])
 
   return (
     <div className="relative -mt-16 flex h-screen items-center justify-center bg-login bg-cover bg-center bg-no-repeat">

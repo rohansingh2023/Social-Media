@@ -2,7 +2,7 @@ import { GetServerSideProps, GetStaticProps } from 'next'
 import React from 'react'
 import { useSelector } from 'react-redux'
 import { Feed, Leftbar, Navbar, Rightbar } from '../components'
-import { selectCurrentUser } from '../redux/activities/userRedux'
+import { selectCurrentUser, selectToken } from '../redux/activities/userRedux'
 import { getOnlyUsers, getOnlyUsersExMe, getPosts, getUsers } from '../services'
 import { authorized } from '../services/auth'
 import { socket } from '../socket'
@@ -11,6 +11,9 @@ const Index = ({ postData, userData }: any) => {
   socket.on('friend_request', (data) => {
     console.log(data)
   })
+
+  const token = useSelector(selectToken)
+  console.log(token)
 
   return (
     <div className="relative bg-slate-50 font-Segoe">

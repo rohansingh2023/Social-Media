@@ -16,7 +16,7 @@ import toast from 'react-hot-toast'
 import { useRouter } from 'next/router'
 import { MdModeComment } from 'react-icons/md'
 import { useSelector } from 'react-redux'
-import { selectCurrentUser } from '../redux/activities/userRedux'
+import { selectCurrentUser, selectToken } from '../redux/activities/userRedux'
 
 type Props = {
   post: Post
@@ -28,9 +28,10 @@ const Post = ({ post, user, refresh }: Props) => {
   const [isOpen, setIsOpen] = useState<boolean>(false)
   const [body, setBody] = useState<string>('')
   const route = useRouter()
-  const { currentUser } = useStateContext()
-  const { user: cUser, token } = currentUser || {}
-  const { id } = cUser || {}
+  // const {
+  //   currentUser: { token },
+  // } = useStateContext()
+  const token = useSelector(selectToken)
   const cuser = useSelector(selectCurrentUser)
 
   const [likePost] = useMutation(LIKE_POST, {
@@ -113,7 +114,11 @@ const Post = ({ post, user, refresh }: Props) => {
       <div className="mb-5 flex h-auto flex-col rounded-md border border-gray-200 bg-white font-Inter shadow-sm lg:w-full">
         <div className="mt-2 flex items-center justify-between px-4 py-2">
           <Link
-            href={user.id === id ? `/profile/${id}` : `/user/${user.id}`}
+            href={
+              user.id === cuser?.id
+                ? `/profile/${cuser?.id}`
+                : `/user/${user.id}`
+            }
             // className="flex flex-1 p-2"
           >
             <div className="flex items-center space-x-3">
@@ -138,7 +143,7 @@ const Post = ({ post, user, refresh }: Props) => {
               </div>
             </div>
           </Link>
-          {user.id === id && (
+          {user.id === cuser?.id && (
             <div>
               <AiFillDelete size={25} className="" onClick={handleDelete} />
             </div>

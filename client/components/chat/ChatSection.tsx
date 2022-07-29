@@ -15,6 +15,8 @@ import { useStateContext } from '../../context/StateContext'
 import MessageCard from './MessageCard'
 import Loading from '../Loading'
 import { socket } from '../../socket'
+import { useSelector } from 'react-redux'
+import { selectCurrentUser } from '../../redux/activities/userRedux'
 
 interface IProps {
   isChatOpen: boolean
@@ -35,7 +37,7 @@ const ChatSection = ({ isChatOpen, setIsChatOpen, currentChat }: IProps) => {
     text: '',
     createdAt: 0,
   })
-  const { currentUser } = useStateContext()
+  const currentUser = useSelector(selectCurrentUser)
   const scrollRef = useRef<null | HTMLDivElement>(null)
 
   useEffect(() => {
@@ -45,8 +47,8 @@ const ChatSection = ({ isChatOpen, setIsChatOpen, currentChat }: IProps) => {
   }, [socket])
 
   useEffect(() => {
-    socket.emit('addUser', currentUser?.user?.id)
-  }, [currentUser?.user?.id, socket])
+    socket.emit('addUser', currentUser?.id)
+  }, [currentUser?.id, socket])
 
   useEffect(() => {
     const getMessages = async () => {
@@ -62,9 +64,7 @@ const ChatSection = ({ isChatOpen, setIsChatOpen, currentChat }: IProps) => {
     getMessages()
   }, [currentChat])
 
-  const receiverId = currentChat?.members.find(
-    (m) => m !== currentUser?.user?.id
-  )
+  const receiverId = currentChat?.members.find((m) => m !== currentUser?.id)
 
   const handleMessage = async (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter') {
@@ -73,17 +73,17 @@ const ChatSection = ({ isChatOpen, setIsChatOpen, currentChat }: IProps) => {
       try {
         const message = {
           conversationId: currentChat?._id,
-          sender: currentUser?.user?.id,
+          sender: currentUser?.id,
           text: msgInput,
         }
 
         const receiverId = currentChat?.members.find(
-          (m) => m !== currentUser?.user?.id
+          (m) => m !== currentUser?.id
         )
 
         await socket.emit('sendMessage', {
           conversationId: currentChat?._id,
-          sender: currentUser?.user?.id,
+          sender: currentUser?.id,
           receiverId,
           text: msgInput,
           createdAt: Date.now(),

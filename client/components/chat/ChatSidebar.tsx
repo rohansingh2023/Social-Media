@@ -24,9 +24,6 @@ const ChatSidebar = ({
 }: IProps) => {
   const [convs, setConvs] = useState<Conversation[]>(conversations)
 
-  console.log(convs)
-  console.log(conversations)
-
   const handleRefresh = async () => {
     try {
       const refreshToast = toast.loading('Refreshing...')

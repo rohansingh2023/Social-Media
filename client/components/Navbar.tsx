@@ -9,18 +9,27 @@ import { useRouter } from 'next/router'
 import { toast } from 'react-toastify'
 import { IoIosPersonAdd } from 'react-icons/io'
 import { socket } from '../socket'
+import { useDispatch, useSelector } from 'react-redux'
+import {
+  removeCurrentUser,
+  selectCurrentUser,
+} from '../redux/activities/userRedux'
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false)
-  const { currentUser } = useStateContext()
-  const { user } = currentUser
-  const { id } = user || {}
+  // const { currentUser } = useStateContext()
+  // const { user } = currentUser
+  // const { id } = user || {}
   const router = useRouter()
+  const currentUser = useSelector(selectCurrentUser)
+  const dispatch = useDispatch()
 
   const handleLogout = () => {
     localStorage.clear()
     toast.info('Logged out successfully')
+    dispatch(removeCurrentUser())
     router.replace('/auth/login')
+    // router.reload()
   }
 
   const joinChat = (e: React.MouseEvent<SVGElement, MouseEvent>) => {
@@ -57,18 +66,18 @@ const Navbar = () => {
           <Link href={'/friendRequest'} passHref>
             <IoIosPersonAdd className="mr-20" size={35} color="#FF8080" />
           </Link>
-          <Link href={`/profile/${id}`} passHref>
+          <Link href={`/profile/${currentUser?.id}`} passHref>
             <FaFortAwesomeAlt className="mr-20" size={35} color="#FF8080" />
           </Link>
         </div>
         <div className="col-span-6 mr-0 flex flex-1 items-center justify-end lg:col-span-2 lg:mr-10 lg:justify-between">
           {/* <div className="flex items-center"> */}
           <img
-            src={user?.profilePic}
+            src={currentUser?.profilePic}
             alt=""
             className="mr-5 h-10 w-10 rounded-full bg-gray-400 object-cover lg:mr-0"
           />
-          <Link href={`/chat/${id}`}>
+          <Link href={`/chat/${currentUser?.id}`}>
             <MdMessage
               color="#111"
               size={45}
@@ -76,12 +85,14 @@ const Navbar = () => {
               onClick={joinChat}
             />
           </Link>
+          {/* <Link href={`/auth/login`}> */}
           <RiLogoutBoxLine
             className="hidden rounded-full bg-gray-300 p-3 hover:bg-gray-400 lg:inline"
             size={45}
             onClick={handleLogout}
             color="#111"
           />
+          {/* </Link> */}
           {/* </div> */}
           <FaListUl
             size={45}

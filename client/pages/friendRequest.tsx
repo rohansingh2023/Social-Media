@@ -1,5 +1,6 @@
 import { useQuery } from '@apollo/client'
 import React from 'react'
+import { useSelector } from 'react-redux'
 import {
   FriendRequestContainer,
   Leftbar,
@@ -9,15 +10,14 @@ import {
 import Loading from '../components/Loading'
 import { useStateContext } from '../context/StateContext'
 import { GET_FRIEND_REQUESTS } from '../graphql/queries/userQueries'
+import { selectCurrentUser } from '../redux/activities/userRedux'
 
 const friendRequest = () => {
-  const { currentUser } = useStateContext()
-  const { user } = currentUser || {}
-  const { id } = user || {}
+  const currentUser = useSelector(selectCurrentUser)
 
   const { data, loading, error } = useQuery(GET_FRIEND_REQUESTS, {
     variables: {
-      id,
+      id: currentUser?.id,
     },
   })
 

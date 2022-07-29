@@ -5,6 +5,8 @@ import Loading from './Loading'
 import UserCard from './UserCard'
 import { searchUsers } from '../services'
 import { useStateContext } from '../context/StateContext'
+import { useSelector } from 'react-redux'
+import { selectCurrentUser } from '../redux/activities/userRedux'
 
 interface Props {
   userData: User[]
@@ -16,12 +18,10 @@ function SearchFriends({ userData }: Props) {
     users: [],
     totalCount: 0,
   })
-  const { currentUser } = useStateContext()
-  const { user } = currentUser || {}
-  const { id } = user || {}
+  const currentUser = useSelector(selectCurrentUser)
 
-  const onlyUserData: User[] = userData?.filter(
-    (user: any) => user?.user.id !== id
+  const onlyUserData: User[] = searchResults.users?.filter(
+    (user: any) => user.id !== currentUser?.id
   )
 
   useEffect(() => {
@@ -84,7 +84,7 @@ function SearchFriends({ userData }: Props) {
         </div>
       ) : ( */}
       <div className="ml-11 flex w-[88%] flex-col items-center justify-center p-5">
-        {searchResults?.users
+        {onlyUserData
           ?.filter((u: { name: string }) =>
             u.name.toLowerCase().includes(searchTerm)
           )

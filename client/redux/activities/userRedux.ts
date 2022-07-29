@@ -11,17 +11,22 @@ const userSlice = createSlice({
     addCurrentUser: (state, action) => {
       state.currentUser = action.payload
     },
-    // addFriend: (state, action)=>{
-    //   state.currentUser?.friends = action.payload
-    // }
+    removeCurrentUser: (state) => {
+      state.currentUser = null
+    },
   },
 })
 
-export const { addCurrentUser } = userSlice.actions
+export const { addCurrentUser, removeCurrentUser } = userSlice.actions
 
 export const selectCurrentUser = (state: {
   user: { currentUser: { user: User } }
 }) => state.user?.currentUser?.user
+
+export const selectToken = (state): any => state.user?.currentUser?.token
+// export const selectCurrentUser = (state: {
+//   user: { currentUser: { user: User } }
+// }) => state.user?.currentUser?.token
 
 export default userSlice.reducer
 

@@ -13,6 +13,8 @@ import client from '../apollo-client'
 import { GET_USER_BY_ID } from '../graphql/queries/userQueries'
 import { getUserById, getUsers } from '../services'
 import { socket } from '../socket'
+import { useSelector } from 'react-redux'
+import { selectCurrentUser } from '../redux/activities/userRedux'
 
 interface Props {
   user: User
@@ -24,10 +26,11 @@ function UserCard({ user }: Props) {
   const [isFriend, setIsFriend] = useState<boolean>(false)
   const [friends, setFriends] = useState<User>()
   const [friendInfo, setFriendInfo] = useState<User>()
+  const currentUser = useSelector(selectCurrentUser)
 
-  const { currentUser } = useStateContext()
-  const { user: u, token } = currentUser || {}
-  const { id } = u || {}
+  const {
+    currentUser: { token },
+  } = useStateContext()
 
   const [friendRequest] = useMutation(SEND_FRIEND_REQUEST, {
     variables: {
@@ -46,7 +49,7 @@ function UserCard({ user }: Props) {
         const { data } = await client.query({
           query: GET_USER_BY_ID,
           variables: {
-            id: id,
+            id: currentUser?.id,
           },
         })
         setFriends(data?.userById?.user)
@@ -75,7 +78,7 @@ function UserCard({ user }: Props) {
   )
 
   const isRequestSent = friendInfo?.friendRequests?.findIndex(
-    (f) => f.userId.toString() === id.toString()
+    (f) => f.userId.toString() === currentUser?.id.toString()
   )
 
   const handleRefresh = async () => {
@@ -90,9 +93,9 @@ function UserCard({ user }: Props) {
   const handleRequest = async () => {
     socket.emit('sent_request', {
       cUser: {
-        name: u?.name,
-        id: u?.id,
-        img: u?.profilePic,
+        name: currentUser?.name,
+        id: currentUser?.id,
+        img: currentUser?.profilePic,
       },
       name: user.name,
       id: user.id,
