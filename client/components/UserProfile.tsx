@@ -12,6 +12,7 @@ import { useMutation } from '@apollo/client'
 import { UNFRIEND } from '../graphql/mutations/userMutations'
 import FriendCard from './FriendCard'
 import toast from 'react-hot-toast'
+import UserModal from './modals/UserModal'
 
 interface Props {
   userD: User
@@ -26,6 +27,7 @@ interface Props2 {
 function UserProfile({ userD, post }: Props) {
   const [userPosts, setUserPosts] = useState<Props2[]>([])
   const [userData, setUserData] = useState<User>(userD)
+  const [showModal, setShowModal] = useState<boolean>(false)
   const router: NextRouter = useRouter()
 
   // const [unFriend] = useMutation(UNFRIEND, {
@@ -58,8 +60,11 @@ function UserProfile({ userD, post }: Props) {
   }
 
   return (
-    <div className="col-span-12 flex max-h-[91vh] max-w-screen-sm flex-1 flex-col overflow-scroll p-3 scrollbar-hide md:max-w-screen-md lg:col-span-8 lg:max-w-screen-lg lg:border-x lg:p-5 xl:col-span-6 xl:max-w-screen-xl">
+    <div className="relative col-span-12 flex max-h-[91vh] max-w-screen-sm flex-1 flex-col overflow-scroll p-3 scrollbar-hide md:max-w-screen-md lg:col-span-8 lg:max-w-screen-lg lg:border-x lg:p-5 xl:col-span-6 xl:max-w-screen-xl">
       <div className="mt-5 flex flex-1 flex-shrink-0 flex-col lg:mt-0">
+        {showModal && (
+          <UserModal showModal={showModal} setShowModal={setShowModal} />
+        )}
         <div className="h-80 w-full flex-shrink-0 rounded-t-md bg-white opacity-70">
           <img
             src="https://tse3.mm.bing.net/th?id=OIP.zsEgRepQ6Uh5OYkkhJyn2gHaE5&pid=Api&P=0&w=253&h=167"
@@ -73,7 +78,7 @@ function UserProfile({ userD, post }: Props) {
             <img
               src={userD.profilePic}
               alt=""
-              className="z-50 mx-auto -mt-10  h-40 w-40 rounded-full object-cover md:ml-10 lg:ml-5"
+              className="z-40 mx-auto -mt-10  h-40 w-40 rounded-full object-cover md:ml-10 lg:ml-5"
             />
             {/* </div> */}
             <div className="relative ml-5 flex flex-1 flex-col ">
@@ -96,7 +101,10 @@ function UserProfile({ userD, post }: Props) {
                     ))}
                   </div>
                 </div>
-                <button className="absolute right-7 bottom-0 flex h-10 items-center justify-center rounded-md bg-gray-300 p-3 text-center font-semibold outline-none hover:bg-gray-400">
+                <button
+                  onClick={() => setShowModal(!showModal)}
+                  className="absolute right-7 bottom-0 flex h-10 items-center justify-center rounded-md bg-gray-300 p-3 text-center font-semibold outline-none hover:bg-gray-400"
+                >
                   <IoPencilSharp />
                   Edit
                 </button>

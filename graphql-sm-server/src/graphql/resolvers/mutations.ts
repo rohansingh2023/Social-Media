@@ -48,6 +48,15 @@ export default {
   ) => {
     // normalize email address
     email = email.trim().toLowerCase();
+    const user = await models.User.findOne({
+      email,
+    });
+    // if there is no user, throw an authentication error
+    if (user) {
+      throw new AuthenticationError(
+        "User already exists. Try with a different emailId"
+      );
+    }
     // hash the password
     const hashed = await bcrypt.hash(password, 10);
     // create the gravatar url
@@ -71,37 +80,37 @@ export default {
     }
   },
   login: async (parent: any, { email, password }: any, { models }) => {
-    try {
-      if (email) {
-        email = email.trim().toLowerCase();
-      }
-      const user = await models.User.findOne({
-        email,
-      });
-      // if there is no user, throw an authentication error
-      if (!user) {
-        throw new AuthenticationError("Error signing in");
-      }
-      // if the passwords don't match, throw an authentication error
-      const valid = await bcrypt.compare(password, user.password);
-      if (!valid) {
-        throw new AuthenticationError("Error signing in");
-      }
-      // create and return the json web token
-      const token = jwt.sign(
-        { id: user._id, name: user.name, email: user.email },
-        "secret"
-      );
-
-      return {
-        token,
-        user,
-        message: "Successfully signed in",
-      };
-    } catch (error) {
-      console.log(error);
-      throw new Error("Error logging in");
+    // try {
+    if (email) {
+      email = email.trim().toLowerCase();
     }
+    const user = await models.User.findOne({
+      email,
+    });
+    // if there is no user, throw an authentication error
+    if (!user) {
+      throw new AuthenticationError("User doesn't exists");
+    }
+    // if the passwords don't match, throw an authentication error
+    const valid = await bcrypt.compare(password, user.password);
+    if (!valid) {
+      throw new AuthenticationError("Passwords do not match");
+    }
+    // create and return the json web token
+    const token = jwt.sign(
+      { id: user._id, name: user.name, email: user.email },
+      "secret"
+    );
+
+    return {
+      token,
+      user,
+      message: "Successfully signed in",
+    };
+    // } catch (error) {
+    //   console.log(error);
+    //   throw new Error("Error logging in");
+    // }
   },
   likePost: async (_: any, { id }: any, { models, user }: any) => {
     if (!user) {

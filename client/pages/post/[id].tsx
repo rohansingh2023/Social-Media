@@ -2,11 +2,16 @@ import { useMutation } from '@apollo/client'
 import moment from 'moment'
 import React, { useState } from 'react'
 import toast from 'react-hot-toast'
+import { useSelector } from 'react-redux'
 import { Navbar } from '../../components'
 import Modal from '../../components/Modal'
 import { useStateContext } from '../../context/StateContext'
 import { ADD_COMMENT } from '../../graphql/mutations/postMutations'
 import { GET_POST_BY_ID } from '../../graphql/queries/postQueries'
+import {
+  selectCurrentUser,
+  selectToken,
+} from '../../redux/activities/userRedux'
 import { getPostById, getPosts } from '../../services'
 
 type Props = {
@@ -18,14 +23,16 @@ type Props = {
 
 function PostInfo({ postData }: Props) {
   const [body, setBody] = useState<string>('')
-  const { currentUser } = useStateContext()
+  // const { currentUser } = useStateContext()
   const [isOpen, setIsOpen] = useState<boolean>(false)
   const [post, setPost] = useState(postData)
+  const currentUser = useSelector(selectCurrentUser)
+  const token = useSelector(selectToken)
 
   const { user, posts } = postData
 
-  const { user: cUser, token } = currentUser || {}
-  const { id } = cUser || {}
+  // const { user: cUser, token } = currentUser || {}
+  // const { id } = cUser || {}
 
   const [addComment] = useMutation(ADD_COMMENT, {
     variables: {
@@ -73,9 +80,14 @@ function PostInfo({ postData }: Props) {
       <div className="row-span-1">
         <Navbar />
       </div>
-      <div className="row-span-9 flex-col">
+      <div className="row-span-9 relative flex-col">
         {isOpen && (
-          <Modal isOpen={isOpen} setIsOpen={setIsOpen} postId={post.posts.id} />
+          <Modal
+            isOpen={isOpen}
+            setIsOpen={setIsOpen}
+            postId={post.posts.id}
+            post={postData.posts}
+          />
         )}
 
         <div className="flex h-screen w-screen items-center justify-center scroll-smooth lg:h-[91vh]">
@@ -151,7 +163,7 @@ function PostInfo({ postData }: Props) {
                   className=" mt-20 h-60 rounded-lg object-cover lg:-mt-20 lg:mr-4 lg:h-2/3 lg:w-11/12 lg:rounded-lg lg:object-cover"
                 />
               )}
-              {user.id === id && (
+              {user.id === currentUser.id && (
                 <div className="-mb-28 mt-10 flex items-center p-3">
                   <button
                     onClick={() => setIsOpen(true)}

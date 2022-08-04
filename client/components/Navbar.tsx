@@ -28,6 +28,7 @@ const Navbar = () => {
     localStorage.clear()
     toast.info('Logged out successfully')
     dispatch(removeCurrentUser())
+    socket.disconnect()
     router.replace('/auth/login')
     // router.reload()
   }

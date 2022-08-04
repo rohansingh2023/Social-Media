@@ -18,19 +18,19 @@ const io = new Server(server, {
   },
 });
 
-let users: any[] = [];
+let onlineUsers: any[] = [];
 
-const addUser = (userId: any, socketId: any) => {
-  !users.some((user) => user.userId === userId) &&
-    users.push({ userId, socketId });
+const addNewUser = (username: any, socketId: any) => {
+  !onlineUsers.some((user) => user.username === username) &&
+    onlineUsers.push({ username, socketId });
 };
 
-const removeUser = (socketId: any) => {
-  users = users.filter((user) => user.socketId !== socketId);
+const removeUser = (socketId: string) => {
+  onlineUsers = onlineUsers.filter((user) => user.socketId !== socketId);
 };
 
-const getUser = (userId: any) => {
-  return users.find((user) => user.userId === userId);
+const getUser = (username: any) => {
+  return onlineUsers.find((user) => user.username === username);
 };
 
 io.on(
@@ -38,10 +38,12 @@ io.on(
   (
     socket: Socket<DefaultEventsMap, DefaultEventsMap, DefaultEventsMap, any>
   ) => {
-    console.log("User connected: ", socket.id);
+    // console.log("User connected: ", socket.id);
 
-    socket.on("join_chat", () => {
-      console.log(`User connected with id: ${socket.id}`);
+    socket.on("join_chat", ({ userId }) => {
+      onlineUsers[userId] = socket.id;
+      // io.emit("userOnline", onlineUsers);
+      console.log(`User connected with id: ${userId}`);
     });
 
     socket.on("sent_request", (data: any) => {
@@ -79,9 +81,9 @@ io.on(
     });
 
     socket.on("disconnect", () => {
+      // let i = onlineUsers.indexOf(socket.id);
+      // onlineUsers.splice(i, 1, 0);
       console.log("User disconnected: ", socket.id);
-      removeUser(socket.id);
-      io.emit("getUsers", users);
     });
   }
 );

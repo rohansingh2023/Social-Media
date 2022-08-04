@@ -12,9 +12,6 @@ const Index = ({ postData, userData }: any) => {
     console.log(data)
   })
 
-  const token = useSelector(selectToken)
-  console.log(token)
-
   return (
     <div className="relative bg-slate-50 font-Segoe">
       <header className="z-50 ">

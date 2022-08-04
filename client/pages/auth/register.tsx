@@ -43,8 +43,8 @@ function register() {
       const { data } = await register()
       localStorage.setItem('authUser', JSON.stringify(data?.register))
       toast.success('Register successfull')
-      router.replace('/')
-      router.reload()
+      router.replace('/auth/login')
+      // router.reload()
     } catch (error) {
       toast.error(`${error}`)
       console.log(error)

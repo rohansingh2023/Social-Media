@@ -6,6 +6,8 @@ import toast from 'react-hot-toast'
 import { useStateContext } from '../context/StateContext'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
+import { useSelector } from 'react-redux'
+import { selectToken } from '../redux/activities/userRedux'
 
 interface Props {
   user: friendRequests
@@ -13,9 +15,8 @@ interface Props {
 }
 
 const FriendRequestCard = ({ user, refresh }: Props) => {
-  const { currentUser } = useStateContext()
-  const { token } = currentUser || {}
   const router = useRouter()
+  const token = useSelector(selectToken)
 
   const [acceptFriendRequest] = useMutation(ACCEPT_FRIEND_REQUEST, {
     variables: {

@@ -11,6 +11,7 @@ import {
   addCurrentUser,
   selectCurrentUser,
 } from '../../redux/activities/userRedux'
+import { socket } from '../../socket'
 
 type FormData = {
   email: string
@@ -37,16 +38,16 @@ function login() {
     e.preventDefault()
     try {
       const { data } = await loginUser()
-      console.log(data)
       localStorage.setItem('authUser', JSON.stringify(data?.login))
       dispatch(addCurrentUser(data?.login))
-
+      socket.emit('join_chat', { userId: data?.login?.user?.id })
       toast.success('Login successful!')
       router.replace('/')
       // router.reload()
       // window.location.reload()
     } catch (error) {
       console.log(error)
+      toast.error(`${error}`)
     }
   }
 

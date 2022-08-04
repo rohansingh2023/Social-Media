@@ -40,26 +40,6 @@ function SearchFriends({ userData }: Props) {
     getSearchResults()
   }, [])
 
-  // const handleEnter = async (e: React.KeyboardEvent<HTMLInputElement>) => {
-  //   if (e.key === 'Enter') {
-  //     e.preventDefault()
-  //     e.stopPropagation()
-  //     try {
-  //       const data = (await searchUsers(searchTerm)) || []
-  //       setSearchResults({
-  //         users: data.users,
-  //         totalCount: data.totalCount,
-  //       })
-  //       toast.success(`Found ${data?.users.length} users`)
-  //     } catch (error) {
-  //       toast.error(`${error}`)
-  //       console.log(error)
-  //     }
-  //   }
-  // }
-
-  // console.log(onlyUserData.filter((u) => u?.name?.includes('Ro')))
-
   if (!userData) {
     return <Loading />
   }
@@ -73,16 +53,8 @@ function SearchFriends({ userData }: Props) {
           className="ml-3 flex flex-1 bg-slate-200 p-0.5 outline-none"
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
-          // onKeyPress={handleEnter}
         />
       </div>
-      {/* {searchTerm === null ? (
-        <div className="ml-11 flex w-[88%] flex-col items-center justify-center p-5">
-          {onlyUserData?.map((user: any, i: any) => (
-            <UserCard key={i} user={user.user} />
-          ))}
-        </div>
-      ) : ( */}
       <div className="ml-11 flex w-[88%] flex-col items-center justify-center p-5">
         {onlyUserData
           ?.filter((u: { name: string }) =>

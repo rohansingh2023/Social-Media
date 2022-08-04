@@ -2,17 +2,25 @@ import { useMutation } from '@apollo/client'
 import React, { useState } from 'react'
 import FileBase from 'react-file-base64'
 import toast from 'react-hot-toast'
+import { useSelector } from 'react-redux'
 import { useStateContext } from '../context/StateContext'
 import { UPDATE_POST } from '../graphql/mutations/postMutations'
 import { GET_POST_BY_ID } from '../graphql/queries/postQueries'
+import { selectToken } from '../redux/activities/userRedux'
 
-function Modal({ isOpen, setIsOpen, postId }: any) {
+interface IProps {
+  isOpen: any
+  setIsOpen: any
+  postId: any
+  post: Post
+}
+
+function Modal({ isOpen, setIsOpen, postId, post }: IProps) {
   const [formData, setFormData] = useState({
-    content: '',
-    image: '',
+    content: post.content,
+    image: post.image,
   })
-  const { currentUser } = useStateContext()
-  const { user, token } = currentUser || {}
+  const token = useSelector(selectToken)
 
   const [updatePost] = useMutation(UPDATE_POST, {
     variables: {
@@ -45,7 +53,7 @@ function Modal({ isOpen, setIsOpen, postId }: any) {
   }
 
   return (
-    <div className="mt-5 flex items-center justify-center">
+    <div className="absolute left-1/4 mt-5 flex w-full text-center">
       <div className=" flex w-1/2 flex-col items-center justify-center rounded-lg bg-slate-100  p-10 shadow-lg">
         <h1 className="absolute top-5 font-Rubik text-3xl font-bold">
           Update your Post

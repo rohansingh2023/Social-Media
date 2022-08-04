@@ -125,7 +125,7 @@ const Post = ({ post, user, refresh }: Props) => {
               <img
                 src={user.profilePic}
                 alt=""
-                className="h-10 w-10 rounded-full object-cover"
+                className="h-12 w-12 rounded-full object-cover"
               />
               <div className="flex flex-col items-start">
                 <div className="flex items-center space-x-2">
@@ -137,8 +137,8 @@ const Post = ({ post, user, refresh }: Props) => {
                     {user.email}
                   </p>
                 </div>
-                <p className="text-sm font-light text-gray-600">
-                  • {moment(post.createdAt).fromNow()}
+                <p className="text-xs font-normal text-gray-600">
+                  {moment(post.createdAt).fromNow()}
                 </p>
               </div>
             </div>
@@ -167,12 +167,12 @@ const Post = ({ post, user, refresh }: Props) => {
         {/* </div> */}
         <div className="">
           <div className="flex items-center justify-between p-4">
-            <p className="text-lg font-bold">
+            <p className="text-md font-base font-Intertext-gray-500">
               {post.likes.length > 1
                 ? `${post.likes.length} likes`
                 : `${post.likes.length} like`}
             </p>
-            <p className="text-lg font-bold">
+            <p className="text-md font-base font-Intertext-gray-500">
               {post.comments.length > 1
                 ? `${post.comments.length} comments`
                 : `${post.comments.length} comment`}

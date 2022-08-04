@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { IoPencilSharp } from 'react-icons/io5'
 import { Navbar, Post } from '../../components'
 import { FaUniversity, FaBirthdayCake } from 'react-icons/fa'
@@ -11,6 +11,18 @@ import { useStateContext } from '../../context/StateContext'
 import { TiTick } from 'react-icons/ti'
 import { RiAddLine } from 'react-icons/ri'
 import Link from 'next/link'
+import client from '../../apollo-client'
+import { GET_USER_BY_ID } from '../../graphql/queries/userQueries'
+import { useSelector } from 'react-redux'
+import {
+  selectCurrentUser,
+  selectToken,
+} from '../../redux/activities/userRedux'
+import toast from 'react-hot-toast'
+import { socket } from '../../socket'
+import { useMutation } from '@apollo/client'
+import { SEND_FRIEND_REQUEST } from '../../graphql/mutations/userMutations'
+import { useRouter } from 'next/router'
 
 interface Props {
   userIdData: {
@@ -21,19 +33,72 @@ interface Props {
 
 function UserInfo({ userIdData: { user, posts } }: Props) {
   const [isHidden, setIsHidden] = useState<boolean>(false)
+  const [friendInfo, setFriendInfo] = useState<User>()
+  const currentUser = useSelector(selectCurrentUser)
+  const token = useSelector(selectToken)
+  const router = useRouter()
+  // const { currentUser } = useStateContext()
+  // const { user: cUser, token } = currentUser || {}
 
-  const { currentUser } = useStateContext()
-  const { user: cUser, token } = currentUser || {}
+  const [friendRequest] = useMutation(SEND_FRIEND_REQUEST, {
+    variables: {
+      id: user.id,
+    },
+    context: {
+      headers: {
+        Authorization: `${token}`,
+      },
+    },
+  })
 
-  const isFriend = cUser?.friends?.findIndex(
+  useEffect(() => {
+    const getUserFriend = async () => {
+      try {
+        const { data } = await client.query({
+          query: GET_USER_BY_ID,
+          variables: {
+            id: user.id,
+          },
+        })
+        setFriendInfo(data?.userById?.user)
+      } catch (error) {}
+    }
+    getUserFriend()
+  }, [])
+
+  const isFriend = currentUser?.friends?.findIndex(
     (f) => f.userId.toString() === user.id.toString()
   )
 
-  // const isRequestSent = cUser?.friendRequests?.findIndex(
-  //   (f) => f.userId.toString() === user.id.toString()
-  // )
+  const isRequestSent = friendInfo?.friendRequests?.findIndex(
+    (f) => f.userId.toString() === currentUser?.id.toString()
+  )
 
-  console.log(isFriend)
+  const handleRequest = async () => {
+    socket.emit('sent_request', {
+      cUser: {
+        name: currentUser?.name,
+        id: currentUser?.id,
+        img: currentUser?.profilePic,
+      },
+      name: user.name,
+      id: user.id,
+    })
+
+    try {
+      const refresh = toast.loading('Sending friend Request...')
+      await friendRequest()
+      toast.success('Request Sent', {
+        id: refresh,
+      })
+      router.reload()
+    } catch (error) {
+      toast.error(`${error}`)
+      console.log(error)
+    }
+  }
+
+  // console.log(isRequestSent)
 
   return (
     <>
@@ -81,16 +146,29 @@ function UserInfo({ userIdData: { user, posts } }: Props) {
                   </div>
                   <div className="mt-3 flex items-start justify-between">
                     <button
-                      disabled={isFriend !== -1}
+                      onClick={handleRequest}
+                      disabled={isFriend !== -1 || isRequestSent !== -1}
                       className={
-                        isFriend === -1
+                        isFriend !== -1
                           ? 'flex h-10 items-center rounded-md bg-gray-300 p-3 text-center font-semibold outline-none hover:bg-gray-400 lg:absolute lg:right-7 lg:bottom-0 lg:justify-center'
+                          : isRequestSent !== -1
+                          ? 'flex h-10 items-center rounded-md bg-green-500 p-3 text-center font-semibold text-white outline-none hover:bg-orange-400 lg:absolute lg:right-7 lg:bottom-0 lg:justify-center'
                           : 'flex h-10 items-center rounded-md bg-[#FF8080] p-3 text-center font-semibold text-white outline-none hover:bg-orange-400 lg:absolute lg:right-7 lg:bottom-0 lg:justify-center'
                       }
                     >
-                      {isFriend !== -1 ? <TiTick /> : <RiAddLine />}
+                      {isFriend !== -1 ? (
+                        <TiTick />
+                      ) : isRequestSent !== -1 ? (
+                        <TiTick />
+                      ) : (
+                        <RiAddLine />
+                      )}
 
-                      {isFriend !== -1 ? 'Friends' : 'Add Friend'}
+                      {isFriend !== -1
+                        ? 'Friends'
+                        : isRequestSent !== -1
+                        ? 'Request Sent'
+                        : 'Add Friend'}
                     </button>
                   </div>
                 </div>
