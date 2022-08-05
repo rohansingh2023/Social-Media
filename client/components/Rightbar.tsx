@@ -73,11 +73,8 @@ const Rightbar = () => {
               currentUser?.friends?.map(
                 (u: friends) => (
                   // user.friends?.map((u) => (
-                  <Link href={`/user/${u.userId}`}>
-                    <div
-                      className="flex cursor-pointer items-center justify-between rounded-md p-3 hover:bg-gray-200"
-                      key={u.id}
-                    >
+                  <Link href={`/user/${u.userId}`} key={u.id}>
+                    <div className="flex cursor-pointer items-center justify-between rounded-md p-3 hover:bg-gray-200">
                       <div className="flex items-center justify-between">
                         <img
                           src={u.profilePic}

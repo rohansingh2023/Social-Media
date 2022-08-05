@@ -34,7 +34,7 @@ const Navbar = () => {
   }
 
   const joinChat = (e: React.MouseEvent<SVGElement, MouseEvent>) => {
-    socket.emit('join_chat')
+    socket.emit('join_chat', { userId: currentUser?.id })
   }
 
   return (

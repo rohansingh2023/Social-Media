@@ -20,9 +20,9 @@ const io = new Server(server, {
 
 let onlineUsers: any[] = [];
 
-const addNewUser = (username: any, socketId: any) => {
-  !onlineUsers.some((user) => user.username === username) &&
-    onlineUsers.push({ username, socketId });
+const addNewUser = (userId: any, socketId: any) => {
+  !onlineUsers.some((user) => user.userId === userId) &&
+    onlineUsers.push({ userId, socketId });
 };
 
 const removeUser = (socketId: string) => {
@@ -40,10 +40,11 @@ io.on(
   ) => {
     // console.log("User connected: ", socket.id);
 
-    socket.on("join_chat", ({ userId }) => {
-      onlineUsers[userId] = socket.id;
-      // io.emit("userOnline", onlineUsers);
-      console.log(`User connected with id: ${userId}`);
+    socket.on("join_chat", (data) => {
+      addNewUser(data?.userId, socket.id);
+      io.emit("userOnline", onlineUsers);
+      console.log(onlineUsers);
+      console.log(`User connected with id: ${data?.userId}`);
     });
 
     socket.on("sent_request", (data: any) => {
@@ -83,6 +84,8 @@ io.on(
     socket.on("disconnect", () => {
       // let i = onlineUsers.indexOf(socket.id);
       // onlineUsers.splice(i, 1, 0);
+      removeUser(socket.id);
+      io.emit("userOnline", onlineUsers);
       console.log("User disconnected: ", socket.id);
     });
   }
