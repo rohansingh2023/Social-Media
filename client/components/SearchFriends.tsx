@@ -7,6 +7,8 @@ import { searchUsers } from '../services'
 import { useStateContext } from '../context/StateContext'
 import { useSelector } from 'react-redux'
 import { selectCurrentUser } from '../redux/activities/userRedux'
+import { useQuery } from '@apollo/client'
+import { SEARCH_USERS } from '../graphql/queries/userQueries'
 
 interface Props {
   userData: User[]
@@ -24,23 +26,23 @@ function SearchFriends({ userData }: Props) {
     (user: any) => user.id !== currentUser?.id
   )
 
+  const { data, loading } = useQuery(SEARCH_USERS, {
+    variables: {
+      searchTerm,
+    },
+  })
+
   useEffect(() => {
     const getSearchResults = async () => {
-      try {
-        const data = (await searchUsers(searchTerm)) || []
-        setSearchResults({
-          users: data.users,
-          totalCount: data.totalCount,
-        })
-      } catch (error) {
-        toast.error(`${error}`)
-        console.log(error)
-      }
+      setSearchResults({
+        users: data?.searchUsers?.users,
+        totalCount: data?.searchUsers?.totalCount,
+      })
     }
     getSearchResults()
   }, [])
 
-  if (!userData) {
+  if (loading) {
     return <Loading />
   }
 

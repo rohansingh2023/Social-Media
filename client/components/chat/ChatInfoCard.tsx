@@ -1,5 +1,5 @@
 import axios from 'axios'
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { useStateContext } from '../../context/StateContext'
 import { HiOutlineUserAdd } from 'react-icons/hi'
 
@@ -9,6 +9,21 @@ interface IProps {
 
 const ChatInfoCard = ({ friendInfo }: IProps) => {
   const { currentUser } = useStateContext()
+  const [myConvs, setMyConvs] = useState([])
+
+  useEffect(() => {
+    const getConvOfUser = async () => {
+      try {
+        const res = await axios.get(
+          `http://localhost:3001/api/conversation/${currentUser?.id}`
+        )
+        setMyConvs(res.data)
+      } catch (error) {
+        console.log(error)
+      }
+    }
+    getConvOfUser()
+  }, [])
 
   const handleConversation = async () => {
     try {

@@ -1,5 +1,5 @@
 import axios from 'axios'
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { useStateContext } from '../../context/StateContext'
 import ChatInfoCard from './ChatInfoCard'
 

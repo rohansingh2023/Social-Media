@@ -155,12 +155,8 @@ const ChatSection = ({ isChatOpen, setIsChatOpen, currentChat }: IProps) => {
             {/* Chats */}
             <div className="flex-[0.90] overflow-y-scroll border-x bg-white">
               {messages?.map((m) => (
-                <div ref={scrollRef}>
-                  <MessageCard
-                    key={m._id}
-                    message={m}
-                    receiverId={receiverId}
-                  />
+                <div ref={scrollRef} key={m._id}>
+                  <MessageCard message={m} receiverId={receiverId} />
                 </div>
               ))}
             </div>

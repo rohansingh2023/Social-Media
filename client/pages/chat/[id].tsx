@@ -16,8 +16,8 @@ interface IProps {
 
 const Chat = ({ userData: { user, posts, conv } }: IProps) => {
   useEffect(() => {
-    socket.on('userOnline', ({ onlineUsers }) => {
-      console.log(onlineUsers)
+    socket.on('userOnline', (data) => {
+      console.log(data)
     })
   }, [socket])
 
