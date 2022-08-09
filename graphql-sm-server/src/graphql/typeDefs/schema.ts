@@ -124,10 +124,18 @@ const typeDefs = gql`
     ): AuthData!
     login(email: String!, password: String!): AuthData!
     likePost(id: ID!): Post!
+    updateUser(
+      name: String!
+      email: String!
+      profilePic: String!
+      dob: String!
+      bio: String!
+    ): User!
     createComment(postId: ID!, body: String!): Post!
     deleteComment(postId: ID!, commentId: ID!): Post!
     friendRequest(id: ID!): User!
     acceptFriendRequest(email: String!): User!
+    declineFriendRequest(email: String!): User
     unFriend(email: String!): User!
     createConversation(sender: String!, receiver: String!): Conversation!
   }

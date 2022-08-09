@@ -52,7 +52,7 @@ const FriendRequestContainer = ({ user: u }: Props) => {
   }
 
   return (
-    <div className="col-span-12 flex max-h-[91vh] flex-col border-x bg-gray-200 p-5 lg:col-span-8 xl:col-span-6">
+    <div className="col-span-12 flex max-h-[91vh] flex-col overflow-scroll border-x bg-gray-200 p-5 scrollbar-hide lg:col-span-8 xl:col-span-6">
       <div className="mt-3 flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-bold">

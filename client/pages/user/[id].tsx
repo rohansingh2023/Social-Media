@@ -120,7 +120,7 @@ function UserInfo({ userIdData: { user, posts } }: Props) {
               <img
                 src={user.profilePic}
                 alt=""
-                className="z-50 mx-auto -mt-20 h-44 w-44 rounded-full object-cover md:ml-10 lg:-mt-10 lg:ml-5"
+                className="z-40 mx-auto -mt-20 h-44 w-44 rounded-full object-cover md:ml-10 lg:-mt-10 lg:ml-5"
               />
               {/* </div> */}
               <div className="ml-5 mt-1 flex flex-1 flex-col lg:relative lg:mt-5">

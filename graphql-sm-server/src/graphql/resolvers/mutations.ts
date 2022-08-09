@@ -2,7 +2,7 @@ import models from "../../models";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import { AuthenticationError, UserInputError } from "apollo-server-express";
-import mongoose from "mongoose";
+import mongoose, { model } from "mongoose";
 import User from "../../models/User";
 
 export default {
@@ -111,6 +111,32 @@ export default {
     //   console.log(error);
     //   throw new Error("Error logging in");
     // }
+  },
+  updateUser: async (
+    _: any,
+    { name, email, profilePic, dob, bio }: any,
+    { models, user }: any
+  ) => {
+    if (!user) {
+      throw new AuthenticationError("You must login to update");
+    }
+    return await models.User.findOneAndUpdate(
+      {
+        _id: user.id,
+      },
+      {
+        $set: {
+          name,
+          email,
+          profilePic,
+          dob,
+          bio,
+        },
+      },
+      {
+        new: true,
+      }
+    );
   },
   likePost: async (_: any, { id }: any, { models, user }: any) => {
     if (!user) {
@@ -267,6 +293,28 @@ export default {
       }
     } catch (error) {
       throw new Error("Error accepting friend request");
+    }
+  },
+  declineFriendRequest: async (
+    _: any,
+    { email }: any,
+    { models, user }: any
+  ) => {
+    try {
+      if (!user) {
+        throw new AuthenticationError(
+          "You must login to accept a friend request"
+        );
+      }
+      const me = await models.User.findById(user.id);
+      // const reqSender = await models.User.findOne({ email });
+      await models.User.updateOne(
+        { _id: me.id },
+        { $pull: { friendRequests: { email: email } } }
+      );
+      await me.save();
+    } catch (err) {
+      throw new Error("Error declining friend request");
     }
   },
   unFriend: async (_: any, { email }: any, { models, user }: any) => {

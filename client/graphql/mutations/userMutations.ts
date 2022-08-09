@@ -62,6 +62,31 @@ const LOGIN_USER = gql`
   }
 `
 
+const UPDATE_USER = gql`
+  mutation updateUser(
+    $name: String!
+    $email: String!
+    $profilePic: String!
+    $dob: String!
+    $bio: String!
+  ) {
+    updateUser(
+      name: $name
+      email: $email
+      profilePic: $profilePic
+      dob: $dob
+      bio: $bio
+    ) {
+      id
+      name
+      email
+      profilePic
+      bio
+      dob
+    }
+  }
+`
+
 const SEND_FRIEND_REQUEST = gql`
   mutation friendReq($id: ID!) {
     friendRequest(id: $id) {
@@ -99,6 +124,16 @@ const ACCEPT_FRIEND_REQUEST = gql`
   }
 `
 
+const DECLINE_FRIEND_REQUEST = gql`
+  mutation declineFriendRequest($email: String!) {
+    declineFriendRequest(email: $email) {
+      id
+      name
+      email
+    }
+  }
+`
+
 const UNFRIEND = gql`
   mutation unFriend($email: String!) {
     unFriend(email: $email) {
@@ -118,4 +153,6 @@ export {
   ACCEPT_FRIEND_REQUEST,
   SEND_FRIEND_REQUEST,
   UNFRIEND,
+  DECLINE_FRIEND_REQUEST,
+  UPDATE_USER,
 }
