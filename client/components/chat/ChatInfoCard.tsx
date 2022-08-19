@@ -2,13 +2,15 @@ import axios from 'axios'
 import React, { useEffect, useState } from 'react'
 import { useStateContext } from '../../context/StateContext'
 import { HiOutlineUserAdd } from 'react-icons/hi'
+import { selectCurrentUser } from '../../redux/activities/userRedux'
+import { useSelector } from 'react-redux'
 
 interface IProps {
   friendInfo: friends
 }
 
 const ChatInfoCard = ({ friendInfo }: IProps) => {
-  const { currentUser } = useStateContext()
+  const currentUser = useSelector(selectCurrentUser)
   const [myConvs, setMyConvs] = useState([])
 
   useEffect(() => {
@@ -23,12 +25,25 @@ const ChatInfoCard = ({ friendInfo }: IProps) => {
       }
     }
     getConvOfUser()
-  }, [])
+  }, [currentUser?.id])
+
+  // var array = [1, 3],
+  //   prizes = [
+  //     [1, 3],
+  //     [1, 4],
+  //   ],
+  //   includes = prizes.some((a) => array.every((v, i) => v === a[i]))
+
+  // console.log(includes)
+  const abc = myConvs.some((a: any) =>
+    a.members.every((v: any, i: any) => v === friendInfo.userId)
+  )
+  console.log(abc)
 
   const handleConversation = async () => {
     try {
       const convDetails = {
-        senderId: currentUser?.user?.id,
+        senderId: currentUser?.id,
         receiverId: friendInfo.userId,
       }
 
@@ -41,6 +56,8 @@ const ChatInfoCard = ({ friendInfo }: IProps) => {
       console.log(error)
     }
   }
+
+  console.log(myConvs)
 
   return (
     <div

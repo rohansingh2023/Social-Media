@@ -1,12 +1,35 @@
 import { createSlice } from '@reduxjs/toolkit'
 
-const intialState = {
+interface currentUser {
+  currentUser: {
+    user: User
+    token: String
+  }
+}
+
+// const intialState: currentUser = {
+//   currentUser: {
+//     user: {
+//       id: '',
+//       name: '',
+//       email: '',
+//       profilePic: '',
+//       bio: '',
+//       dob: '',
+//       friendRequests: [],
+//       friends: []
+//     },
+//     token: ''
+//   }
+// }
+
+const initialState = {
   currentUser: null,
 }
 
 const userSlice = createSlice({
   name: 'user',
-  initialState: intialState,
+  initialState: initialState,
   reducers: {
     addCurrentUser: (state, action) => {
       state.currentUser = action.payload
@@ -14,6 +37,9 @@ const userSlice = createSlice({
     removeCurrentUser: (state) => {
       state.currentUser = null
     },
+    // addToFriendList: (state, action)=>{
+    //   state.currentUser?.user?.
+    // }
   },
 })
 

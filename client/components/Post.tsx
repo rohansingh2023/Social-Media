@@ -17,6 +17,7 @@ import { useRouter } from 'next/router'
 import { MdModeComment } from 'react-icons/md'
 import { useSelector } from 'react-redux'
 import { selectCurrentUser, selectToken } from '../redux/activities/userRedux'
+import { TiTick } from 'react-icons/ti'
 
 type Props = {
   post: Post
@@ -109,6 +110,8 @@ const Post = ({ post, user, refresh }: Props) => {
     }
   }
 
+  const isFriend = cuser?.friends?.findIndex((f) => f.userId === user.id)
+
   return (
     <div>
       <div className="mb-5 flex h-auto flex-col rounded-md border border-gray-200 bg-white font-Inter shadow-sm lg:w-full">
@@ -137,9 +140,14 @@ const Post = ({ post, user, refresh }: Props) => {
                     {user.email}
                   </p>
                 </div>
-                <p className="text-xs font-normal text-gray-600">
-                  {moment(post.createdAt).fromNow()}
-                </p>
+                <div className="flex items-center">
+                  <p className="text-xs font-normal text-gray-600">
+                    {moment(post.createdAt).fromNow()}
+                  </p>
+                  <div className="ml-3">
+                    {isFriend !== -1 && <TiTick color="green" />}
+                  </div>
+                </div>
               </div>
             </div>
           </Link>

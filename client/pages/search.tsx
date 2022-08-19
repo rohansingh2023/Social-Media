@@ -16,7 +16,7 @@ const Search = ({ userData, onlyUserData }: Props) => {
       <div className="row-span-9 grid grid-cols-12">
         <Leftbar />
         <SearchFriends userData={userData} />
-        <Rightbar userData={onlyUserData} />
+        <Rightbar/>
       </div>
     </div>
   )

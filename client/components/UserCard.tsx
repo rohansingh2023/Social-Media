@@ -2,9 +2,6 @@ import React, { useEffect, useState } from 'react'
 import { HiViewList } from 'react-icons/hi'
 import { CgPlayListRemove } from 'react-icons/cg'
 import { MdOutlineFileDownloadDone } from 'react-icons/md'
-import Link from 'next/link'
-import { useStateContext } from '../context/StateContext'
-import { type } from 'os'
 import { useRouter } from 'next/router'
 import { useMutation } from '@apollo/client'
 import { SEND_FRIEND_REQUEST } from '../graphql/mutations/userMutations'
@@ -14,7 +11,7 @@ import { GET_USER_BY_ID } from '../graphql/queries/userQueries'
 import { getUserById, getUsers } from '../services'
 import { socket } from '../socket'
 import { useSelector } from 'react-redux'
-import { selectCurrentUser } from '../redux/activities/userRedux'
+import { selectCurrentUser, selectToken } from '../redux/activities/userRedux'
 
 interface Props {
   user: User
@@ -27,10 +24,7 @@ function UserCard({ user }: Props) {
   const [friends, setFriends] = useState<User>()
   const [friendInfo, setFriendInfo] = useState<User>()
   const currentUser = useSelector(selectCurrentUser)
-
-  const {
-    currentUser: { token },
-  } = useStateContext()
+  const token = useSelector(selectToken)
 
   const [friendRequest] = useMutation(SEND_FRIEND_REQUEST, {
     variables: {
@@ -101,15 +95,17 @@ function UserCard({ user }: Props) {
       id: user.id,
     })
 
+    const refresh = toast.loading('Sending friend Request...')
     try {
-      const refresh = toast.loading('Sending friend Request...')
       await friendRequest()
       toast.success('Request Sent', {
         id: refresh,
       })
       router.reload()
     } catch (error) {
-      toast.error(`${error}`)
+      toast.error(`${error}`, {
+        id: refresh,
+      })
       console.log(error)
     }
   }
