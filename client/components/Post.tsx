@@ -111,10 +111,11 @@ const Post = ({ post, user, refresh }: Props) => {
   }
 
   const isFriend = cuser?.friends?.findIndex((f) => f.userId === user.id)
+  const isLiked = post.likes.findIndex((f) => f.email === cuser?.email)
 
   return (
     <div>
-      <div className="mb-5 flex h-auto flex-col rounded-md border border-gray-200 bg-white font-Inter shadow-sm lg:w-full">
+      <div className="bg-white mb-5 flex h-auto flex-col rounded-md border border-gray-200 font-Inter shadow-sm lg:w-full">
         <div className="mt-2 flex items-center justify-between px-4 py-2">
           <Link
             href={
@@ -193,14 +194,23 @@ const Post = ({ post, user, refresh }: Props) => {
             </Link>
             <Button>Share</Button> */}
             <div
-              className="flex w-full items-center justify-center space-x-2 rounded-md py-1 hover:bg-gray-200"
+              className="hover:bg-gray-200 flex w-full items-center justify-center space-x-2 rounded-md py-1"
               onClick={handleLike}
             >
-              <AiTwotoneLike size={22} color="gray" />
-              <p className="font-Inter text-base text-gray-700">Like</p>
+              <AiTwotoneLike
+                size={22}
+                color={isLiked === -1 ? 'grey' : '#FF8080'}
+              />
+              <p
+                className={`font-Inter text-base ${
+                  isLiked === -1 ? 'text-gray-700' : 'text-[#FF8080]'
+                }`}
+              >
+                Like
+              </p>
             </div>
             <div
-              className="flex w-full items-center justify-center space-x-2 rounded-md py-1 hover:bg-gray-200"
+              className="hover:bg-gray-200 flex w-full items-center justify-center space-x-2 rounded-md py-1"
               onClick={() => setIsOpen(!isOpen)}
             >
               <MdModeComment size={22} color="gray" />
@@ -220,7 +230,7 @@ const Post = ({ post, user, refresh }: Props) => {
                 <input
                   type="text"
                   placeholder="Comment..."
-                  className="flex-1 rounded-full bg-gray-200 px-4 py-2 outline-none "
+                  className="bg-gray-200 flex-1 rounded-full px-4 py-2 outline-none "
                   value={body}
                   onChange={(e) => setBody(e.target.value)}
                   onKeyPress={handleComment}
@@ -241,7 +251,7 @@ const Post = ({ post, user, refresh }: Props) => {
                       className="h-8 w-8 rounded-full"
                     />
                     <div>
-                      <div className="flex-1 flex-wrap  rounded-xl bg-gray-200 p-2">
+                      <div className="bg-gray-200 flex-1  flex-wrap rounded-xl p-2">
                         <h1 className="text-base font-semibold">{c.name}</h1>
                         <p className="text-sm font-normal">{c.body}</p>
                       </div>

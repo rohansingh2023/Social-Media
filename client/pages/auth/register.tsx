@@ -51,6 +51,11 @@ function register() {
     }
   }
 
+  const printSubmit = (e: any) => {
+    e.preventDefault()
+    console.log(typeof formData.name)
+  }
+
   return (
     <div className="relative -mt-16 flex h-screen items-center justify-center bg-register bg-cover bg-center bg-no-repeat font-DMSerif">
       <div className="absolute top-20 rounded-md bg-slate-200 py-7 px-5">
@@ -144,7 +149,7 @@ function register() {
                     setFormData({ ...formData, dob: e.target.value })
                   }}
                   value={formData.dob}
-                  type="text"
+                  type="date"
                   className="relative mt-3 block w-full appearance-none rounded-md border border-gray-300 px-3 py-2 text-gray-900 placeholder-gray-500 focus:z-10 focus:border-[#FF8080] focus:outline-none focus:ring-[#FF8080] sm:text-sm"
                   placeholder="Enter your Date of Birth"
                 />

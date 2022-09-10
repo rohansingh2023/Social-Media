@@ -1,6 +1,6 @@
 import { useQuery } from '@apollo/client'
 import Link from 'next/link'
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { FaBirthdayCake } from 'react-icons/fa'
 import { MdOutlineOnlinePrediction } from 'react-icons/md'
 import { useSelector } from 'react-redux'
@@ -9,17 +9,85 @@ import { selectCurrentUser } from '../redux/activities/userRedux'
 
 const Rightbar = () => {
   const currentUser = useSelector(selectCurrentUser)
+  const [currentSlide, setCurrentSlide] = useState<number>(0)
+
+  const incSlide = () => {
+    setCurrentSlide(currentSlide + 1)
+  }
+
+  const decSlide = () => {
+    setCurrentSlide(currentSlide - 1)
+  }
+
+  const date = new Date()
+  const csDate = [date.getDate().toString(), date.getMonth().toString()]
+  const cDate = currentUser?.dob.split('-').splice(1, 2)
+  console.log(JSON.stringify(csDate) === JSON.stringify(cDate))
 
   return (
     // <div className="sticky top-20 h-[100vh] w-1/4">
     <div className="hidden max-h-[91vh] max-w-full overflow-scroll scrollbar-hide lg:col-span-2 lg:inline xl:col-span-3">
       <div className="font-Inter lg:flex lg:h-full lg:flex-shrink-0 lg:flex-col lg:items-center">
-        <div className="h-50 mx-5 my-5 w-11/12 rounded-xl border border-b-2 border-gray-300 bg-gray-300 bg-pack-train p-3 text-white">
-          <p className="ml-3 text-xl font-bold">Tuesday</p>
-          <p className="ml-3 text-lg">15 Jan 2022</p>
-          <p className="ml-3 text-lg">Mumbai, IN</p>
-          <p className="ml-3 mt-10 text-5xl font-extrabold">29 C</p>
-          <p className="ml-3 text-lg font-semibold">Sunny</p>
+        <div
+          className={`h-50 relative mx-5 my-5 w-11/12 rounded-md border border-b-2 border-gray-300 bg-gray-300 ${
+            currentSlide === 0
+              ? 'bg-slider-1'
+              : currentSlide === 1
+              ? 'bg-slider-2'
+              : 'bg-slider-3'
+          } p-3 text-white transition-opacity duration-200`}
+        >
+          {currentSlide < 1 && (
+            <img
+              onClick={incSlide}
+              src="https://raw.githubusercontent.com/Ziratsu/slider-react/a44cc92f02b0e4995cc661e04c32724fc946ac59/src/Components/Slider/icons/right-arrow.svg"
+              alt=""
+              className="absolute right-0 top-[45%] h-8 w-8 rounded-full bg-white p-2 hover:bg-gray-400"
+            />
+          )}
+          {currentSlide > 0 && (
+            <img
+              onClick={decSlide}
+              src="https://raw.githubusercontent.com/Ziratsu/slider-react/a44cc92f02b0e4995cc661e04c32724fc946ac59/src/Components/Slider/icons/left-arrow.svg"
+              alt=""
+              className="absolute left-0 top-[45%] h-8 w-8 rounded-full bg-white p-2 hover:bg-gray-400"
+            />
+          )}
+          {currentSlide === 0 && (
+            <div className="space-y-3 p-2">
+              <h1 className="text-left font-Inter text-xl font-bold">
+                Welcome to SM
+              </h1>
+              <p className="text-left font-Inter text-base font-light">
+                Your very own social media like no other. Feel free to connect
+                with world and share your thoughts. Swipe to see all it's
+                amazing features.
+              </p>
+            </div>
+          )}
+          {currentSlide === 1 && (
+            <div className="ml-5 space-y-3 p-2">
+              <h1 className="text-left font-Inter text-xl font-bold">
+                Make Friends
+              </h1>
+              <p className="text-left font-Inter text-base font-light">
+                Connect with people from all over the world through our friend
+                request feature. View, react and comment on their posts freely.
+              </p>
+            </div>
+          )}
+
+          {currentSlide === 2 && (
+            <div className="ml-5 space-y-3 p-3">
+              <h1 className="text-left font-Inter text-xl font-bold">
+                Make Friends
+              </h1>
+              <p className="text-left font-Inter text-base font-light">
+                Connect with people from all over the world through our friend
+                request feature. View, react and comment on their posts freely.
+              </p>
+            </div>
+          )}
         </div>
         <div className="mx-5 mt-5 flex h-28 w-11/12 flex-col items-start justify-between border-y border-gray-300 p-3 font-Inter">
           <h1 className="text-lg font-medium text-gray-500">Birthdays</h1>

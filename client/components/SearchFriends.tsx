@@ -3,7 +3,7 @@ import toast from 'react-hot-toast'
 import { AiOutlineSearch } from 'react-icons/ai'
 import Loading from './Loading'
 import UserCard from './UserCard'
-import { searchUsers } from '../services'
+// import { searchUsers } from '../services'
 import { useStateContext } from '../context/StateContext'
 import { useSelector } from 'react-redux'
 import { selectCurrentUser } from '../redux/activities/userRedux'
@@ -12,39 +12,16 @@ import { SEARCH_USERS } from '../graphql/queries/userQueries'
 
 interface Props {
   userData: User[]
+  searchUsers: any
 }
 
-function SearchFriends({ userData }: Props) {
+function SearchFriends({ userData, searchUsers }: Props) {
   const [searchTerm, setSearchTerm] = useState<string>('')
-  const [searchResults, setSearchResults] = useState<any>({
-    users: [],
-    totalCount: 0,
-  })
   const currentUser = useSelector(selectCurrentUser)
 
-  const onlyUserData: User[] = searchResults.users?.filter(
+  const onlyUserData: User[] = searchUsers?.users?.filter(
     (user: any) => user.id !== currentUser?.id
   )
-
-  const { data, loading } = useQuery(SEARCH_USERS, {
-    variables: {
-      searchTerm,
-    },
-  })
-
-  useEffect(() => {
-    const getSearchResults = async () => {
-      setSearchResults({
-        users: data?.searchUsers?.users,
-        totalCount: data?.searchUsers?.totalCount,
-      })
-    }
-    getSearchResults()
-  }, [])
-
-  if (loading) {
-    return <Loading />
-  }
 
   return (
     <div className="col-span-12 flex max-h-[91vh] flex-1 flex-col overflow-scroll scrollbar-hide lg:col-span-8 lg:border-x xl:col-span-6 ">
@@ -60,7 +37,7 @@ function SearchFriends({ userData }: Props) {
       <div className="ml-11 flex w-[88%] flex-col items-center justify-center p-5">
         {onlyUserData
           ?.filter((u: { name: string }) =>
-            u.name.toLowerCase().includes(searchTerm)
+            u?.name?.toLowerCase().includes(searchTerm)
           )
           .map((user: any, i: any) => (
             <UserCard key={i} user={user} />

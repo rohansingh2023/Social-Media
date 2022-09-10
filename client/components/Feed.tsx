@@ -10,6 +10,7 @@ import { RefreshIcon } from '@heroicons/react/outline'
 import { getPosts } from '../services'
 import { useSelector } from 'react-redux'
 import { selectCurrentUser, selectToken } from '../redux/activities/userRedux'
+import Skeleton from 'react-loading-skeleton'
 
 interface Props {
   postData: Post[]
@@ -88,7 +89,7 @@ const Feed = ({ postData: posts }: Props) => {
   }
 
   return (
-    <div className="col-span-12 max-h-[91vh] overflow-scroll bg-gray-100 p-3 scrollbar-hide lg:col-span-8 lg:border-x lg:p-5 xl:col-span-6">
+    <div className="bg-gray-100 col-span-12 max-h-[91vh] overflow-scroll p-3 scrollbar-hide lg:col-span-8 lg:border-x lg:p-5 xl:col-span-6">
       <div className="mx-auto max-w-xl">
         <div className="flex items-center justify-between">
           <h1 className="text-3xl font-bold ">Explore</h1>
@@ -97,6 +98,7 @@ const Feed = ({ postData: posts }: Props) => {
             className="mr-5 mt-5 h-8 w-8 cursor-pointer text-[#FF8080] transition-all duration-500 ease-out hover:rotate-180 active:scale-125"
           />
         </div>
+
         <div className="mt-3 flex items-center justify-center space-x-0 lg:mt-0 lg:flex-1 lg:space-x-2 lg:p-5 ">
           <img
             src={currentUser?.profilePic}
@@ -104,9 +106,9 @@ const Feed = ({ postData: posts }: Props) => {
             className="mt-14 hidden h-14 w-14 rounded-full object-cover lg:inline"
           />
           <div className=" flex items-center lg:flex-1">
-            <div className="flex flex-col rounded-lg bg-white lg:flex-1 ">
+            <div className="bg-white flex flex-col rounded-lg lg:flex-1 ">
               <input
-                className="w-full bg-white p-3 placeholder-black outline-none"
+                className="bg-white w-full p-3 placeholder-black outline-none"
                 placeholder="Share your Knowledge"
                 name="content"
                 value={formData.content}
@@ -125,13 +127,14 @@ const Feed = ({ postData: posts }: Props) => {
                 <button
                   onClick={handleUpload}
                   disabled={!formData.content}
-                  className="rounded-full bg-[#FF8080] px-5 py-2 font-bold text-white hover:bg-orange-600 disabled:opacity-40"
+                  className="hover:bg-orange-600 rounded-full bg-[#FF8080] px-5 py-2 font-bold text-white disabled:opacity-40"
                 >
                   Post
                 </button>
               </div>
             </div>
           </div>
+          <Skeleton height={30} width={30} />
         </div>
         <div className="mt-5 flex flex-1 flex-col items-center justify-center px-3 lg:ml-0">
           {postData.length > 0 ? (

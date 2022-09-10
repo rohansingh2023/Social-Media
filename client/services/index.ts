@@ -72,7 +72,7 @@ export const getPostById = async (id: any) => {
   return results.postById
 }
 
-export const searchUsers = async (searchTerm: any) => {
+export const getSearchUsers = async (searchTerm: any) => {
   const results = await request(GRAPHQL_ENDPOINT, SEARCH_USERS, { searchTerm })
   return results.searchUsers
 }

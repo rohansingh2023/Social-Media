@@ -54,6 +54,8 @@ type comment = {
 type likes = {
   id: string
   createdAt: string
+  name: string
+  email: string
 }
 
 type member = {

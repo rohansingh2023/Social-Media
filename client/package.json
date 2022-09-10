@@ -23,6 +23,7 @@
     "react-file-base64": "^1.0.3",
     "react-hot-toast": "^2.2.0",
     "react-icons": "^4.3.1",
+    "react-loading-skeleton": "^3.1.0",
     "react-redux": "^8.0.1",
     "react-toastify": "^9.0.4",
     "redux-persist": "^6.0.0",

@@ -18,6 +18,8 @@ const GET_POSTS = gql`
         likes {
           id
           createdAt
+          email
+          name
         }
         createdAt
       }
