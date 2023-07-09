@@ -1,24 +1,30 @@
 import { gql } from '@apollo/client'
 
+const HELLO = gql`
+  query hello {
+    hello
+  }
+`
+
 const GET_USERS = gql`
   query users {
     users {
       user {
-        id
+        _id
         name
         email
         profilePic
         dob
         bio
         friendRequests {
-          id
+          _id
           email
           name
           profilePic
           createdAt
         }
         friends {
-          id
+          _id
           name
           email
           profilePic
@@ -26,19 +32,19 @@ const GET_USERS = gql`
         }
       }
       posts {
-        id
+        _id
         content
         image
         user
         comments {
-          id
+          _id
           body
           createdAt
           name
           email
         }
         likes {
-          id
+          _id
           createdAt
         }
       }
@@ -50,7 +56,7 @@ const GET_USERS_EX_ME = gql`
   query users {
     usersExcludingMe {
       user {
-        id
+        _id
         name
         email
         profilePic
@@ -58,19 +64,19 @@ const GET_USERS_EX_ME = gql`
         bio
       }
       posts {
-        id
+        _id
         user
         content
         image
         comments {
-          id
+          _id
           body
           createdAt
           name
           email
         }
         likes {
-          id
+          _id
           createdAt
         }
       }
@@ -82,14 +88,14 @@ const GET_USER_BY_ID = gql`
   query getUserById($id: ID!) {
     userById(id: $id) {
       user {
-        id
+        _id
         name
         email
         profilePic
         dob
         bio
         friendRequests {
-          id
+          _id
           email
           userId
           name
@@ -97,7 +103,7 @@ const GET_USER_BY_ID = gql`
           createdAt
         }
         friends {
-          id
+          _id
           name
           userId
           email
@@ -106,10 +112,10 @@ const GET_USER_BY_ID = gql`
         }
       }
       posts {
-        id
+        _id
         user
         comments {
-          id
+          _id
           body
           createdAt
           name
@@ -119,7 +125,7 @@ const GET_USER_BY_ID = gql`
         content
         createdAt
         likes {
-          id
+          _id
           createdAt
         }
       }
@@ -131,18 +137,34 @@ const CURRENT_USER = gql`
   query currentUser {
     currentUser {
       user {
-        id
+        _id
         name
         email
         profilePic
         dob
         bio
+        friendRequests {
+          _id
+          email
+          userId
+          name
+          profilePic
+          createdAt
+        }
+        friends {
+          _id
+          name
+          userId
+          email
+          profilePic
+          createdAt
+        }
       }
       posts {
-        id
+        _id
         user
         comments {
-          id
+          _id
           body
           createdAt
           name
@@ -151,7 +173,7 @@ const CURRENT_USER = gql`
         content
         image
         likes {
-          id
+          _id
           createdAt
         }
       }
@@ -162,14 +184,14 @@ const CURRENT_USER = gql`
 const GET_ONLY_USERS = gql`
   query onlyUsers {
     onlyUsers {
-      id
+      _id
       name
       email
       profilePic
       bio
       dob
       friends {
-        id
+        _id
         userId
         name
         email
@@ -183,7 +205,7 @@ const GET_ONLY_USERS = gql`
 const GET_ONLY_USERS_EX_ME = gql`
   query onlyUsers {
     onlyUsersExcludingMe {
-      id
+      _id
       name
       email
       profilePic
@@ -197,7 +219,7 @@ const SEARCH_USERS = gql`
   query searchUsers($searchTerm: String!) {
     searchUsers(searchTerm: $searchTerm) {
       users {
-        id
+        _id
         name
         email
         profilePic
@@ -214,7 +236,7 @@ const GET_FRIEND_REQUESTS = gql`
     userById(id: $id) {
       user {
         friendRequests {
-          id
+          _id
           name
           userId
           email
@@ -227,6 +249,7 @@ const GET_FRIEND_REQUESTS = gql`
 `
 
 export {
+  HELLO,
   GET_USERS,
   GET_USER_BY_ID,
   CURRENT_USER,

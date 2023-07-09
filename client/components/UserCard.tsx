@@ -12,6 +12,8 @@ import { getUserById, getUsers } from '../services'
 import { socket } from '../socket'
 import { useSelector } from 'react-redux'
 import { selectCurrentUser, selectToken } from '../redux/activities/userRedux'
+import Image from 'next/image'
+import { useCurrentState } from '../state-management/zustand'
 
 interface Props {
   user: User
@@ -23,12 +25,12 @@ function UserCard({ user }: Props) {
   const [isFriend, setIsFriend] = useState<boolean>(false)
   const [friends, setFriends] = useState<User>()
   const [friendInfo, setFriendInfo] = useState<User>()
-  const currentUser = useSelector(selectCurrentUser)
+  const currentUser = useCurrentState((state) => state.currentUser)
   const token = useSelector(selectToken)
 
   const [friendRequest] = useMutation(SEND_FRIEND_REQUEST, {
     variables: {
-      id: user.id,
+      id: user._id,
     },
     context: {
       headers: {
@@ -43,7 +45,7 @@ function UserCard({ user }: Props) {
         const { data } = await client.query({
           query: GET_USER_BY_ID,
           variables: {
-            id: currentUser?.id,
+            id: currentUser?.user?._id,
           },
         })
         setFriends(data?.userById?.user)
@@ -58,7 +60,7 @@ function UserCard({ user }: Props) {
         const { data } = await client.query({
           query: GET_USER_BY_ID,
           variables: {
-            id: user.id,
+            id: user._id,
           },
         })
         setFriendInfo(data?.userById?.user)
@@ -68,16 +70,16 @@ function UserCard({ user }: Props) {
   }, [])
 
   const myFriend = friends?.friends?.findIndex(
-    (f) => f.userId.toString() === user.id.toString()
+    (f) => f.userId.toString() === user._id.toString()
   )
 
   const isRequestSent = friendInfo?.friendRequests?.findIndex(
-    (f) => f.userId.toString() === currentUser?.id.toString()
+    (f) => f.userId.toString() === currentUser?.user?._id.toString()
   )
 
   const handleRefresh = async () => {
     const refreshToast = toast.loading('Refreshing...')
-    const u: User = await getUserById(user.id)
+    const u: User = await getUserById(user._id)
     setUserD(u)
     toast.success('Search Section Updated', {
       id: refreshToast,
@@ -87,12 +89,12 @@ function UserCard({ user }: Props) {
   const handleRequest = async () => {
     socket.emit('sent_request', {
       cUser: {
-        name: currentUser?.name,
-        id: currentUser?.id,
-        img: currentUser?.profilePic,
+        name: currentUser?.user?.name,
+        id: currentUser?.user?._id,
+        img: currentUser?.user?.profilePic,
       },
       name: user.name,
-      id: user.id,
+      id: user._id,
     })
 
     const refresh = toast.loading('Sending friend Request...')
@@ -114,11 +116,15 @@ function UserCard({ user }: Props) {
     // <Link href={`/user/${user.id}`}>
     <div className="mt-10 flex flex-1 cursor-pointer flex-col rounded-md bg-white p-2 font-Inter shadow-lg">
       <div className="flex items-center p-2">
-        <img
-          src={user.profilePic}
-          alt=""
-          className="h-16 w-16 rounded-full object-cover"
-        />
+        {user?.profilePic && (
+          <Image
+            src={user.profilePic}
+            alt=""
+            height={64}
+            width={64}
+            className="rounded-full object-cover"
+          />
+        )}
         <div className="ml-3">
           <h2 className="text-xl font-bold text-gray-600">{user.name}</h2>
           <p className="text-md font-semibold text-gray-400">{user.email}</p>
@@ -150,7 +156,7 @@ function UserCard({ user }: Props) {
         </button>
         <button
           className="m-5 flex items-center rounded-full bg-blue-600 p-1 text-white shadow-xl hover:bg-blue-400"
-          onClick={() => router.push(`/user/${user.id}`)}
+          onClick={() => router.push(`/user/${user._id}`)}
         >
           <HiViewList color={'#fff'} size={20} />
           <span className="ml-2 pr-2 text-lg">View Profile</span>

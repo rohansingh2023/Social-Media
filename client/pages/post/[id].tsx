@@ -1,18 +1,15 @@
 import { useMutation } from '@apollo/client'
 import moment from 'moment'
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import toast from 'react-hot-toast'
 import { useSelector } from 'react-redux'
 import { Navbar } from '../../components'
 import Modal from '../../components/Modal'
-import { useStateContext } from '../../context/StateContext'
 import { ADD_COMMENT } from '../../graphql/mutations/postMutations'
 import { GET_POST_BY_ID } from '../../graphql/queries/postQueries'
-import {
-  selectCurrentUser,
-  selectToken,
-} from '../../redux/activities/userRedux'
+import { selectToken } from '../../redux/activities/userRedux'
 import { getPostById, getPosts } from '../../services'
+import { useCurrentState } from '../../state-management/zustand'
 
 type Props = {
   postData: {
@@ -23,20 +20,26 @@ type Props = {
 
 function PostInfo({ postData }: Props) {
   const [body, setBody] = useState<string>('')
-  // const { currentUser } = useStateContext()
   const [isOpen, setIsOpen] = useState<boolean>(false)
   const [post, setPost] = useState(postData)
-  const currentUser = useSelector(selectCurrentUser)
+  const currentUser = useCurrentState((state) => state.currentUser)
   const token = useSelector(selectToken)
 
   const { user, posts } = postData
+
+  const addCurrentUser = useCurrentState((state) => state.addCurrentUser)
+  // const currentUser = useCurrentState((state)=> state.currentUser);
+
+  useEffect(() => {
+    addCurrentUser()
+  }, [])
 
   // const { user: cUser, token } = currentUser || {}
   // const { id } = cUser || {}
 
   const [addComment] = useMutation(ADD_COMMENT, {
     variables: {
-      postId: posts.id,
+      postId: posts._id,
       body: body,
     },
     context: {
@@ -48,7 +51,7 @@ function PostInfo({ postData }: Props) {
       {
         query: GET_POST_BY_ID,
         variables: {
-          id: posts.id,
+          id: posts._id,
         },
       },
     ],
@@ -56,7 +59,7 @@ function PostInfo({ postData }: Props) {
 
   const handleRefresh = async () => {
     const refreshToast = toast.loading('Refreshing...')
-    const post = await getPostById(posts.id)
+    const post = await getPostById(posts._id)
     setPost(post)
     toast.success('Post Updated', {
       id: refreshToast,
@@ -85,7 +88,7 @@ function PostInfo({ postData }: Props) {
           <Modal
             isOpen={isOpen}
             setIsOpen={setIsOpen}
-            postId={post.posts.id}
+            postId={post.posts._id}
             post={postData.posts}
           />
         )}
@@ -163,7 +166,7 @@ function PostInfo({ postData }: Props) {
                   className=" mt-20 h-60 rounded-lg object-cover lg:-mt-20 lg:mr-4 lg:h-2/3 lg:w-11/12 lg:rounded-lg lg:object-cover"
                 />
               )}
-              {user.id === currentUser.id && (
+              {user._id === currentUser?.user?._id && (
                 <div className="-mb-28 mt-10 flex items-center p-3">
                   <button
                     onClick={() => setIsOpen(true)}
@@ -193,9 +196,9 @@ export async function getStaticProps({ params }) {
 export async function getStaticPaths() {
   const posts = (await getPosts()) || []
   return {
-    paths: posts.map((post: { posts: { id: any } }) => ({
+    paths: posts.map((post: { posts: { _id: any } }) => ({
       params: {
-        id: post.posts.id,
+        id: post.posts._id,
       },
     })),
     fallback: true,

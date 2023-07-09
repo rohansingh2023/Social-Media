@@ -1,10 +1,7 @@
 import React, { useState } from 'react'
-import { FiMoreVertical } from 'react-icons/fi'
 import { AiFillDelete, AiTwotoneLike } from 'react-icons/ai'
-import { Button } from '@nextui-org/react'
 import moment from 'moment'
 import Link from 'next/link'
-import { useStateContext } from '../context/StateContext'
 import { useMutation } from '@apollo/client'
 import {
   ADD_COMMENT,
@@ -13,31 +10,30 @@ import {
 } from '../graphql/mutations/postMutations'
 import { GET_POSTS } from '../graphql/queries/postQueries'
 import toast from 'react-hot-toast'
-import { useRouter } from 'next/router'
 import { MdModeComment } from 'react-icons/md'
 import { useSelector } from 'react-redux'
-import { selectCurrentUser, selectToken } from '../redux/activities/userRedux'
+import { selectToken } from '../redux/activities/userRedux'
 import { TiTick } from 'react-icons/ti'
+import { getPosts } from '../services'
+import Image from 'next/image'
+import { useCurrentState } from '../state-management/zustand'
 
 type Props = {
   post: Post
   user: User
   refresh: () => Promise<void>
+  setPostsData: any
 }
 
-const Post = ({ post, user, refresh }: Props) => {
+const Post = ({ post, user, refresh, setPostsData }: Props) => {
   const [isOpen, setIsOpen] = useState<boolean>(false)
   const [body, setBody] = useState<string>('')
-  const route = useRouter()
-  // const {
-  //   currentUser: { token },
-  // } = useStateContext()
   const token = useSelector(selectToken)
-  const cuser = useSelector(selectCurrentUser)
+  const cuser = useCurrentState((state) => state.currentUser)
 
   const [likePost] = useMutation(LIKE_POST, {
     variables: {
-      id: post.id,
+      id: post._id,
     },
     context: {
       headers: {
@@ -49,7 +45,7 @@ const Post = ({ post, user, refresh }: Props) => {
 
   const [deletePost] = useMutation(DELETE_POST, {
     variables: {
-      id: post.id,
+      id: post._id,
     },
     context: {
       headers: {
@@ -60,7 +56,7 @@ const Post = ({ post, user, refresh }: Props) => {
 
   const [addComment] = useMutation(ADD_COMMENT, {
     variables: {
-      postId: post.id,
+      postId: post._id,
       body: body,
     },
     context: {
@@ -71,13 +67,20 @@ const Post = ({ post, user, refresh }: Props) => {
   })
 
   const handleLike = async () => {
+    const refreshToast = toast.loading('Liking the post...')
     try {
       await likePost()
       toast.success('Liked!')
-      await refresh()
+      const posts = await getPosts()
+      setPostsData(posts)
+      toast.success('Post Updated', {
+        id: refreshToast,
+      })
       // window.location.reload()
     } catch (error) {
-      toast.error(`${error}`)
+      toast.error(`${error}`, {
+        id: refreshToast,
+      })
       console.log(error)
     }
   }
@@ -110,34 +113,38 @@ const Post = ({ post, user, refresh }: Props) => {
     }
   }
 
-  const isFriend = cuser?.friends?.findIndex((f) => f.userId === user.id)
-  const isLiked = post.likes.findIndex((f) => f.email === cuser?.email)
+  const isFriend = cuser?.user?.friends?.findIndex((f) => f.userId === user._id)
+  const isLiked = post.likes.findIndex((f) => f.email === cuser?.user?.email)
 
   return (
     <div>
-      <div className="bg-white mb-5 flex h-auto flex-col rounded-md border border-gray-200 font-Inter shadow-sm lg:w-full">
+      <div className="mb-5 flex h-auto flex-col rounded-md border border-gray-200 bg-white font-Inter shadow-sm lg:w-full">
         <div className="mt-2 flex items-center justify-between px-4 py-2">
           <Link
             href={
-              user.id === cuser?.id
-                ? `/profile/${cuser?.id}`
-                : `/user/${user.id}`
+              user._id === cuser?.user?._id
+                ? `/profile/${cuser?.user?._id}`
+                : `/user/${user._id}`
             }
             // className="flex flex-1 p-2"
           >
             <div className="flex items-center space-x-3">
-              <img
-                src={user.profilePic}
-                alt=""
-                className="h-12 w-12 rounded-full object-cover"
-              />
+              {user?.profilePic && (
+                <Image
+                  src={user.profilePic}
+                  alt=""
+                  height={48}
+                  width={48}
+                  className="rounded-full object-cover"
+                />
+              )}
               <div className="flex flex-col items-start">
                 <div className="flex items-center space-x-2">
-                  <p className=" cursor-pointer text-lg font-semibold">
+                  <p className=" cursor-pointer text-base font-semibold">
                     {user.name}
                   </p>
 
-                  <p className="hidden text-base font-normal text-gray-400 lg:inline">
+                  <p className="hidden text-xs font-normal text-gray-400 lg:inline">
                     {user.email}
                   </p>
                 </div>
@@ -152,22 +159,26 @@ const Post = ({ post, user, refresh }: Props) => {
               </div>
             </div>
           </Link>
-          {user.id === cuser?.id && (
+          {user._id === cuser?.user?._id && (
             <div>
               <AiFillDelete size={25} className="" onClick={handleDelete} />
             </div>
           )}
         </div>
-        <p className="ml-2 px-2 text-base font-normal">
-          {`${post.content}`.slice(0, 200).concat('...')}
-        </p>
+        {post?.content.length > 200 ? (
+          <p className="ml-2 p-2 text-sm font-normal">
+            {`${post.content}`.slice(0, 200).concat('...')}
+          </p>
+        ) : (
+          <p className="ml-2 p-2 text-sm font-normal">{post.content}</p>
+        )}
         {/* <div className="flex items-center justify-center"> */}
-        <Link href={`/post/${post.id}`}>
+        <Link href={`/post/${post._id}`}>
           {post.image && (
-            <img
+            <Image
               src={post.image}
               alt=""
-              className="w-full rounded-lg py-3"
+              className="w-full py-3"
               width="550"
               height="500"
             />
@@ -176,12 +187,12 @@ const Post = ({ post, user, refresh }: Props) => {
         {/* </div> */}
         <div className="">
           <div className="flex items-center justify-between p-4">
-            <p className="text-md font-base font-Intertext-gray-500">
+            <p className="text-md font-sm font-Intertext-gray-500">
               {post.likes.length > 1
                 ? `${post.likes.length} likes`
                 : `${post.likes.length} like`}
             </p>
-            <p className="text-md font-base font-Intertext-gray-500">
+            <p className="text-md font-sm font-Intertext-gray-500">
               {post.comments.length > 1
                 ? `${post.comments.length} comments`
                 : `${post.comments.length} comment`}
@@ -194,7 +205,7 @@ const Post = ({ post, user, refresh }: Props) => {
             </Link>
             <Button>Share</Button> */}
             <div
-              className="hover:bg-gray-200 flex w-full items-center justify-center space-x-2 rounded-md py-1"
+              className="flex w-full items-center justify-center space-x-2 rounded-md py-1 hover:bg-gray-200"
               onClick={handleLike}
             >
               <AiTwotoneLike
@@ -202,7 +213,7 @@ const Post = ({ post, user, refresh }: Props) => {
                 color={isLiked === -1 ? 'grey' : '#FF8080'}
               />
               <p
-                className={`font-Inter text-base ${
+                className={`font-Inter text-sm ${
                   isLiked === -1 ? 'text-gray-700' : 'text-[#FF8080]'
                 }`}
               >
@@ -210,27 +221,31 @@ const Post = ({ post, user, refresh }: Props) => {
               </p>
             </div>
             <div
-              className="hover:bg-gray-200 flex w-full items-center justify-center space-x-2 rounded-md py-1"
+              className="flex w-full items-center justify-center space-x-2 rounded-md py-1 hover:bg-gray-200"
               onClick={() => setIsOpen(!isOpen)}
             >
               <MdModeComment size={22} color="gray" />
-              <p className="font-Inter text-base text-gray-700">Comment</p>
+              <p className="font-Inter text-sm text-gray-700">Comment</p>
             </div>
           </div>
         </div>
         {isOpen && (
           <div className="transition-all duration-300 ease-out">
             <div className="flex items-center space-x-2 p-3">
-              <img
-                src={cuser.profilePic}
-                alt=""
-                className="h-10 w-10 rounded-full"
-              />
+              {cuser?.user?.profilePic && (
+                <Image
+                  src={cuser.user?.profilePic}
+                  alt=""
+                  height={40}
+                  width={40}
+                  className="h-10 w-10 rounded-full"
+                />
+              )}
               <div className="flex flex-1 flex-col">
                 <input
                   type="text"
                   placeholder="Comment..."
-                  className="bg-gray-200 flex-1 rounded-full px-4 py-2 outline-none "
+                  className="flex-1 rounded-full bg-gray-200 px-4 py-2 outline-none "
                   value={body}
                   onChange={(e) => setBody(e.target.value)}
                   onKeyPress={handleComment}
@@ -243,17 +258,19 @@ const Post = ({ post, user, refresh }: Props) => {
                 {post?.comments?.map((c) => (
                   <div
                     className="flex items-start space-x-2 py-3 px-5"
-                    key={c.id}
+                    key={c._id}
                   >
-                    <img
+                    <Image
                       src="https://cdn.dribbble.com/users/24078/screenshots/15522433/media/e92e58ec9d338a234945ae3d3ffd5be3.jpg?compress=1&resize=400x300"
                       alt=""
+                      height={32}
+                      width={32}
                       className="h-8 w-8 rounded-full"
                     />
                     <div>
-                      <div className="bg-gray-200 flex-1  flex-wrap rounded-xl p-2">
-                        <h1 className="text-base font-semibold">{c.name}</h1>
-                        <p className="text-sm font-normal">{c.body}</p>
+                      <div className="flex-1 flex-wrap  rounded-xl bg-gray-200 p-2">
+                        <h1 className="text-sm font-semibold">{c.name}</h1>
+                        <p className="text-xs font-normal">{c.body}</p>
                       </div>
                       <p className="text-xs font-normal">
                         {moment(c.createdAt).fromNow()}

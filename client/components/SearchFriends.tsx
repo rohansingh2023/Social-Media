@@ -1,26 +1,22 @@
-import React, { useEffect, useState } from 'react'
-import toast from 'react-hot-toast'
+import React, { useState } from 'react'
 import { AiOutlineSearch } from 'react-icons/ai'
-import Loading from './Loading'
-import UserCard from './UserCard'
-// import { searchUsers } from '../services'
-import { useStateContext } from '../context/StateContext'
-import { useSelector } from 'react-redux'
-import { selectCurrentUser } from '../redux/activities/userRedux'
-import { useQuery } from '@apollo/client'
-import { SEARCH_USERS } from '../graphql/queries/userQueries'
+import dynamic from 'next/dynamic'
+import { useCurrentState } from '../state-management/zustand'
+
+const UserCard = dynamic(() => import('../components/UserCard'), {
+  loading: () => <p>Loading...</p>,
+})
 
 interface Props {
-  userData: User[]
   searchUsers: any
 }
 
-function SearchFriends({ userData, searchUsers }: Props) {
+function SearchFriends({ searchUsers }: Props) {
   const [searchTerm, setSearchTerm] = useState<string>('')
-  const currentUser = useSelector(selectCurrentUser)
+  const currentUser = useCurrentState((state) => state.currentUser)
 
   const onlyUserData: User[] = searchUsers?.users?.filter(
-    (user: any) => user.id !== currentUser?.id
+    (user: any) => user.id !== currentUser?.user?._id
   )
 
   return (

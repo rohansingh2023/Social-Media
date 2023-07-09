@@ -5,6 +5,8 @@ import client from '../../apollo-client'
 import { GET_USER_BY_ID } from '../../graphql/queries/userQueries'
 import { useSelector } from 'react-redux'
 import { selectCurrentUser } from '../../redux/activities/userRedux'
+import { useCurrentState } from '../../state-management/zustand'
+import Image from 'next/image'
 
 interface IProps {
   message: Message
@@ -12,7 +14,7 @@ interface IProps {
 }
 
 const MessageCard = ({ message, receiverId }: IProps) => {
-  const currentUser = useSelector(selectCurrentUser)
+  const currentUser = useCurrentState((state) => state.currentUser)
   const [otherUser, setOtherUser] = useState<User>()
 
   useEffect(() => {
@@ -32,14 +34,18 @@ const MessageCard = ({ message, receiverId }: IProps) => {
 
   return (
     <>
-      {message.sender === currentUser?.id ? (
+      {message.sender === currentUser?.user?._id ? (
         <div className="flex flex-col items-end">
           <div className="float-right flex w-1/2 items-start space-x-2 p-2 text-left">
-            <img
-              src={currentUser?.profilePic}
-              alt=""
-              className="h-10 w-10 flex-[0.12] rounded-full object-cover"
-            />
+            {currentUser?.user?.profilePic && (
+              <Image
+                src={currentUser?.user?.profilePic}
+                alt=""
+                height={40}
+                width={40}
+                className="h-10 w-10 flex-[0.12] rounded-full object-cover"
+              />
+            )}
             <div className="flex-[0.88]">
               <p className="rounded-r-md rounded-b-md bg-[#FF8080] p-2 text-white">
                 {message.text}
@@ -53,11 +59,15 @@ const MessageCard = ({ message, receiverId }: IProps) => {
       ) : (
         <div className="flex flex-col items-start">
           <div className="float-right flex w-1/2 items-start space-x-2 p-2 text-left">
-            <img
-              src={otherUser?.profilePic}
-              alt=""
-              className="h-10 w-10 flex-[0.12] rounded-full object-cover"
-            />
+            {otherUser?.profilePic && (
+              <Image
+                src={otherUser?.profilePic}
+                alt=""
+                height={40}
+                width={40}
+                className="h-10 w-10 flex-[0.12] rounded-full object-cover"
+              />
+            )}
             <div className="flex-[0.88]">
               <p className="rounded-r-md rounded-b-md bg-gray-200 p-2 text-left">
                 {message.text}

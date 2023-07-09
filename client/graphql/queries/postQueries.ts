@@ -4,19 +4,19 @@ const GET_POSTS = gql`
   query getPosts {
     posts {
       posts {
-        id
+        _id
         user
         content
         image
         comments {
-          id
+          _id
           name
           body
           email
           createdAt
         }
         likes {
-          id
+          _id
           createdAt
           email
           name
@@ -24,7 +24,7 @@ const GET_POSTS = gql`
         createdAt
       }
       user {
-        id
+        _id
         name
         email
         profilePic
@@ -39,24 +39,24 @@ const GET_POSTS_BY_USER_ID = gql`
   query getPostsByUserId($id: ID!) {
     postByUserId(id: $id) {
       posts {
-        id
+        _id
         user
         content
         image
         comments {
-          id
+          _id
           name
           email
           createdAt
         }
         likes {
-          id
+          _id
           createdAt
         }
         createdAt
       }
       user {
-        id
+        _id
         name
         email
         profilePic
@@ -71,24 +71,24 @@ const GET_POST_BY_ID = gql`
   query getPostById($id: ID!) {
     postById(id: $id) {
       user {
-        id
+        _id
         name
         email
         profilePic
       }
       posts {
-        id
+        _id
         user
         content
         createdAt
         image
         likes {
-          id
+          _id
           createdAt
         }
         comments {
           body
-          id
+          _id
           name
           createdAt
         }

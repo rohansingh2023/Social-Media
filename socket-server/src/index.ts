@@ -3,17 +3,19 @@ import http from "http";
 import { Server, Socket } from "socket.io";
 import { DefaultEventsMap } from "socket.io/dist/typed-events";
 import cors from "cors";
+import dotenv from "dotenv";
+
+dotenv.config();
 
 const app = express();
 
 app.use(cors());
-// app.use(express.json());
 
 const server = http.createServer(app);
 
 const io = new Server(server, {
   cors: {
-    origin: "http://localhost:3000",
+    origin: process.env.ORIGIN_URL,
     methods: ["GET", "POST"],
   },
 });
@@ -29,17 +31,11 @@ const removeUser = (socketId: string) => {
   onlineUsers = onlineUsers.filter((user) => user.socketId !== socketId);
 };
 
-const getUser = (username: any) => {
-  return onlineUsers.find((user) => user.username === username);
-};
-
 io.on(
   "connection",
   (
     socket: Socket<DefaultEventsMap, DefaultEventsMap, DefaultEventsMap, any>
   ) => {
-    // console.log("User connected: ", socket.id);
-
     socket.on("join_chat", (data) => {
       addNewUser(data?.userId, socket.id);
       io.emit("userOnline", onlineUsers);

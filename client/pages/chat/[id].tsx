@@ -5,6 +5,7 @@ import { Navbar } from '../../components'
 import ChatMain from '../../components/chat'
 import { getConversationsOfAUser, getUserById } from '../../services'
 import { socket } from '../../socket'
+import { useCurrentState } from '../../state-management/zustand'
 
 interface IProps {
   userData: {
@@ -21,6 +22,13 @@ const Chat = ({ userData: { user, posts, conv } }: IProps) => {
     })
   }, [socket])
 
+  const addCurrentUser = useCurrentState((state) => state.addCurrentUser)
+  // const currentUser = useCurrentState((state)=> state.currentUser);
+
+  useEffect(() => {
+    addCurrentUser()
+  }, [])
+
   return (
     <div>
       <Navbar />
@@ -31,14 +39,12 @@ const Chat = ({ userData: { user, posts, conv } }: IProps) => {
 
 export default Chat
 
-export const getServerSideProps: GetServerSideProps = async ({
-  params: { id },
-}: {
-  params: { id: string }
-}) => {
-  const user = (await getUserById(id)) || []
+export const getServerSideProps: GetServerSideProps = async ({ params }) => {
+  const user = (await getUserById(params?.id)) || []
 
-  const res = await axios.get(`http://localhost:3001/api/conversation/${id}`)
+  const res = await axios.get(
+    `http://localhost:3001/api/conversation/${params?.id}`
+  )
   const conv = res?.data
 
   return {

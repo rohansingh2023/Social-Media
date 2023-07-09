@@ -1,4 +1,4 @@
-import { ApolloClient, InMemoryCache } from '@apollo/client'
+import { ApolloClient, InMemoryCache, createHttpLink } from '@apollo/client'
 
 // const cache = new InMemoryCache({
 //   typePolicies: {
@@ -19,9 +19,17 @@ import { ApolloClient, InMemoryCache } from '@apollo/client'
 //   },
 // })
 
+// const link = createHttpLink({
+//   uri: 'http://localhost:8000/graphql',
+//   credentials: 'include',
+// })
+
 const client = new ApolloClient({
-  uri: 'http://localhost:4000/api',
+  // uri: 'https://sm-graphql-api.onrender.com/api',
+  uri: 'http://localhost:8080/graphql',
   cache: new InMemoryCache(),
+  credentials: 'include',
+  // link: link,
 })
 
 export default client

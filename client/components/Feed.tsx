@@ -1,6 +1,5 @@
 import React, { useRef, useState } from 'react'
 import Loading from './Loading'
-import Post from './Post'
 import FileBase from 'react-file-base64'
 import toast from 'react-hot-toast'
 import { useMutation } from '@apollo/client'
@@ -9,8 +8,16 @@ import { useStateContext } from '../context/StateContext'
 import { RefreshIcon } from '@heroicons/react/outline'
 import { getPosts } from '../services'
 import { useSelector } from 'react-redux'
-import { selectCurrentUser, selectToken } from '../redux/activities/userRedux'
+import { selectToken } from '../redux/activities/userRedux'
 import Skeleton from 'react-loading-skeleton'
+import dynamic from 'next/dynamic'
+import Image from 'next/image'
+import { useCurrentState } from '../state-management/zustand'
+
+const Post = dynamic(() => import('../components/Post'), {
+  // ssr: false,
+  loading: () => <p>Loading...</p>,
+})
 
 interface Props {
   postData: Post[]
@@ -22,10 +29,8 @@ const Feed = ({ postData: posts }: Props) => {
     image: '',
   })
   const [postData, setPostData] = useState(posts)
-  const currentUser = useSelector(selectCurrentUser)
-  // const {
-  //   currentUser: { token },
-  // } = useStateContext()
+  const currentUser = useCurrentState((state) => state.currentUser)
+
   const token = useSelector(selectToken)
 
   const [addPost] = useMutation(ADD_POST, {
@@ -68,12 +73,17 @@ const Feed = ({ postData: posts }: Props) => {
 
   const handleUpload = async (e: any) => {
     e.preventDefault()
+    const refreshToast = toast.loading('Refreshing...')
     try {
       const { data } = await addPost()
       toast.success('Post added successfully')
       setFormData({ content: '', image: '' })
       // window.location.reload()
-      await handleRefresh()
+      const posts = await getPosts()
+      setPostData(posts)
+      toast.success('Post Updated', {
+        id: refreshToast,
+      })
     } catch (error) {
       toast.error(`${error}`)
       console.log(error)
@@ -89,7 +99,7 @@ const Feed = ({ postData: posts }: Props) => {
   }
 
   return (
-    <div className="bg-gray-100 col-span-12 max-h-[91vh] overflow-scroll p-3 scrollbar-hide lg:col-span-8 lg:border-x lg:p-5 xl:col-span-6">
+    <div className="col-span-12 max-h-[91vh] overflow-scroll bg-gray-100 p-3 scrollbar-hide lg:col-span-8 lg:border-x lg:p-5 xl:col-span-6">
       <div className="mx-auto max-w-xl">
         <div className="flex items-center justify-between">
           <h1 className="text-3xl font-bold ">Explore</h1>
@@ -100,15 +110,20 @@ const Feed = ({ postData: posts }: Props) => {
         </div>
 
         <div className="mt-3 flex items-center justify-center space-x-0 lg:mt-0 lg:flex-1 lg:space-x-2 lg:p-5 ">
-          <img
-            src={currentUser?.profilePic}
-            alt=""
-            className="mt-14 hidden h-14 w-14 rounded-full object-cover lg:inline"
-          />
+          {currentUser?.user?.profilePic && (
+            <Image
+              src={currentUser?.user?.profilePic}
+              alt=""
+              height={56}
+              width={56}
+              loading="lazy"
+              className="mt-14 hidden h-14 w-14 rounded-full object-cover lg:inline"
+            />
+          )}
           <div className=" flex items-center lg:flex-1">
-            <div className="bg-white flex flex-col rounded-lg lg:flex-1 ">
+            <div className="flex flex-col rounded-lg bg-white lg:flex-1 ">
               <input
-                className="bg-white w-full p-3 placeholder-black outline-none"
+                className="w-full bg-white p-3 placeholder-black outline-none"
                 placeholder="Share your Knowledge"
                 name="content"
                 value={formData.content}
@@ -127,11 +142,29 @@ const Feed = ({ postData: posts }: Props) => {
                 <button
                   onClick={handleUpload}
                   disabled={!formData.content}
-                  className="hover:bg-orange-600 rounded-full bg-[#FF8080] px-5 py-2 font-bold text-white disabled:opacity-40"
+                  className="rounded-full bg-[#FF8080] px-5 py-2 font-bold text-white hover:bg-orange-600 disabled:opacity-40"
                 >
                   Post
                 </button>
               </div>
+              {/* <div className="flex flex-col items-center justify-between space-y-3 p-3">
+                <p>OR, Generate an image!</p>
+                <div className="relative flex h-64 w-64 items-center justify-center rounded-lg border border-gray-300 bg-gray-50 p-3 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500">
+                  {generatedImg ? (
+                    <img
+                      src=""
+                      alt=""
+                      className="h-full w-full object-contain"
+                    />
+                  ) : (
+                    <img
+                      src={require('../assets/img1.jpg')}
+                      alt="preview"
+                      className="h-9/12 w-9/12 object-contain opacity-40"
+                    />
+                  )}
+                </div>
+              </div> */}
             </div>
           </div>
           <Skeleton height={30} width={30} />
@@ -144,6 +177,7 @@ const Feed = ({ postData: posts }: Props) => {
                 post={post.posts}
                 user={post.user}
                 refresh={handleRefresh}
+                setPostsData={setPostData}
               />
             ))
           ) : (

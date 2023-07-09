@@ -1,14 +1,12 @@
-import { useQuery } from '@apollo/client'
 import Link from 'next/link'
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import { FaBirthdayCake } from 'react-icons/fa'
 import { MdOutlineOnlinePrediction } from 'react-icons/md'
-import { useSelector } from 'react-redux'
-import { useStateContext } from '../context/StateContext'
-import { selectCurrentUser } from '../redux/activities/userRedux'
+import Image from 'next/image'
+import { useCurrentState } from '../state-management/zustand'
 
 const Rightbar = () => {
-  const currentUser = useSelector(selectCurrentUser)
+  const currentUser = useCurrentState((state) => state.currentUser)
   const [currentSlide, setCurrentSlide] = useState<number>(0)
 
   const incSlide = () => {
@@ -18,11 +16,6 @@ const Rightbar = () => {
   const decSlide = () => {
     setCurrentSlide(currentSlide - 1)
   }
-
-  const date = new Date()
-  const csDate = [date.getDate().toString(), date.getMonth().toString()]
-  const cDate = currentUser?.dob.split('-').splice(1, 2)
-  console.log(JSON.stringify(csDate) === JSON.stringify(cDate))
 
   return (
     // <div className="sticky top-20 h-[100vh] w-1/4">
@@ -38,24 +31,28 @@ const Rightbar = () => {
           } p-3 text-white transition-opacity duration-200`}
         >
           {currentSlide < 1 && (
-            <img
+            <Image
               onClick={incSlide}
               src="https://raw.githubusercontent.com/Ziratsu/slider-react/a44cc92f02b0e4995cc661e04c32724fc946ac59/src/Components/Slider/icons/right-arrow.svg"
               alt=""
-              className="absolute right-0 top-[45%] h-8 w-8 rounded-full bg-white p-2 hover:bg-gray-400"
+              height={32}
+              width={32}
+              className="absolute right-0 top-[45%] rounded-full bg-white p-2 hover:bg-gray-400"
             />
           )}
           {currentSlide > 0 && (
-            <img
+            <Image
               onClick={decSlide}
               src="https://raw.githubusercontent.com/Ziratsu/slider-react/a44cc92f02b0e4995cc661e04c32724fc946ac59/src/Components/Slider/icons/left-arrow.svg"
               alt=""
-              className="absolute left-0 top-[45%] h-8 w-8 rounded-full bg-white p-2 hover:bg-gray-400"
+              height={32}
+              width={32}
+              className="absolute left-0 top-[45%] rounded-full bg-white p-2 hover:bg-gray-400"
             />
           )}
           {currentSlide === 0 && (
             <div className="space-y-3 p-2">
-              <h1 className="text-left font-Inter text-xl font-bold">
+              <h1 className="text-left font-Inter text-lg font-bold">
                 Welcome to SM
               </h1>
               <p className="text-left font-Inter text-base font-light">
@@ -67,7 +64,7 @@ const Rightbar = () => {
           )}
           {currentSlide === 1 && (
             <div className="ml-5 space-y-3 p-2">
-              <h1 className="text-left font-Inter text-xl font-bold">
+              <h1 className="text-left font-Inter text-lg font-bold">
                 Make Friends
               </h1>
               <p className="text-left font-Inter text-base font-light">
@@ -79,7 +76,7 @@ const Rightbar = () => {
 
           {currentSlide === 2 && (
             <div className="ml-5 space-y-3 p-3">
-              <h1 className="text-left font-Inter text-xl font-bold">
+              <h1 className="text-left font-Inter text-lg font-bold">
                 Make Friends
               </h1>
               <p className="text-left font-Inter text-base font-light">
@@ -89,22 +86,24 @@ const Rightbar = () => {
             </div>
           )}
         </div>
-        <div className="mx-5 mt-5 flex h-28 w-11/12 flex-col items-start justify-between border-y border-gray-300 p-3 font-Inter">
+        <div className="flex h-28 w-11/12 flex-col items-start justify-between border-y border-gray-300 py-5 px-3 font-Inter">
           <h1 className="text-lg font-medium text-gray-500">Birthdays</h1>
           <div className="mt-3 flex items-center">
             <FaBirthdayCake size={25} />
-            <p className="ml-5 text-base font-normal">
+            <p className="ml-3 text-sm font-normal">
               <span className="font-bold">Rohan and 2 others</span> have
               birthday today
             </p>
           </div>
         </div>
-        <div className="flex w-11/12 flex-1 flex-col items-start justify-evenly rounded-lg border-b border-gray-300 p-3 font-Inter">
-          <h1 className="text-lg font-medium text-gray-500">Friend Requests</h1>
+        <div className="flex w-11/12 flex-1 flex-col items-start justify-evenly rounded-lg border-b border-gray-300 px-3 py-5 font-Inter">
+          <h1 className="text-base font-medium text-gray-500">
+            Friend Requests
+          </h1>
           <div className="mt-3 max-h-96 w-full overflow-y-scroll">
             {
-              currentUser?.friendRequests.length > 0 ? (
-                currentUser?.friendRequests?.map((u: friendRequests) => (
+              currentUser?.user?.friendRequests?.length > 0 ? (
+                currentUser?.user?.friendRequests?.map((u: friendRequests) => (
                   // user.friends?.map((u) => (
                   <Link href={`/user/${u.userId}`}>
                     <div
@@ -112,12 +111,16 @@ const Rightbar = () => {
                       key={u.id}
                     >
                       <div className="flex items-center justify-between">
-                        <img
-                          src={u.profilePic}
-                          alt=""
-                          className="h-10 w-10 rounded-full object-cover"
-                        />
-                        <p className="ml-5 text-lg font-semibold">{u.name}</p>
+                        {u?.profilePic && (
+                          <Image
+                            src={u.profilePic}
+                            alt=""
+                            height={32}
+                            width={32}
+                            className="rounded-full object-cover"
+                          />
+                        )}
+                        <p className="ml-5 text-base font-semibold">{u.name}</p>
                       </div>
                       <div>
                         <MdOutlineOnlinePrediction size={30} />
@@ -135,21 +138,25 @@ const Rightbar = () => {
           </div>
         </div>
         <div className="flex w-11/12 flex-1 flex-col items-start justify-evenly rounded-lg border-gray-300 p-3 font-Inter">
-          <h1 className="text-lg font-medium text-gray-500">My Friends</h1>
+          <h1 className="text-base font-medium text-gray-500">My Friends</h1>
           <div className="mt-3 max-h-96 w-full overflow-y-scroll">
-            {currentUser?.friends.length > 0 ? (
-              currentUser?.friends?.map(
+            {currentUser?.user?.friends?.length > 0 ? (
+              currentUser?.user?.friends?.map(
                 (u: friends) => (
                   // user.friends?.map((u) => (
                   <Link href={`/user/${u.userId}`} key={u.id}>
                     <div className="flex cursor-pointer items-center justify-between rounded-md p-3 hover:bg-gray-200">
                       <div className="flex items-center justify-between">
-                        <img
-                          src={u.profilePic}
-                          alt="profilePic"
-                          className="h-10 w-10 rounded-full object-cover"
-                        />
-                        <p className="ml-5 text-base font-medium">{u.name}</p>
+                        {u?.profilePic && (
+                          <Image
+                            src={u.profilePic}
+                            alt="profilePic"
+                            height={40}
+                            width={40}
+                            className="rounded-full object-cover"
+                          />
+                        )}
+                        <p className="ml-5 text-sm font-medium">{u.name}</p>
                       </div>
                       <div>
                         <MdOutlineOnlinePrediction size={30} />

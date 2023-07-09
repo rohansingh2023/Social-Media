@@ -3,17 +3,17 @@ import { gql } from '@apollo/client'
 const ADD_POST = gql`
   mutation addPost($content: String!, $image: String!) {
     addPost(content: $content, image: $image) {
-      id
+      _id
       content
       image
       comments {
-        id
+        _id
         name
         email
         createdAt
       }
       likes {
-        id
+        _id
         createdAt
       }
       createdAt
@@ -24,12 +24,12 @@ const ADD_POST = gql`
 const LIKE_POST = gql`
   mutation likePost($id: ID!) {
     likePost(id: $id) {
-      id
+      _id
       content
       image
       createdAt
       likes {
-        id
+        _id
         createdAt
       }
     }
@@ -39,14 +39,14 @@ const LIKE_POST = gql`
 const ADD_COMMENT = gql`
   mutation addComment($postId: ID!, $body: String!) {
     createComment(postId: $postId, body: $body) {
-      id
+      _id
       content
       likes {
-        id
+        _id
         createdAt
       }
       comments {
-        id
+        _id
         name
         body
         createdAt
@@ -58,7 +58,7 @@ const ADD_COMMENT = gql`
 const UPDATE_POST = gql`
   mutation updatePost($id: ID!, $content: String, $image: String) {
     updatePost(id: $id, content: $content, image: $image) {
-      id
+      _id
       content
       image
       createdAt

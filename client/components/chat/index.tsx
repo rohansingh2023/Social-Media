@@ -1,11 +1,19 @@
 import axios from 'axios'
 import React, { useEffect, useState } from 'react'
-import client from '../../apollo-client'
-import { GET_CONVERSATIONS_OF_A_USER } from '../../graphql/queries/convQueries'
 import { socket } from '../../socket'
-import ChatInfo from './ChatInfo'
-import ChatSection from './ChatSection'
-import ChatSidebar from './ChatSidebar'
+import dynamic from 'next/dynamic'
+import { useQuery } from 'react-query'
+import { getConverstaions } from '../../services/query-requests'
+
+const ChatInfo = dynamic(() => import('./ChatInfo'), {
+  loading: () => <p>Loading</p>,
+})
+const ChatSidebar = dynamic(() => import('./ChatSidebar'), {
+  loading: () => <p>Loading</p>,
+})
+const ChatSection = dynamic(() => import('./ChatSection'), {
+  loading: () => <p>Loading</p>,
+})
 
 interface IProps {
   user: User
@@ -16,17 +24,10 @@ const ChatMain = ({ user }: IProps) => {
   const [conversations, setConversations] = useState<Conversation[]>([])
   const [currentChat, setCurrentChat] = useState<Conversation>()
 
-  useEffect(() => {
-    const getConv = async () => {
-      try {
-        const res = await axios.get(
-          `http://localhost:3001/api/conversation/${user.id}`
-        )
-        setConversations(res.data)
-      } catch (error) {}
-    }
-    getConv()
-  }, [])
+  const { data } = useQuery({
+    queryKey: ['conversations'],
+    queryFn: () => getConverstaions(user?._id, setConversations),
+  })
 
   useEffect(() => {
     socket.on('test2', (data) => {

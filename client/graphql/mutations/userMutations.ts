@@ -17,14 +17,7 @@ const REGISTER_USER = gql`
       dob: $dob
       bio: $bio
     ) {
-      user {
-        id
-        name
-        email
-        profilePic
-        dob
-        bio
-      }
+      message
       token
     }
   }
@@ -33,32 +26,15 @@ const REGISTER_USER = gql`
 const LOGIN_USER = gql`
   mutation loginUser($email: String!, $password: String!) {
     login(email: $email, password: $password) {
-      user {
-        id
-        name
-        email
-        profilePic
-        dob
-        bio
-        friendRequests {
-          id
-          email
-          userId
-          name
-          profilePic
-          createdAt
-        }
-        friends {
-          id
-          name
-          email
-          userId
-          profilePic
-          createdAt
-        }
-      }
+      message
       token
     }
+  }
+`
+
+const LOGOUT = gql`
+  mutation logout {
+    logout
   }
 `
 
@@ -77,7 +53,7 @@ const UPDATE_USER = gql`
       dob: $dob
       bio: $bio
     ) {
-      id
+      _id
       name
       email
       profilePic
@@ -90,12 +66,12 @@ const UPDATE_USER = gql`
 const SEND_FRIEND_REQUEST = gql`
   mutation friendReq($id: ID!) {
     friendRequest(id: $id) {
-      id
+      _id
       name
       email
       profilePic
       friendRequests {
-        id
+        _id
         name
         email
         profilePic
@@ -107,16 +83,16 @@ const SEND_FRIEND_REQUEST = gql`
 const ACCEPT_FRIEND_REQUEST = gql`
   mutation acceptFriendReq($email: String!) {
     acceptFriendRequest(email: $email) {
-      id
+      _id
       name
       email
       friendRequests {
-        id
+        _id
         name
         email
       }
       friends {
-        id
+        _id
         name
         email
       }
@@ -127,7 +103,7 @@ const ACCEPT_FRIEND_REQUEST = gql`
 const DECLINE_FRIEND_REQUEST = gql`
   mutation declineFriendRequest($email: String!) {
     declineFriendRequest(email: $email) {
-      id
+      _id
       name
       email
     }
@@ -137,10 +113,10 @@ const DECLINE_FRIEND_REQUEST = gql`
 const UNFRIEND = gql`
   mutation unFriend($email: String!) {
     unFriend(email: $email) {
-      id
+      _id
       name
       friends {
-        id
+        _id
         name
       }
     }
@@ -155,4 +131,5 @@ export {
   UNFRIEND,
   DECLINE_FRIEND_REQUEST,
   UPDATE_USER,
+  LOGOUT,
 }

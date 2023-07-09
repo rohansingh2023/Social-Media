@@ -1,11 +1,15 @@
 import React, { Dispatch, SetStateAction, useState } from 'react'
-import { FiMoreHorizontal } from 'react-icons/fi'
 import { AiOutlineSearch } from 'react-icons/ai'
-import ChatListCard from './ChatListCard'
 import Loading from '../Loading'
 import { RefreshIcon } from '@heroicons/react/outline'
 import toast from 'react-hot-toast'
 import axios from 'axios'
+import dynamic from 'next/dynamic'
+
+const ChatListCard = dynamic(() => import('./ChatListCard'), {
+  loading: () => <p>Loading</p>,
+})
+
 interface IProps {
   user: User
   isChatOpen: boolean
@@ -28,7 +32,7 @@ const ChatSidebar = ({
     try {
       const refreshToast = toast.loading('Refreshing...')
       const res = await axios.get(
-        `http://localhost:3001/api/conversation/${user.id}`
+        `http://localhost:3001/api/conversation/${user._id}`
       )
       // setConvs(res.data)
       // console.log(res.data)
@@ -56,7 +60,7 @@ const ChatSidebar = ({
     >
       {/* Chat header */}
       <div className="flex items-center justify-between px-3 py-2">
-        <h1 className="text-2xl font-bold">Chats</h1>
+        <h1 className="text-xl font-bold">Chats</h1>
         <RefreshIcon
           onClick={handleRefresh}
           className="mr-5 h-6 w-6 cursor-pointer text-[#FF8080] transition-all duration-500 ease-out hover:rotate-180 active:scale-125"

@@ -1,10 +1,8 @@
 import React, { Dispatch, SetStateAction, useEffect, useState } from 'react'
-import { useSelector } from 'react-redux'
 import client from '../../apollo-client'
-import { useStateContext } from '../../context/StateContext'
 import { GET_USER_BY_ID } from '../../graphql/queries/userQueries'
-import { selectCurrentUser } from '../../redux/activities/userRedux'
 import { socket } from '../../socket'
+import { useCurrentState } from '../../state-management/zustand'
 
 interface IProps {
   conv: Conversation
@@ -13,12 +11,11 @@ interface IProps {
 }
 
 const ChatListCard = ({ setIsChatOpen, conv, setCurrentChat }: IProps) => {
-  // const { currentUser } = useStateContext()
-  const currentUser = useSelector(selectCurrentUser)
+  const currentUser = useCurrentState((state) => state.currentUser)
   const [convChats, setConvChats] = useState<User>()
 
   useEffect(() => {
-    const friendId = conv?.members?.find((m) => m !== currentUser?.id)
+    const friendId = conv?.members?.find((m) => m !== currentUser?.user?._id)
 
     const getUser = async () => {
       try {
@@ -48,11 +45,11 @@ const ChatListCard = ({ setIsChatOpen, conv, setCurrentChat }: IProps) => {
       <img
         src={convChats?.profilePic}
         alt=""
-        className="h-16 w-16 rounded-full object-cover"
+        className="h-12 w-12 rounded-full object-cover"
       />
       <div className="ml-3 flex flex-col">
-        <h1 className="font-semibold">{convChats?.name}</h1>
-        <p className="text-sm font-light">{convChats?.email}</p>
+        <h1 className="text-sm font-semibold">{convChats?.name}</h1>
+        <p className="text-xs font-light">{convChats?.email}</p>
       </div>
     </div>
   )

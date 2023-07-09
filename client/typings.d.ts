@@ -1,5 +1,5 @@
 type User = {
-  id: string
+  _id: string
   name: string
   email: string
   profilePic: string
@@ -10,7 +10,7 @@ type User = {
 }
 
 type Post = {
-  id: string
+  _id: string
   title: string
   content: string
   image: string
@@ -26,7 +26,7 @@ type Conversation = {
 }
 
 type friendRequests = {
-  id: string
+  _id: string
   userId: string
   name: string
   email: string
@@ -35,7 +35,7 @@ type friendRequests = {
 }
 
 type friends = {
-  id: string
+  _id: string
   userId: string
   name: string
   email: string
@@ -44,7 +44,7 @@ type friends = {
 }
 
 type comment = {
-  id: string
+  _id: string
   name: string
   email: string
   createdAt: string
@@ -52,7 +52,7 @@ type comment = {
 }
 
 type likes = {
-  id: string
+  _id: string
   createdAt: string
   name: string
   email: string
@@ -70,4 +70,13 @@ type Message = {
   sender: string
   text: string
   createdAt: string
+}
+
+type Login = {
+  message: String
+  token: String
+}
+
+type CurrentUser = {
+  user: User
 }

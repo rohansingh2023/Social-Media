@@ -5,18 +5,17 @@ import React, {
   useRef,
   useState,
 } from 'react'
-import { IoCall } from 'react-icons/io5'
-import { BsFillCameraVideoFill } from 'react-icons/bs'
-import { AiOutlineMore } from 'react-icons/ai'
 import { RiSendPlaneFill } from 'react-icons/ri'
 import { IoMdPhotos } from 'react-icons/io'
 import axios from 'axios'
-import { useStateContext } from '../../context/StateContext'
-import MessageCard from './MessageCard'
 import Loading from '../Loading'
 import { socket } from '../../socket'
-import { useSelector } from 'react-redux'
-import { selectCurrentUser } from '../../redux/activities/userRedux'
+import dynamic from 'next/dynamic'
+import { useCurrentState } from '../../state-management/zustand'
+
+const MessageCard = dynamic(() => import('./MessageCard'), {
+  loading: () => <p>Loading</p>,
+})
 
 interface IProps {
   isChatOpen: boolean
@@ -37,7 +36,7 @@ const ChatSection = ({ isChatOpen, setIsChatOpen, currentChat }: IProps) => {
     text: '',
     createdAt: 0,
   })
-  const currentUser = useSelector(selectCurrentUser)
+  const currentUser = useCurrentState((state) => state.currentUser)
   const scrollRef = useRef<null | HTMLDivElement>(null)
 
   useEffect(() => {
@@ -47,8 +46,8 @@ const ChatSection = ({ isChatOpen, setIsChatOpen, currentChat }: IProps) => {
   }, [socket])
 
   useEffect(() => {
-    socket.emit('addUser', currentUser?.id)
-  }, [currentUser?.id, socket])
+    socket.emit('addUser', currentUser?.user?._id)
+  }, [currentUser?.user?._id, socket])
 
   useEffect(() => {
     const getMessages = async () => {
@@ -64,7 +63,9 @@ const ChatSection = ({ isChatOpen, setIsChatOpen, currentChat }: IProps) => {
     getMessages()
   }, [currentChat])
 
-  const receiverId = currentChat?.members.find((m) => m !== currentUser?.id)
+  const receiverId = currentChat?.members.find(
+    (m) => m !== currentUser?.user?._id
+  )
 
   const handleMessage = async (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter') {
@@ -73,17 +74,17 @@ const ChatSection = ({ isChatOpen, setIsChatOpen, currentChat }: IProps) => {
       try {
         const message = {
           conversationId: currentChat?._id,
-          sender: currentUser?.id,
+          sender: currentUser?.user?._id,
           text: msgInput,
         }
 
         const receiverId = currentChat?.members.find(
-          (m) => m !== currentUser?.id
+          (m) => m !== currentUser?.user?._id
         )
 
         await socket.emit('sendMessage', {
           conversationId: currentChat?._id,
-          sender: currentUser?.id,
+          sender: currentUser?.user?._id,
           receiverId,
           text: msgInput,
           createdAt: Date.now(),

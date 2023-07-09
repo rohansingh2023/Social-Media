@@ -14,13 +14,11 @@ import {
   GET_USER_BY_ID,
   SEARCH_USERS,
 } from '../graphql/queries/userQueries'
+import client from '../apollo-client'
 
-const GRAPHQL_ENDPOINT = 'http://localhost:4000/api'
-// const authClient = new GraphQLClient(GRAPHQL_ENDPOINT, {
-//   headers: {
-//     Authorization: `${localStorage.getItem('authUser').token}`
-//   }
-// })
+// const GRAPHQL_ENDPOINT = 'https://sm-graphql-api.onrender.com/api'
+const GRAPHQL_ENDPOINT = 'http://localhost:8080/graphql'
+const authClient = new GraphQLClient(GRAPHQL_ENDPOINT, {})
 
 export const getPosts = async () => {
   const results = await request(GRAPHQL_ENDPOINT, GET_POSTS)
@@ -34,6 +32,13 @@ export const getUsers = async () => {
 
 export const getUserById = async (id: any) => {
   const results = await request(GRAPHQL_ENDPOINT, GET_USER_BY_ID, { id })
+  // const results = await authClient.request(GET_USER_BY_ID, { id })
+  // const { data } = await client.query({
+  //   query: GET_USER_BY_ID,
+  //   variables: {
+  //     id,
+  //   },
+  // })
   return results.userById
 }
 

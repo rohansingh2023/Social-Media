@@ -11,6 +11,7 @@ import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { useSelector } from 'react-redux'
 import { selectToken } from '../redux/activities/userRedux'
+import Image from 'next/image'
 
 interface Props {
   user: friendRequests
@@ -72,11 +73,15 @@ const FriendRequestCard = ({ user, refresh }: Props) => {
   return (
     <div className="mt-10 flex flex-1 items-center rounded-md border border-gray-200 bg-white p-5">
       <div className="flex-[0.2]">
-        <img
-          src={user.profilePic}
-          alt=""
-          className="h-20 w-20 rounded-full bg-white object-contain md:h-32 md:w-32"
-        />
+        {user?.profilePic && (
+          <Image
+            src={user.profilePic}
+            alt=""
+            height={80}
+            width={80}
+            className="rounded-full bg-white object-contain md:h-32 md:w-32"
+          />
+        )}
       </div>
       <div className="ml-5 flex flex-[0.8] flex-col">
         <div className="flex flex-1 items-center justify-between border-b-[1px] border-b-gray-400">

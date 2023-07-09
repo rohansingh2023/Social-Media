@@ -5,6 +5,8 @@ import React, { useState } from 'react'
 import FileBase from 'react-file-base64'
 import toast from 'react-hot-toast'
 import { REGISTER_USER } from '../../graphql/mutations/userMutations'
+import Image from 'next/image'
+import { useCookies } from 'react-cookie'
 
 type FormData = {
   name: string
@@ -16,6 +18,8 @@ type FormData = {
 }
 
 function register() {
+  const [cookie, setCookie] = useCookies(['userJwt'])
+
   const [formData, setFormData] = useState<FormData>({
     name: '',
     email: '',
@@ -38,22 +42,24 @@ function register() {
   })
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    const refreshToken = toast.loading('Creating a User...')
     e.preventDefault()
     try {
       const { data } = await register()
-      localStorage.setItem('authUser', JSON.stringify(data?.register))
-      toast.success('Register successfull')
-      router.replace('/auth/login')
-      // router.reload()
+      const tokenData: Login = data?.register
+      setCookie('userJwt', JSON.stringify(tokenData?.token), {
+        path: '/',
+        maxAge: 3600, // Expires after 1hr
+        sameSite: true,
+      })
+      toast.success('Register successfull. Now login to continue', {
+        id: refreshToken,
+      })
+      router.push('/')
     } catch (error) {
       toast.error(`${error}`)
       console.log(error)
     }
-  }
-
-  const printSubmit = (e: any) => {
-    e.preventDefault()
-    console.log(typeof formData.name)
   }
 
   return (
@@ -61,9 +67,11 @@ function register() {
       <div className="absolute top-20 rounded-md bg-slate-200 py-7 px-5">
         <div className=" mb-16">
           <div className="flex justify-center">
-            <img
+            <Image
               alt=""
-              className="h-14 w-14 rounded-full"
+              height={56}
+              width={56}
+              className="rounded-full"
               src="https://cdn.dribbble.com/users/24078/screenshots/15522433/media/e92e58ec9d338a234945ae3d3ffd5be3.jpg?compress=1&resize=400x300"
             />
           </div>
@@ -103,8 +111,6 @@ function register() {
                     setFormData({ ...formData, email: e.target.value })
                   }}
                   value={formData.email}
-                  // id={id}
-                  // name={name}
                   type="email"
                   className="relative block w-full appearance-none rounded-md border border-gray-300 px-3 py-2 text-gray-900 placeholder-gray-500 focus:z-10 focus:border-[#FF8080] focus:outline-none focus:ring-[#FF8080] sm:text-sm"
                   placeholder="Enter your email"
@@ -119,8 +125,6 @@ function register() {
                     setFormData({ ...formData, password: e.target.value })
                   }}
                   value={formData.password}
-                  // id={id}
-                  // name={name}
                   type="password"
                   className="relative mt-3 block w-full appearance-none rounded-md border border-gray-300 px-3 py-2 text-gray-900 placeholder-gray-500 focus:z-10 focus:border-[#FF8080] focus:outline-none focus:ring-[#FF8080] sm:text-sm"
                   placeholder="Enter your password"
@@ -161,7 +165,6 @@ function register() {
                   onChange={(e) => {
                     setFormData({ ...formData, profilePic: e.target.value })
                   }}
-                  // ref={fileInputRef}
                   className="upload-btn"
                   onDone={({ base64 }) =>
                     setFormData({ ...formData, profilePic: base64 })

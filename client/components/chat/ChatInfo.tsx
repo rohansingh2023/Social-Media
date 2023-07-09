@@ -1,7 +1,9 @@
-import axios from 'axios'
-import React, { useEffect, useState } from 'react'
-import { useStateContext } from '../../context/StateContext'
-import ChatInfoCard from './ChatInfoCard'
+import React from 'react'
+import dynamic from 'next/dynamic'
+
+const ChatInfoCard = dynamic(() => import('./ChatInfoCard'), {
+  loading: () => <p>Loading</p>,
+})
 
 interface IProps {
   user: User
@@ -16,7 +18,7 @@ const ChatInfo = ({ user, conv }: IProps) => {
       </div>
       <div className="max-h-[83vh] cursor-pointer overflow-y-scroll scrollbar-hide">
         {user.friends.map((u) => (
-          <ChatInfoCard key={u.id} friendInfo={u} />
+          <ChatInfoCard key={u._id} friendInfo={u} />
         ))}
       </div>
     </div>

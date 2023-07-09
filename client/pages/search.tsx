@@ -1,11 +1,27 @@
-import React from 'react'
-import { Leftbar, Navbar, Rightbar, SearchFriends } from '../components'
+import React, { useEffect } from 'react'
+import { Navbar } from '../components'
 import {
   getOnlyUsers,
   getOnlyUsersExMe,
   getSearchUsers,
   getUsers,
 } from '../services'
+import dynamic from 'next/dynamic'
+import Loading from '../components/Loading'
+import { useCurrentState } from '../state-management/zustand'
+
+const SearchFriends = dynamic(() => import('../components/SearchFriends'), {
+  loading: () => <Loading />,
+})
+
+const Leftbar = dynamic(() => import('../components/Leftbar'), {
+  // ssr: false,
+  loading: () => <Loading />,
+})
+const Rightbar = dynamic(() => import('../components/Rightbar'), {
+  // ssr: false,
+  loading: () => <Loading />,
+})
 
 interface Props {
   userData: User[]
@@ -13,7 +29,12 @@ interface Props {
   searchUsers: any
 }
 
-const Search = ({ userData, onlyUserData, searchUsers }: Props) => {
+const Search = ({ searchUsers }: Props) => {
+  const addCurrentUser = useCurrentState((state) => state.addCurrentUser)
+
+  useEffect(() => {
+    addCurrentUser()
+  }, [])
   return (
     <div className="grid-rows-10 grid max-h-screen overflow-hidden font-DMSerif">
       <header className="z-50 row-span-1">
@@ -21,7 +42,7 @@ const Search = ({ userData, onlyUserData, searchUsers }: Props) => {
       </header>
       <div className="row-span-9 grid grid-cols-12">
         <Leftbar />
-        <SearchFriends userData={userData} searchUsers={searchUsers} />
+        <SearchFriends searchUsers={searchUsers} />
         <Rightbar />
       </div>
     </div>
@@ -29,14 +50,10 @@ const Search = ({ userData, onlyUserData, searchUsers }: Props) => {
 }
 
 export async function getStaticProps() {
-  const userData = (await getUsers()) || []
-  const onlyUserData = (await getOnlyUsers()) || []
   const searchUsers = (await getSearchUsers('')) || []
 
   return {
     props: {
-      userData,
-      onlyUserData,
       searchUsers,
     },
   }

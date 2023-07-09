@@ -1,17 +1,11 @@
 import { useMutation, useQuery } from '@apollo/client'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
-import React, { useEffect, useState } from 'react'
-import client from '../../apollo-client'
-import { GET_USERS } from '../../graphql/queries/userQueries'
+import React, { useState } from 'react'
 import { LOGIN_USER } from '../../graphql/mutations/userMutations'
 import toast from 'react-hot-toast'
-import { useDispatch, useSelector } from 'react-redux'
-import {
-  addCurrentUser,
-  selectCurrentUser,
-} from '../../redux/activities/userRedux'
-import { socket } from '../../socket'
+import Image from 'next/image'
+import Cookies from 'js-cookie'
 
 type FormData = {
   email: string
@@ -19,8 +13,6 @@ type FormData = {
 }
 
 function login() {
-  const dispatch = useDispatch()
-  const currentUser = useSelector(selectCurrentUser)
   const [formData, setFormData] = useState<FormData>({
     email: '',
     password: '',
@@ -36,24 +28,28 @@ function login() {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
+    const refreshToast = toast.loading('Loading...')
     try {
       const { data } = await loginUser()
-      localStorage.setItem('authUser', JSON.stringify(data?.login))
-      dispatch(addCurrentUser(data?.login))
-      socket.emit('join_chat', { userId: data?.login?.user?.id })
-      toast.success('Login successful!')
-      router.replace('/')
-      // router.reload()
-      // window.location.reload()
+      const tokenData: Login = data?.login
+      localStorage.setItem('userToken', JSON.stringify(tokenData?.token))
+      Cookies.set('userJwt', JSON.stringify(tokenData?.token), {
+        path: '/',
+        expires: 1 / 12,
+      })
+      toast.success('Login successful!', {
+        id: refreshToast,
+      })
+      console.log(data)
+
+      router.push('/')
     } catch (error) {
       console.log(error)
-      toast.error(`${error}`)
+      toast.error(`${error}`, {
+        id: refreshToast,
+      })
     }
   }
-
-  useEffect(() => {
-    currentUser === null && router.replace('/')
-  }, [])
 
   return (
     <div className="relative -mt-16 flex h-screen items-center justify-center bg-login bg-cover bg-center bg-no-repeat">
@@ -63,10 +59,12 @@ function login() {
       >
         <div className="mb-10">
           <div className="flex justify-center">
-            <img
-              alt=""
-              className="h-14 w-14 rounded-full"
+            <Image
               src="https://cdn.dribbble.com/users/24078/screenshots/15522433/media/e92e58ec9d338a234945ae3d3ffd5be3.jpg?compress=1&resize=400x300"
+              alt=""
+              height={56}
+              width={56}
+              className="rounded-full"
             />
           </div>
           <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">

@@ -3,6 +3,9 @@ import { connectToDb } from "./db";
 import convRoute from "./routes/conversation";
 import messageRoute from "./routes/message";
 import cors from "cors";
+import dotenv from "dotenv";
+
+dotenv.config();
 
 const app = express();
 

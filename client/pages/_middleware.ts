@@ -1,20 +1,19 @@
-import {
-  NextFetchEvent,
-  NextMiddleware,
-  NextRequest,
-  NextResponse,
-} from 'next/server'
+import { NextResponse } from 'next/server'
+import { verify } from 'jsonwebtoken'
+import type { NextRequest } from 'next/server'
 
-export const middleware: NextMiddleware = (req: any, event: any) => {
-  if (typeof window !== 'undefined') {
-    const user = localStorage.getItem('authUser')
-    if (user) {
-      const parsedUser = JSON.parse(user)
-      const { token } = parsedUser
-      if (!token) {
-        return event.respondWith(NextResponse.redirect('/auth/login'))
-      }
-      return event.respondWith(NextResponse.redirect('/'))
-    }
+export default function middleware(request: NextRequest) {
+  let verify = request.cookies['userJwt']
+  let url = request.url
+
+  if (!verify && !url.includes('/auth')) {
+    console.log('Middleware Testing!!!')
+    return NextResponse.redirect('http://localhost:3000/auth/login')
+  }
+
+  if (verify && url.includes('/auth')) {
+    console.log('Middleware Testing!!!')
+
+    return NextResponse.redirect('http://localhost:3000/')
   }
 }

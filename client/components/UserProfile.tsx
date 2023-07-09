@@ -1,18 +1,22 @@
 import React, { useEffect, useState } from 'react'
 import { GiThreeFriends } from 'react-icons/gi'
 import { FcAbout } from 'react-icons/fc'
-import { BsSignpost } from 'react-icons/bs'
-import Post from './Post'
 import { getPostById, getPostsByUserId, getUserById } from '../services'
 import Loading from './Loading'
-import Link from 'next/link'
 import { NextRouter, useRouter } from 'next/router'
 import { IoPencilSharp } from 'react-icons/io5'
-import { useMutation } from '@apollo/client'
-import { UNFRIEND } from '../graphql/mutations/userMutations'
-import FriendCard from './FriendCard'
 import toast from 'react-hot-toast'
 import UserModal from './modals/UserModal'
+import dynamic from 'next/dynamic'
+import Image from 'next/image'
+
+const FriendCard = dynamic(() => import('../components/FriendCard'), {
+  loading: () => <Loading />,
+})
+
+const Post = dynamic(() => import('../components/Post'), {
+  loading: () => <Loading />,
+})
 
 interface Props {
   userD: User
@@ -38,7 +42,7 @@ function UserProfile({ userD, post }: Props) {
 
   const handleRefresh = async () => {
     const refreshToast = toast.loading('Refreshing...')
-    const users = await getUserById(userD.id)
+    const users = await getUserById(userD?._id)
     setUserData(users)
     toast.success('User Updated', {
       id: refreshToast,
@@ -47,17 +51,15 @@ function UserProfile({ userD, post }: Props) {
 
   useEffect(() => {
     const getUserById = async () => {
-      const results: Props2[] = await getPostsByUserId(userD.id)
+      const results: Props2[] = await getPostsByUserId(userD?._id)
       setUserPosts(results)
     }
     getUserById()
   }, [])
 
-  console.log(userPosts)
-
-  if (!userPosts) {
-    return <Loading />
-  }
+  // if (!userPosts) {
+  //   return <Loading />
+  // }
 
   return (
     <div className="relative col-span-12 flex max-h-[91vh] max-w-screen-sm flex-1 flex-col overflow-scroll p-3 scrollbar-hide md:max-w-screen-md lg:col-span-8 lg:max-w-screen-lg lg:border-x lg:p-5 xl:col-span-6 xl:max-w-screen-xl">
@@ -79,30 +81,41 @@ function UserProfile({ userD, post }: Props) {
         <div className="h-64 w-full rounded-b-md bg-white shadow-lg lg:h-40">
           <div className="flex flex-col lg:flex-row">
             {/* <div> */}
-            <img
-              src={userD.profilePic}
-              alt=""
-              className="z-40 mx-auto -mt-10  h-40 w-40 rounded-full object-cover md:ml-10 lg:ml-5"
-            />
+            {userD?.profilePic && (
+              <Image
+                src={userD.profilePic}
+                alt=""
+                height={160}
+                width={160}
+                className="z-40 mx-auto -mt-10  h-40 w-40 rounded-full object-cover md:ml-10 lg:ml-5"
+              />
+            )}
             {/* </div> */}
             <div className="relative ml-5 flex flex-1 flex-col ">
-              <h2 className="text-xl font-bold text-slate-800">{userD.name}</h2>
-              <p className="text-sm font-thin text-gray-400">{userD.email}</p>
+              <h2 className="text-xl font-bold text-slate-800">
+                {userD?.name}
+              </h2>
+              <p className="text-sm font-thin text-gray-400">{userD?.email}</p>
               <div className=" flex flex-1">
                 <div className="flex flex-1 flex-col">
                   <p className="text-md mt-3 font-semibold text-gray-400">
-                    {userD.friends.length > 1
-                      ? `${userD.friends.length} friends`
-                      : `${userD.friends.length} friend`}
+                    {userD?.friends.length > 1
+                      ? `${userD?.friends.length} friends`
+                      : `${userD?.friends.length} friend`}
                   </p>
                   <div className="flex items-center">
-                    {userD?.friends.map((u) => (
-                      <img
-                        src={u.profilePic}
-                        alt=""
-                        className=" h-7 w-7 rounded-full object-cover"
-                      />
-                    ))}
+                    {userD?.friends.map(
+                      (u) =>
+                        u?.profilePic && (
+                          <Image
+                            src={u.profilePic}
+                            alt=""
+                            height={28}
+                            width={28}
+                            className=" h-7 w-7 rounded-full object-cover"
+                          />
+                        )
+                    )}
                   </div>
                 </div>
                 <button
@@ -126,7 +139,7 @@ function UserProfile({ userD, post }: Props) {
             <h1 className="text-xl font-bold">Friends</h1>
             <div className="mt-3">
               {userData?.friends?.map((f) => (
-                <FriendCard user={f} key={f.id} refresh={handleRefresh} />
+                <FriendCard user={f} key={f._id} refresh={handleRefresh} />
               ))}
             </div>
           </div>
@@ -138,11 +151,15 @@ function UserProfile({ userD, post }: Props) {
             <div className="mt-3">
               {userData?.friendRequests?.map((u) => (
                 <div className="mt-2 flex cursor-pointer items-center rounded-sm py-2 px-2 hover:bg-gray-200">
-                  <img
-                    src={u.profilePic}
-                    alt=""
-                    className="h-7 w-7 rounded-full object-fill"
-                  />
+                  {u?.profilePic && (
+                    <Image
+                      src={u.profilePic}
+                      alt=""
+                      height={28}
+                      width={28}
+                      className="h-7 w-7 rounded-full object-fill"
+                    />
+                  )}
                   <h1 className="ml-3 text-base text-gray-500">{u.name}</h1>
                 </div>
               ))}
@@ -161,6 +178,7 @@ function UserProfile({ userD, post }: Props) {
           </h1>
         )}
       </div>
+      _
     </div>
   )
 }

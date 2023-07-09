@@ -2,39 +2,48 @@ import React, { useState } from 'react'
 import { FaHome, FaSearch, FaFortAwesomeAlt, FaListUl } from 'react-icons/fa'
 import Sidebar from './Sidebar'
 import Link from 'next/link'
-import { useStateContext } from '../context/StateContext'
 import { RiLogoutBoxLine } from 'react-icons/ri'
-import { MdArrowDropDown, MdMessage } from 'react-icons/md'
+import { MdMessage } from 'react-icons/md'
 import { useRouter } from 'next/router'
-import { toast } from 'react-toastify'
+import toast from 'react-hot-toast'
 import { IoIosPersonAdd } from 'react-icons/io'
 import { socket } from '../socket'
-import { useDispatch, useSelector } from 'react-redux'
-import {
-  removeCurrentUser,
-  selectCurrentUser,
-} from '../redux/activities/userRedux'
+import { useDispatch } from 'react-redux'
+import Image from 'next/image'
+import { useCurrentState } from '../state-management/zustand'
+import { useMutation } from '@apollo/client'
+import { LOGOUT } from '../graphql/mutations/userMutations'
+import Cookies from 'js-cookie'
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false)
-  // const { currentUser } = useStateContext()
-  // const { user } = currentUser
-  // const { id } = user || {}
   const router = useRouter()
-  const currentUser = useSelector(selectCurrentUser)
+  const [colour, setColour] = useState('home')
+  const currentUser = useCurrentState((state) => state.currentUser)
+  const [logout] = useMutation(LOGOUT)
+
   const dispatch = useDispatch()
 
-  const handleLogout = () => {
-    localStorage.clear()
-    toast.info('Logged out successfully')
-    dispatch(removeCurrentUser())
-    socket.disconnect()
-    router.replace('/auth/login')
-    // router.reload()
+  const handleLogout = async () => {
+    const refreshId = toast.loading('Logging Out')
+    try {
+      await logout()
+      Cookies.remove('userJwt')
+      toast.success('Logged out successfully', {
+        id: refreshId,
+      })
+      socket.disconnect()
+      router.push('/auth/login')
+    } catch (error) {
+      console.log(error)
+      toast.error("Can't Logout", {
+        id: refreshId,
+      })
+    }
   }
 
   const joinChat = (e: React.MouseEvent<SVGElement, MouseEvent>) => {
-    socket.emit('join_chat', { userId: currentUser?.id })
+    socket.emit('join_chat', { userId: currentUser?.user?._id })
   }
 
   return (
@@ -42,9 +51,11 @@ const Navbar = () => {
       <div className="fixed left-0 top-0 z-50 grid w-screen grid-cols-12 items-center justify-between border-b-2 bg-white py-2 px-2 font-DMSerif text-white lg:px-5">
         <div className="col-span-6 flex flex-1 items-start justify-start lg:col-span-3 lg:items-center lg:justify-around">
           <Link href={'/'} passHref>
-            <img
+            <Image
               src="https://cdn.dribbble.com/users/24078/screenshots/15522433/media/e92e58ec9d338a234945ae3d3ffd5be3.jpg?compress=1&resize=400x300"
               alt=""
+              height={40}
+              width={40}
               className="h-10 w-10 rounded-full"
             />
             {/* <p className="cursor-pointer text-3xl font-bold italic">
@@ -59,26 +70,54 @@ const Navbar = () => {
         </div>
         <div className="hidden flex-1 items-center justify-center lg:col-span-7 lg:inline-flex">
           <Link href={'/'} passHref>
-            <FaHome className="mr-20" size={35} color="#FF8080" />
+            <button onClick={() => setColour('home')}>
+              <FaHome
+                className="mr-20"
+                size={35}
+                color={colour == 'home' ? '#FF8080' : '#c30f0f11'}
+              />
+            </button>
           </Link>
           <Link href={'/search'} passHref>
-            <FaSearch className="mr-20" size={30} color="#FF8080" />
+            <button onClick={() => setColour('search')}>
+              <FaSearch
+                className="mr-20"
+                size={30}
+                color={colour == 'search' ? '#FF8080' : '#c30f0f11'}
+              />
+            </button>
           </Link>
           <Link href={'/friendRequest'} passHref>
-            <IoIosPersonAdd className="mr-20" size={35} color="#FF8080" />
+            <button onClick={() => setColour('friendReq')}>
+              <IoIosPersonAdd
+                className="mr-20"
+                size={35}
+                color={colour == 'friendReq' ? '#FF8080' : '#c30f0f11'}
+              />
+            </button>
           </Link>
-          <Link href={`/profile/${currentUser?.id}`} passHref>
-            <FaFortAwesomeAlt className="mr-20" size={35} color="#FF8080" />
+          <Link href={`/profile/${currentUser?.user?._id}`} passHref>
+            <button onClick={() => setColour('profile')}>
+              <FaFortAwesomeAlt
+                className="mr-20"
+                size={35}
+                color={colour == 'profile' ? '#FF8080' : '#c30f0f11'}
+              />
+            </button>
           </Link>
         </div>
         <div className="col-span-6 mr-0 flex flex-1 items-center justify-end lg:col-span-2 lg:mr-10 lg:justify-between">
           {/* <div className="flex items-center"> */}
-          <img
-            src={currentUser?.profilePic}
-            alt=""
-            className="mr-5 h-10 w-10 rounded-full bg-gray-400 object-cover lg:mr-0"
-          />
-          <Link href={`/chat/${currentUser?.id}`}>
+          {currentUser?.user?.profilePic && (
+            <Image
+              src={currentUser?.user?.profilePic}
+              alt=""
+              height={40}
+              width={40}
+              className="mr-5 h-10 w-10 rounded-full bg-gray-400 object-cover lg:mr-0"
+            />
+          )}
+          <Link href={`/chat/${currentUser?.user?._id}`}>
             <MdMessage
               color="#111"
               size={45}

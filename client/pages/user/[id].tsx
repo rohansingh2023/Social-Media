@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { IoPencilSharp } from 'react-icons/io5'
-import { Navbar, Post } from '../../components'
+import { Navbar } from '../../components'
 import { FaUniversity, FaBirthdayCake } from 'react-icons/fa'
 import { MdOutlineMail } from 'react-icons/md'
 import { BiOutline } from 'react-icons/bi'
@@ -23,6 +23,13 @@ import { socket } from '../../socket'
 import { useMutation } from '@apollo/client'
 import { SEND_FRIEND_REQUEST } from '../../graphql/mutations/userMutations'
 import { useRouter } from 'next/router'
+import dynamic from 'next/dynamic'
+import { useCurrentState } from '../../state-management/zustand'
+import Image from 'next/image'
+
+const Post = dynamic(() => import('../../components/Post'), {
+  loading: () => <h1>Loading...</h1>,
+})
 
 interface Props {
   userIdData: {
@@ -34,15 +41,22 @@ interface Props {
 function UserInfo({ userIdData: { user, posts } }: Props) {
   const [isHidden, setIsHidden] = useState<boolean>(false)
   const [friendInfo, setFriendInfo] = useState<User>()
-  const currentUser = useSelector(selectCurrentUser)
+  // const currentUser = useSelector(selectCurrentUser)
+  const currentUser = useCurrentState((state) => state.currentUser)
   const token = useSelector(selectToken)
   const router = useRouter()
+  const addCurrentUser = useCurrentState((state) => state.addCurrentUser)
+  // const currentUser = useCurrentState((state)=> state.currentUser);
+
+  useEffect(() => {
+    addCurrentUser()
+  }, [])
   // const { currentUser } = useStateContext()
   // const { user: cUser, token } = currentUser || {}
 
   const [friendRequest] = useMutation(SEND_FRIEND_REQUEST, {
     variables: {
-      id: user.id,
+      id: user._id,
     },
     context: {
       headers: {
@@ -57,7 +71,7 @@ function UserInfo({ userIdData: { user, posts } }: Props) {
         const { data } = await client.query({
           query: GET_USER_BY_ID,
           variables: {
-            id: user.id,
+            id: user._id,
           },
         })
         setFriendInfo(data?.userById?.user)
@@ -66,23 +80,23 @@ function UserInfo({ userIdData: { user, posts } }: Props) {
     getUserFriend()
   }, [])
 
-  const isFriend = currentUser?.friends?.findIndex(
-    (f) => f.userId.toString() === user.id.toString()
+  const isFriend = currentUser?.user?.friends?.findIndex(
+    (f) => f.userId.toString() === user._id.toString()
   )
 
   const isRequestSent = friendInfo?.friendRequests?.findIndex(
-    (f) => f.userId.toString() === currentUser?.id.toString()
+    (f) => f.userId.toString() === currentUser?.user?._id.toString()
   )
 
   const handleRequest = async () => {
     socket.emit('sent_request', {
       cUser: {
-        name: currentUser?.name,
-        id: currentUser?.id,
-        img: currentUser?.profilePic,
+        name: currentUser?.user?.name,
+        id: currentUser?.user?._id,
+        img: currentUser?.user?.profilePic,
       },
       name: user.name,
-      id: user.id,
+      id: user._id,
     })
 
     try {
@@ -117,11 +131,16 @@ function UserInfo({ userIdData: { user, posts } }: Props) {
           <div className="mx-auto h-64 w-[70%] rounded-b-md lg:h-40">
             <div className="flex flex-col lg:flex-row">
               {/* <div> */}
-              <img
-                src={user.profilePic}
-                alt=""
-                className="z-40 mx-auto -mt-20 h-44 w-44 rounded-full object-cover md:ml-10 lg:-mt-10 lg:ml-5"
-              />
+              {user?.profilePic && (
+                <Image
+                  src={user.profilePic}
+                  alt=""
+                  height={150}
+                  width={150}
+                  loading="lazy"
+                  className="z-40 mx-auto -mt-20 h-44 w-44 rounded-full object-cover md:ml-10 lg:-mt-10 lg:ml-5"
+                />
+              )}
               {/* </div> */}
               <div className="ml-5 mt-1 flex flex-1 flex-col lg:relative lg:mt-5">
                 <h2 className="text-center text-3xl font-bold text-slate-800 lg:text-left">
@@ -136,9 +155,12 @@ function UserInfo({ userIdData: { user, posts } }: Props) {
                     </p>
                     <div className="flex items-center">
                       {user?.friends.map((u) => (
-                        <img
-                          src={u.profilePic}
+                        <Image
+                          src={u?.profilePic}
                           alt=""
+                          height={28}
+                          width={28}
+                          loading="lazy"
                           className=" h-7 w-7 rounded-full object-cover"
                         />
                       ))}
@@ -215,13 +237,18 @@ function UserInfo({ userIdData: { user, posts } }: Props) {
                   <Link href={`/user/${f.userId}`}>
                     <div
                       className="my-4 mx-1 flex cursor-pointer items-center space-x-2 rounded-md p-2 hover:bg-gray-200"
-                      key={f.id}
+                      key={f._id}
                     >
-                      <img
-                        src={f.profilePic}
-                        alt=""
-                        className="h-10 w-10 rounded-full object-cover"
-                      />
+                      {f?.profilePic && (
+                        <Image
+                          src={f.profilePic}
+                          alt=""
+                          height={40}
+                          width={40}
+                          loading="lazy"
+                          className="rounded-full object-cover"
+                        />
+                      )}
                       <p className="text-base text-gray-500">{f.name}</p>
                     </div>
                   </Link>
@@ -233,7 +260,7 @@ function UserInfo({ userIdData: { user, posts } }: Props) {
             {posts.length > 0 ? (
               <div className="m-5 mx-auto w-[90%]">
                 {posts?.map((p) => (
-                  <Post user={user} post={p} key={p.id} />
+                  <Post user={user} post={p} key={p._id} />
                 ))}
               </div>
             ) : (
@@ -263,7 +290,7 @@ export async function getStaticPaths() {
   const userData = (await getUsers()) || []
   return {
     paths: userData.map((user: { user: any }) => ({
-      params: { id: user.user.id },
+      params: { id: user.user._id },
     })),
     fallback: true,
   }
