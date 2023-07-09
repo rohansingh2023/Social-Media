@@ -41,17 +41,17 @@ Some of it's previews
       - npm i
       - npm run dev
       
-- graphql-smserver: 
-      - npm i
-      - npm run dev
+- backend: 
+      - yarn
+      - yarn dev
       
 - chat-server: 
-      - npm i
-      - npm run dev
+      - yarn
+      - yarn dev
       
 - socket-server: 
-      - npm i
-      - npm run dev
+      - yarn
+      - yarn dev
 
 
 
