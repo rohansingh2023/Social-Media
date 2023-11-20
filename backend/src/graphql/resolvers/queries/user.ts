@@ -1,4 +1,4 @@
-import { redisClient } from "../../../index";
+import { redisClient } from "../../../app";
 
 export const UserQuery = {
   hello: () => {

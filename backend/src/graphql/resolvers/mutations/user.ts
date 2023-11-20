@@ -2,7 +2,7 @@ import { AuthenticationError, UserInputError } from "apollo-server-express";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import { v2 as cloudinary } from "cloudinary";
-import { redisClient } from "../../../index";
+import { redisClient } from "../../../app";
 import dotenv from "dotenv";
 
 dotenv.config();

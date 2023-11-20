@@ -1,6 +1,6 @@
 import { v2 as cloudinary } from "cloudinary";
 import mongoose from "mongoose";
-import { redisClient } from "../../../index";
+import { redisClient } from "../../../app";
 import dotenv from "dotenv";
 
 dotenv.config();
