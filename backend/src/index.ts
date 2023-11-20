@@ -13,6 +13,8 @@ import resolvers from "./graphql/resolvers";
 import { middleware } from "./middlewares";
 import dbConnect from "./db";
 import models from "./models";
+import { morganMiddleware } from "./logging";
+import { logger } from "./logging/winston";
 
 dotenv.config();
 
@@ -26,6 +28,7 @@ export const redisClient = new Redis({
 const port = process.env.PORT || 8080;
 
 // app.set("trust proxy", 1);
+app.use(morganMiddleware);
 app.use(cors({ credentials: true, origin: process.env.ORIGIN_URL }));
 app.use(express.json({ limit: "50mb" }));
 app.use(express.urlencoded({ extended: true }));
@@ -55,10 +58,6 @@ const startServer = async () => {
 
   app.use(
     "/graphql",
-    // cors<cors.CorsRequest>({
-    //   origin: "http://localhost:3000",
-    //   credentials: true,
-    // }),
     expressMiddleware(server, {
       context: async ({ req }) => ({
         req: req,
@@ -72,11 +71,12 @@ const startServer = async () => {
   redisClient.on("error", (err) => console.log("Redis Client Error", err));
 
   app.get("/", (req: Request, res: Response) => {
+    logger.info("Checking the API Status: Everything OK");
     res.json({ data: "api working" });
   });
 
   app.listen(port, () => {
-    console.log(`🚀 Server ready at at http://localhost:${port}`);
+    logger.info(`🚀 Server ready at at http://localhost:${port}`);
     // console.log(`gql path is ${apolloServer.graphqlPath}`);
   });
 };

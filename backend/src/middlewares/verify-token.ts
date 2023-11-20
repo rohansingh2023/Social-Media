@@ -11,16 +11,17 @@ export const verifyToken = async (
   const authHeader = context.req.headers.authorization;
   if (authHeader) {
     const token = authHeader.split(" ")[1];
-    jwt.verify(
-      token,
-      `${process.env.JWT_SECRET_KEY}`,
-      (err: any, user: any) => {
-        if (err) {
-          throw new GraphQLError("Token is invalid");
-        }
-        return resolve(parent, args, context, info);
-      }
-    );
+    try {
+      const decoded = jwt.verify(token, `${process.env.JWT_SECRET_KEY}`);
+      return resolve(parent, args, context, info);
+    } catch (error) {
+      throw new GraphQLError("Token is Invalid", {
+        extensions: {
+          code: "UNAUTHORIZED",
+          http: { status: 401 },
+        },
+      });
+    }
   } else {
     throw new GraphQLError("You are not Authorized", {
       extensions: {

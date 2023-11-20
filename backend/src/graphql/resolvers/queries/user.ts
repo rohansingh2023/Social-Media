@@ -128,7 +128,6 @@ export const UserQuery = {
   friendRequests: async (_: any, args: any, { models }: any) => {
     try {
       const userDet = await models.User.findById(args.id);
-      // if (userDet.friendRequests.length > 0) {
       return userDet?.map((f: any) => ({
         id: f.id,
         name: f.name,
@@ -136,9 +135,6 @@ export const UserQuery = {
         createdAt: f.createdAt,
         profilePic: f.profilePic,
       }));
-      // } else {
-      //   return "No friend Requests";
-      // }
     } catch (error) {
       console.log(error);
       throw new Error("Error getting users");
