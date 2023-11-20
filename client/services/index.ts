@@ -15,13 +15,20 @@ import {
   SEARCH_USERS,
 } from '../graphql/queries/userQueries'
 import client from '../apollo-client'
+import Cookies from 'js-cookie'
 
-// const GRAPHQL_ENDPOINT = 'https://sm-graphql-api.onrender.com/api'
+const token = Cookies.get('userJwt')
+const subToken = token?.substring(1, token.length - 1)
 const GRAPHQL_ENDPOINT = 'http://localhost:8080/graphql'
-const authClient = new GraphQLClient(GRAPHQL_ENDPOINT, {})
+const authClient = new GraphQLClient(GRAPHQL_ENDPOINT, {
+  headers: {
+    Authorization: `Bearer ${subToken}`,
+  },
+})
+// const GRAPHQL_ENDPOINT = 'https://sm-graphql-api.onrender.com/api'
 
 export const getPosts = async () => {
-  const results = await request(GRAPHQL_ENDPOINT, GET_POSTS)
+  const results = await authClient.request(GET_POSTS)
   return results.posts
 }
 

@@ -11,6 +11,8 @@ import { addCurrentUser } from '../redux/activities/userRedux'
 import client from '../apollo-client'
 import request, { GraphQLClient } from 'graphql-request'
 import Loading from '../components/Loading'
+import Cookies from 'js-cookie'
+import { GET_POSTS } from '../graphql/queries/postQueries'
 
 const DynamicFeedComponent = dynamic(() => import('../components/Feed'), {
   // ssr: false,
@@ -28,8 +30,9 @@ const Rightbar = dynamic(() => import('../components/Rightbar'), {
 
 interface Props {
   postData: Post[]
+  // data: Post[]
   userData: User[]
-  token: any
+  res: any
 }
 
 const Index = ({ postData }: Props) => {
@@ -37,23 +40,23 @@ const Index = ({ postData }: Props) => {
     console.log(data)
   })
   const addCurrentUser = useCurrentState((state) => state.addCurrentUser)
+  // const token = Cookies.get('userJwt')
+  // const subToken = token?.substring(1, token.length - 1)
+  // const authClient = new GraphQLClient('http://localhost:8080/graphql', {
+  //   headers: {
+  //     authorization: `Bearer ${subToken}`,
+  //   },
+  // })
   // const currentUser = useCurrentState((state)=> state.currentUser);
-
   useEffect(() => {
     addCurrentUser()
   }, [])
   // const token = localStorage.getItem('userToken')
 
   // const getData = async () => {
-  //   console.log(token)
+  //   console.log(subToken)
 
   //   try {
-  //     const authClient = new GraphQLClient('http://localhost:8080/graphql', {
-  //       headers: {
-  //         authorization: `Bearer ${token}`,
-  //       },
-  //     })
-
   //     const res = await authClient.request(HELLO)
   //     console.log(res)
   //   } catch (error) {
@@ -61,6 +64,7 @@ const Index = ({ postData }: Props) => {
   //   }
   // }
   // getData()
+  // console.log(res)
 
   return (
     <div className="relative bg-slate-50 font-Segoe">
@@ -104,23 +108,24 @@ const Index = ({ postData }: Props) => {
 // }
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
-  const token = context.req.cookies.userJwt
-  // console.log(token)
+  // const token = context.req.cookies.userJwt
+  // // console.log(token)
 
-  // const authClient = new GraphQLClient('http://localhost:8000/graphql', {
+  // const authClient = new GraphQLClient('http://localhost:8080/graphql', {
   //   headers: {
-  //     token: `Bearer ${token}`,
+  //     Authorization: `Bearer ${token.substring(1, token.length - 1)}`,
   //   },
   // })
 
-  // const res = await authClient.request(HELLO)
-  // console.log(res)
+  // const res = await authClient.request(GET_POSTS)
+  // const data = res.posts
   const postData = (await getPosts()) || []
   // const userData = (await getOnlyUsers()) || []
   // const onlyUserData = (await getOnlyUsersExMe()) || []
   return {
     props: {
       postData,
+      // data,
       // userData,
       // token,
       // onlyUserData,
