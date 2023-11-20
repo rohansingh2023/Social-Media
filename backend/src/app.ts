@@ -13,8 +13,8 @@ import resolvers from "./graphql/resolvers";
 import { middleware } from "./middlewares";
 import dbConnect from "./db";
 import models from "./models";
-import { morganMiddleware } from "./logging";
-import { logger } from "./logging/winston";
+import { morganMiddleware } from "./middlewares/logger";
+import { logger } from "./logging";
 
 dotenv.config();
 
