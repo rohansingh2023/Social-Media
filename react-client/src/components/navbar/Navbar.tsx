@@ -41,7 +41,7 @@ const Navbar = () => {
 
   return (
     <>
-      <div className="fixed left-0 top-0 z-50 grid w-screen grid-cols-12 items-center justify-between border-b-2 bg-white py-2 px-2 font-DMSerif text-white lg:px-5">
+      <div className="sticky bg-[#010100] left-0 top-0 z-50 grid w-screen grid-cols-12 items-center justify-between border-b-2 py-2 px-2 font-DMSerif text-white lg:px-5">
         <div className="col-span-6 flex flex-1 items-start justify-start lg:col-span-3 lg:items-center lg:justify-around">
           <Link to={"/"}>
             <img
@@ -67,7 +67,7 @@ const Navbar = () => {
               <FaHome
                 className="mr-20"
                 size={35}
-                color={colour == "home" ? "#FF8080" : "#c30f0f11"}
+                color={colour == "home" ? "#FF8080" : "#d99292"}
               />
             </button>
           </Link>
@@ -76,7 +76,7 @@ const Navbar = () => {
               <FaSearch
                 className="mr-20"
                 size={30}
-                color={colour == "search" ? "#FF8080" : "#c30f0f11"}
+                color={colour == "search" ? "#FF8080" : "#d99292"}
               />
             </button>
           </Link>
@@ -85,7 +85,7 @@ const Navbar = () => {
               <IoIosPersonAdd
                 className="mr-20"
                 size={35}
-                color={colour == "friendReq" ? "#FF8080" : "#c30f0f11"}
+                color={colour == "friendReq" ? "#FF8080" : "#d99292"}
               />
             </button>
           </Link>
@@ -94,7 +94,7 @@ const Navbar = () => {
               <FaFortAwesomeAlt
                 className="mr-20"
                 size={35}
-                color={colour == "profile" ? "#FF8080" : "#c30f0f11"}
+                color={colour == "profile" ? "#FF8080" : "#d99292"}
               />
             </button>
           </Link>

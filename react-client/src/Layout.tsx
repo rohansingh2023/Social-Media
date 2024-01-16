@@ -4,10 +4,12 @@ import { Navbar } from "./components";
 const Layout = () => {
   return (
     <>
-      <header className="z-50 ">
+      <div className="overflow-hidden">
+        {/* <header className="z-50 "> */}
         <Navbar />
-      </header>
-      <Outlet />
+        {/* </header> */}
+        <Outlet />
+      </div>
     </>
   );
 };

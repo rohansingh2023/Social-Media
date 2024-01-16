@@ -4,29 +4,36 @@ import React, { useRef, useState } from "react";
 // import toast from 'react-hot-toast'
 // import { useMutation } from '@apollo/client'
 // import { ADD_POST } from '../../graphql/mutations/postMutations'
-// import { RefreshIcon } from '@heroicons/react/outline'
+import { BeakerIcon } from "@heroicons/react/24/solid";
 // import { getPosts } from '../services'
 // import { useSelector } from 'react-redux'
 // import { selectToken } from '../redux/activities/userRedux'
 // import Skeleton from 'react-loading-skeleton'
 // import dynamic from 'next/dynamic'
 import { useCurrentState } from "../../state-management/current-user";
+import { Post } from "../../components";
 
 // const Post = dynamic(() => import('../components/Post'), {
 //   // ssr: false,
 //   loading: () => <p>Loading...</p>,
 // })
 
-// interface Props {
-//   postData: Post[];
-// }
+interface PropsData {
+  posts: Post;
+  user: User;
+}
 
-const Feed = () => {
+interface Props {
+  postData: PropsData[];
+}
+
+const Feed = ({ postData: posts }: Props) => {
   const [formData, setFormData] = useState({
     content: "",
     image: "",
   });
-  // const [postData, setPostData] = useState(posts);
+  // console.log(posts);
+
   const currentUser = useCurrentState((state) => state.currentUser);
 
   //   const token = useSelector(selectToken)
@@ -88,23 +95,23 @@ const Feed = () => {
     // }
   };
 
-  //   const handleChange = (e: { target: { name: unknown; value: any } }) => {
-  //     setFormData({ ...formData, [e.target.name]: e.target.value })
-  //   }
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
 
   //   if (!postData) {
   //     return <Loading />
   //   }
 
   return (
-    <div className="col-span-12 max-h-[91vh] overflow-scroll bg-gray-100 p-3 scrollbar-hide lg:col-span-8 lg:border-x lg:p-5 xl:col-span-6">
+    <div className="col-span-12 max-h-[91vh] overflow-y-scroll bg-[#010100] text-white p-3 scrollbar-hide lg:col-span-8 lg:border-x lg:p-5 xl:col-span-6">
       <div className="mx-auto max-w-xl">
         <div className="flex items-center justify-between">
           <h1 className="text-3xl font-bold ">Explore</h1>
-          {/* <RefreshIcon
+          <BeakerIcon
             onClick={handleRefresh}
             className="mr-5 mt-5 h-8 w-8 cursor-pointer text-[#FF8080] transition-all duration-500 ease-out hover:rotate-180 active:scale-125"
-          /> */}
+          />
         </div>
 
         <div className="mt-3 flex items-center justify-center space-x-0 lg:mt-0 lg:flex-1 lg:space-x-2 lg:p-5 ">
@@ -119,13 +126,13 @@ const Feed = () => {
             />
           )}
           <div className=" flex items-center lg:flex-1">
-            <div className="flex flex-col rounded-lg bg-white lg:flex-1 ">
+            <div className="flex flex-col rounded-lg bg-[#191818] text-white lg:flex-1 ">
               <input
-                className="w-full bg-white p-3 placeholder-black outline-none"
+                className="w-full bg-[#191818] p-3 placeholder-white outline-none"
                 placeholder="Share your Knowledge"
                 name="content"
                 value={formData.content}
-                // onChange={handleChange}
+                onChange={handleChange}
               />
               <div className="mx-5 mt-5 mb-5 flex items-center justify-between">
                 {/* <FileBase
@@ -168,21 +175,20 @@ const Feed = () => {
           {/* <Skeleton height={30} width={30} /> */}
         </div>
         <div className="mt-5 flex flex-1 flex-col items-center justify-center px-3 lg:ml-0">
-          {/* {postData.length > 0 ? (
-            postData?.map((post: any, i: any) => (
+          {posts?.length > 0 ? (
+            posts!.map((post, i) => (
               <Post
                 key={i}
                 post={post.posts}
                 user={post.user}
                 refresh={handleRefresh}
-                setPostsData={setPostData}
               />
             ))
-          ) : ( */}
-          <span className="mt-32 text-center text-2xl font-bold">
-            No Posts to show
-          </span>
-          {/* )} */}
+          ) : (
+            <span className="mt-32 text-center text-2xl font-bold">
+              No Posts to show
+            </span>
+          )}
         </div>
       </div>
     </div>

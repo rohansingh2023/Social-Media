@@ -18,7 +18,7 @@ const Rightbar = () => {
 
   return (
     // <div className="sticky top-20 h-[100vh] w-1/4">
-    <div className="hidden max-h-[91vh] max-w-full overflow-scroll scrollbar-hide lg:col-span-2 lg:inline xl:col-span-3">
+    <div className="hidden max-h-[91vh] bg-[#010100] text-white max-w-full overflow-y-scroll scrollbar-hide lg:col-span-2 lg:inline xl:col-span-3">
       <div className="font-Inter lg:flex lg:h-full lg:flex-shrink-0 lg:flex-col lg:items-center">
         <div
           className={`h-50 relative mx-5 my-5 w-11/12 rounded-md border border-b-2 border-gray-300 bg-gray-300 ${
