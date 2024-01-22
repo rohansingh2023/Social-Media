@@ -18,15 +18,15 @@ const Rightbar = () => {
 
   return (
     // <div className="sticky top-20 h-[100vh] w-1/4">
-    <div className="hidden max-h-[91vh] bg-[#010100] text-white max-w-full overflow-y-scroll scrollbar-hide lg:col-span-2 lg:inline xl:col-span-3">
+    <div className="hidden max-h-screen bg-[#010100] text-white max-w-full overflow-y-scroll scrollbar-hide lg:col-span-2 lg:inline xl:col-span-3">
       <div className="font-Inter lg:flex lg:h-full lg:flex-shrink-0 lg:flex-col lg:items-center">
         <div
-          className={`h-50 relative mx-5 my-5 w-11/12 rounded-md border border-b-2 border-gray-300 bg-gray-300 ${
+          className={`h-50 relative mx-5 my-5 w-11/12 rounded-md shadow-xl bg-gray-300 ${
             currentSlide === 0
-              ? "bg-slider-1"
+              ? "bg-slider1"
               : currentSlide === 1
-              ? "bg-slider-2"
-              : "bg-slider-3"
+              ? "bg-slider2"
+              : "bg-slider3"
           } p-3 text-white transition-opacity duration-200`}
         >
           {currentSlide < 1 && (

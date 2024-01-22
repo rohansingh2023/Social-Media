@@ -12,6 +12,13 @@ import { BeakerIcon } from "@heroicons/react/24/solid";
 // import dynamic from 'next/dynamic'
 import { useCurrentState } from "../../state-management/current-user";
 import { Post } from "../../components";
+import Cookies from "js-cookie";
+import { useMutation } from "@apollo/client";
+import { ADD_POST } from "../../graphql/mutations/postMutations";
+import { GET_POSTS } from "../../graphql/queries/postQueries";
+import toast from "react-hot-toast";
+import { getPosts } from "../../services/api-calls";
+import PostSkeleton from "../post/PostSkeleton";
 
 // const Post = dynamic(() => import('../components/Post'), {
 //   // ssr: false,
@@ -25,74 +32,84 @@ interface PropsData {
 
 interface Props {
   postData: PropsData[];
+  loading: boolean;
 }
 
-const Feed = ({ postData: posts }: Props) => {
+const Feed = ({ postData: posts, loading }: Props) => {
   const [formData, setFormData] = useState({
     content: "",
     image: "",
   });
+  const cookie = Cookies.get("userJwt");
+  const token = cookie?.substring(1, cookie.length - 1);
   // console.log(posts);
 
   const currentUser = useCurrentState((state) => state.currentUser);
 
   //   const token = useSelector(selectToken)
 
-  //   const [addPost] = useMutation(ADD_POST, {
-  //     variables: {
-  //       content: formData.content,
-  //       image: formData.image,
-  //     },
-  //     context: {
-  //       headers: {
-  //         Authorization: `${token}`,
-  //       },
-  //     },
-  //     // refetchQueries: [GET_POSTS, 'posts'],
-  //     // update(cache, { data: { addPost } }) {
-  //     //   const { posts }: any = cache.readQuery({
-  //     //     query: GET_POSTS,
-  //     //   })
+  const [addPost] = useMutation(ADD_POST, {
+    variables: {
+      content: formData.content,
+      image: formData.image,
+    },
+    context: {
+      headers: {
+        Authorization: `${token}`,
+      },
+    },
+    refetchQueries: [{ query: GET_POSTS }],
 
-  //     //   if (posts) {
-  //     //     cache.writeQuery({
-  //     //       query: GET_POSTS,
-  //     //       data: {
-  //     //         posts: [...posts, addPost],
-  //     //       },
-  //     //     })
-  //     //   }
-  //     // },
-  //   })
+    // refetchQueries: [GET_POSTS, 'posts'],
+    // update(cache, { data: { addPost } }) {
+    //   const { posts }: any = cache.readQuery({
+    //     query: GET_POSTS,
+    //   })
+
+    //   if (posts) {
+    //     cache.writeQuery({
+    //       query: GET_POSTS,
+    //       data: {
+    //         posts: [...posts, addPost],
+    //       },
+    //     })
+    //   }
+    // },
+  });
 
   //   const fileInputRef = useRef<HTMLInputElement>(null)
 
   const handleRefresh = async () => {
-    // const refreshToast = toast.loading('Refreshing...')
-    // const posts = await getPosts()
+    const refreshToast = toast.loading("Refreshing...");
+    await getPosts();
     // setPostData(posts)
-    // toast.success('Post Updated', {
-    //   id: refreshToast,
-    // })
+    toast.success("Post Updated", {
+      id: refreshToast,
+    });
   };
 
-  const handleUpload = async () => {
-    // e.preventDefault()
-    // const refreshToast = toast.loading('Refreshing...')
-    // try {
-    //   const { data } = await addPost()
-    //   toast.success('Post added successfully')
-    //   setFormData({ content: '', image: '' })
-    //   // window.location.reload()
-    //   const posts = await getPosts()
-    //   setPostData(posts)
-    //   toast.success('Post Updated', {
-    //     id: refreshToast,
-    //   })
-    // } catch (error) {
-    //   toast.error(`${error}`)
-    //   console.log(error)
-    // }
+  const handleUpload = async (
+    e: React.MouseEvent<HTMLButtonElement, MouseEvent>
+  ) => {
+    e.preventDefault();
+    const refreshToast = toast.loading("Refreshing...");
+    try {
+      const { data } = await addPost();
+      toast.success("Post added successfully");
+      setFormData({ content: "", image: "" });
+      // window.location.reload()
+      // const posts = await getPosts()
+      // setPostData(posts)
+      toast.success("Post Updated", {
+        id: refreshToast,
+      });
+    } catch (error) {
+      toast.error(`${error}`, {
+        id: refreshToast,
+      });
+      setFormData({ content: "", image: "" });
+      console.log(error);
+    }
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -175,6 +192,7 @@ const Feed = ({ postData: posts }: Props) => {
           {/* <Skeleton height={30} width={30} /> */}
         </div>
         <div className="mt-5 flex flex-1 flex-col items-center justify-center px-3 lg:ml-0">
+          {loading === true && <PostSkeleton />}
           {posts?.length > 0 ? (
             posts!.map((post, i) => (
               <Post
@@ -185,6 +203,7 @@ const Feed = ({ postData: posts }: Props) => {
               />
             ))
           ) : (
+            // <PostSkeleton />
             <span className="mt-32 text-center text-2xl font-bold">
               No Posts to show
             </span>

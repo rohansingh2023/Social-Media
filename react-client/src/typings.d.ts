@@ -80,3 +80,17 @@ type Login = {
 type CurrentUser = {
   user: User;
 };
+
+type SearchUsers = {
+  users: [
+    {
+      _id: string;
+      name: string;
+      email: string;
+      profilePic: string;
+      bio: string;
+      dob: string;
+    }
+  ];
+  totalCount: number;
+};

@@ -25,6 +25,7 @@ export const useCurrentState = create<CurrentUserState>()((set) => ({
       const { data } = await client.query({
         query: CURRENT_USER,
       });
+
       set({ currentUser: data?.currentUser });
     } catch (error) {
       console.log(error);

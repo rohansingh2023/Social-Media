@@ -17,11 +17,11 @@ import { Link } from "react-router-dom";
 
 type Props = {
   post: Post;
-  user: User;
-  refresh: () => Promise<void>;
+  user: User | undefined;
+  // refresh: () => Promise<void>;
 };
 
-const Post = ({ post, user, refresh }: Props) => {
+const Post = ({ post, user }: Props) => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [body, setBody] = useState<string>("");
   //   const token = useSelector(selectToken)
@@ -50,6 +50,7 @@ const Post = ({ post, user, refresh }: Props) => {
         Authorization: `${token}`,
       },
     },
+    refetchQueries: [{ query: GET_POSTS }],
   });
 
   const [addComment] = useMutation(ADD_COMMENT, {
@@ -62,6 +63,7 @@ const Post = ({ post, user, refresh }: Props) => {
         Authorization: `${token}`,
       },
     },
+    refetchQueries: [{ query: GET_POSTS }],
   });
 
   const handleLike = async () => {
@@ -87,7 +89,7 @@ const Post = ({ post, user, refresh }: Props) => {
     try {
       await deletePost();
       toast.success("Post deleted successfully");
-      await refresh();
+      // await refresh();
       // window.location.reload()
     } catch (error) {
       toast.error(`${error}`);
@@ -102,7 +104,7 @@ const Post = ({ post, user, refresh }: Props) => {
       try {
         await addComment();
         toast.success("Comment added successfully");
-        await refresh();
+        // await refresh();
         setBody("");
       } catch (error) {
         toast.error(`${error}`);
@@ -112,7 +114,7 @@ const Post = ({ post, user, refresh }: Props) => {
   };
 
   const isFriend = cuser?.user?.friends?.findIndex(
-    (f) => f.userId === user._id
+    (f) => f.userId === user?._id
   );
   const isLiked = post.likes.findIndex((f) => f.email === cuser?.user?.email);
 
@@ -122,9 +124,9 @@ const Post = ({ post, user, refresh }: Props) => {
         <div className="mt-2 flex items-center justify-between px-4 py-2">
           <Link
             to={
-              user._id === cuser?.user?._id
+              user?._id === cuser?.user?._id
                 ? `/profile/${cuser?.user?._id}`
-                : `/user/${user._id}`
+                : `/user/${user?._id}`
             }
             // className="flex flex-1 p-2"
           >
@@ -141,11 +143,11 @@ const Post = ({ post, user, refresh }: Props) => {
               <div className="flex flex-col items-start">
                 <div className="flex items-center space-x-2">
                   <p className=" cursor-pointer text-base font-semibold">
-                    {user.name}
+                    {user?.name}
                   </p>
 
                   <p className="hidden text-xs font-normal text-gray-400 lg:inline">
-                    {user.email}
+                    {user?.email}
                   </p>
                 </div>
                 <div className="flex items-center">
@@ -159,7 +161,7 @@ const Post = ({ post, user, refresh }: Props) => {
               </div>
             </div>
           </Link>
-          {user._id === cuser?.user?._id && (
+          {user?._id === cuser?.user?._id && (
             <div>
               <AiFillDelete size={25} className="" onClick={handleDelete} />
             </div>
@@ -245,7 +247,7 @@ const Post = ({ post, user, refresh }: Props) => {
                 <input
                   type="text"
                   placeholder="Comment..."
-                  className="flex-1 rounded-full bg-gray-200 px-4 py-2 outline-none "
+                  className="flex-1 rounded-full bg-[#191818] border-2 border-[#191818] shadow-2xl text-white px-4 py-2 outline-none "
                   value={body}
                   onChange={(e) => setBody(e.target.value)}
                   onKeyPress={handleComment}

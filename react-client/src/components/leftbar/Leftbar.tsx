@@ -12,7 +12,7 @@ const Leftbar = () => {
   const currentUser = useCurrentState((state) => state.currentUser);
 
   return (
-    <div className=" flex-1 max-h-[91vh] bg-[#010100] text-white lg:col-span-2 xl:col-span-3">
+    <div className=" flex-1 max-h-screen bg-[#010100] text-white lg:col-span-2 xl:col-span-3">
       <div className="hidden font-Inter lg:inline-flex lg:flex-1 lg:flex-col lg:items-start lg:justify-around lg:p-3 lg:text-lg">
         <Link to={`/profile/${currentUser?.user?._id}`}>
           <div className="mb-4 flex flex-1 items-center justify-start rounded-xl py-2  px-1 hover:bg-[#191818]">

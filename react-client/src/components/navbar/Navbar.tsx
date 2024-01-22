@@ -26,7 +26,9 @@ const Navbar = () => {
         id: refreshId,
       });
       // socket.disconnect()
-      router("/auth/login");
+      // router("/login");
+      router("/");
+      window.location.reload();
     } catch (error) {
       console.log(error);
       toast.error("Can't Logout", {
@@ -90,6 +92,7 @@ const Navbar = () => {
             </button>
           </Link>
           <Link to={`/profile/${currentUser?.user?._id}`}>
+            {/* <Link to={"/profile"}> */}
             <button onClick={() => setColour("profile")}>
               <FaFortAwesomeAlt
                 className="mr-20"

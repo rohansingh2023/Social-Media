@@ -3,3 +3,7 @@ export { default as Leftbar } from "./leftbar/Leftbar";
 export { default as Rightbar } from "./rightbar/Rightbar";
 export { default as Feed } from "./feed/Feed";
 export { default as Post } from "./post/Post";
+export { default as SearchFriends } from "./search-friends/SearchFriends";
+export { default as UserCard } from "./user-card/UserCard";
+export { default as UserProfile } from "./user-profile/UserProfile";
+export { default as FriendCard } from "./friend-card/FriendCard";
