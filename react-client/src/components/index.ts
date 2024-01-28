@@ -7,3 +7,6 @@ export { default as SearchFriends } from "./search-friends/SearchFriends";
 export { default as UserCard } from "./user-card/UserCard";
 export { default as UserProfile } from "./user-profile/UserProfile";
 export { default as FriendCard } from "./friend-card/FriendCard";
+export { default as UserModal } from "./modals/UserModal";
+export { default as PostModal } from "./modals/PostModal";
+export { default as ChatMain } from "./chat/ChatMain";

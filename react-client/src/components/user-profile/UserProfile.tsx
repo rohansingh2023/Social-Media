@@ -1,52 +1,19 @@
 import { useState } from "react";
 import { IoPencilSharp } from "react-icons/io5";
-// import toast from "react-hot-toast";
-// import { useNavigate } from "react-router-dom";
-import { FriendCard, Post } from "..";
+import { FriendCard, Post, UserModal } from "..";
+import { useCurrentState } from "../../state-management/current-user";
 
 interface Props {
   userD: User;
-  post: Post;
+  post: Post[];
   loading: boolean;
 }
 
-interface Props2 {
-  posts: Post;
-  user: User;
-}
-
 function UserProfile({ userD, post, loading }: Props) {
-  const [userPosts, setUserPosts] = useState<Props2[]>([]);
-  const [userData, setUserData] = useState<User>(userD);
+  // const [userData, setUserData] = useState<User>(userD);
   const [showModal, setShowModal] = useState<boolean>(false);
-  //   const router = useNavigate();
+  const currentUser = useCurrentState((state) => state.currentUser);
 
-  // const [unFriend] = useMutation(UNFRIEND, {
-  //   variables:{
-  //     id: userD.id
-  //   }
-  // })
-
-  //   const handleRefresh = async () => {
-  //     const refreshToast = toast.loading('Refreshing...')
-  //     const users = await getUserById(userD?._id)
-  //     setUserData(users)
-  //     toast.success('User Updated', {
-  //       id: refreshToast,
-  //     })
-  //   }
-
-  // useEffect(() => {
-  //   const getUserById = async () => {
-  //     const results: Props2[] = await client.query(GET_USER_BY_ID)
-  //     setUserPosts(results)
-  //   }
-  //   getUserById()
-  // }, [])
-
-  // if (!userPosts) {
-  //   return <Loading />
-  // }
   if (loading) {
     console.log("Loading...");
   }
@@ -54,13 +21,13 @@ function UserProfile({ userD, post, loading }: Props) {
   return (
     <div className="relative col-span-12 flex max-h-[91vh] bg-[#010100] text-white max-w-screen-sm flex-1 flex-col overflow-y-scroll p-3 scrollbar-hide md:max-w-screen-md lg:col-span-8 lg:max-w-screen-lg lg:border-x lg:p-5 xl:col-span-6 xl:max-w-screen-xl">
       <div className="mt-5 flex flex-1 flex-shrink-0 flex-col lg:mt-0">
-        {/* {showModal && (
+        {showModal && (
           <UserModal
-            showModal={showModal}
+            // showModal={showModal}
             setShowModal={setShowModal}
             user={userD}
           />
-        )} */}
+        )}
         <div className="h-80 w-full flex-shrink-0 rounded-t-md  opacity-70">
           <img
             src="https://tse3.mm.bing.net/th?id=OIP.zsEgRepQ6Uh5OYkkhJyn2gHaE5&pid=Api&P=0&w=253&h=167"
@@ -119,28 +86,27 @@ function UserProfile({ userD, post, loading }: Props) {
           </div>
         </div>
       </div>
-      <div className={userPosts.length > 0 ? "p-5" : "mt-10 p-5"}>
+      <div className={post?.length > 0 ? "p-5" : "mt-10 p-5"}>
         <hr className="mt-10 border bg-black" />
       </div>
       <div className="mx-auto max-w-xl">
-        {userData?.friends.length > 0 && (
+        {userD?.friends.length > 0 && (
           <div className="m-5 w-[90%] rounded-md p-3">
             <h1 className="text-xl font-bold text-white">Friends</h1>
             <div className="mt-3">
-              {userData?.friends?.map((f) => (
+              {userD?.friends?.map((f) => (
                 <FriendCard user={f} key={f._id} />
               ))}
             </div>
           </div>
         )}
-
-        {userData?.friendRequests.length > 0 && (
+        {userD?.friendRequests.length > 0 && (
           <div className="m-5 w-[90%] rounded-md p-3">
             <h1 className="text-xl font-bold">Friend Requests</h1>
             <div className="mt-3">
-              {userData?.friendRequests?.map((u, i) => (
+              {userD?.friendRequests?.map((u, i) => (
                 <div
-                  className="mt-2 flex cursor-pointer items-center rounded-sm py-2 px-2 hover:bg-gray-200"
+                  className="mt-2 flex cursor-pointer items-center rounded-sm py-2 px-2 bg-[#191818] hover:bg-[#010100]"
                   key={i}
                 >
                   {u?.profilePic && (
@@ -158,19 +124,21 @@ function UserProfile({ userD, post, loading }: Props) {
             </div>
           </div>
         )}
-
-        {/* <div className="flex flex-col items-center lg:p-5"> */}
-        {userPosts.length > 0 ? (
-          userPosts?.map((post: { user: User; posts: Post }, i) => (
-            <Post user={post.user} post={post.posts} key={i} />
-          ))
-        ) : (
-          <h1 className="mt-5 text-center text-lg font-bold ">
-            No posts to show
-          </h1>
-        )}
+        <div className="flex flex-col items-start lg:p-5">
+          <h1 className="text-3xl font-bold m-3">Posts</h1>
+          <div>
+            {post?.length > 0 ? (
+              post?.map((p, i) => (
+                <Post user={currentUser?.user} post={p} key={i} />
+              ))
+            ) : (
+              <h1 className="mt-5 text-center text-lg font-bold ">
+                No posts to show
+              </h1>
+            )}
+          </div>
+        </div>
       </div>
-      _
     </div>
   );
 }

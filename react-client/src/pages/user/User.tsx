@@ -115,7 +115,7 @@ function UserInfo() {
               {/* <div> */}
               {mainData?.userById?.user?.profilePic && (
                 <img
-                  src={mainData?.userById?.user.profilePic}
+                  src={mainData?.userById?.user?.profilePic}
                   alt=""
                   height={150}
                   width={150}

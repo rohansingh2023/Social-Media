@@ -4,7 +4,7 @@ import "./index.css";
 import { RouterProvider } from "react-router-dom";
 import { router } from "./utils/router";
 import { ApolloProvider } from "@apollo/client";
-import { QueryClientProvider, QueryClient } from "react-query";
+import { QueryClientProvider, QueryClient } from "@tanstack/react-query";
 import client from "./services/apollo-client";
 import { Toaster } from "react-hot-toast";
 

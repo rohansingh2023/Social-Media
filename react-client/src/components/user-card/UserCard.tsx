@@ -7,7 +7,10 @@ import { useMutation } from "@apollo/client";
 import { SEND_FRIEND_REQUEST } from "../../graphql/mutations/userMutations";
 import toast from "react-hot-toast";
 import client from "../../services/apollo-client";
-import { GET_USER_BY_ID } from "../../graphql/queries/userQueries";
+import {
+  GET_USER_BY_ID,
+  SEARCH_USERS,
+} from "../../graphql/queries/userQueries";
 // import { getUserById, getUsers } from '../services'
 // import { socket } from '../socket'
 // import { useSelector } from 'react-redux'
@@ -40,7 +43,7 @@ function UserCard({ user }: Props) {
         Authorization: `${token}`,
       },
     },
-    // refetchQueries: [{}],
+    refetchQueries: [{ query: SEARCH_USERS, variables: { searchTerm: "" } }],
   });
 
   useEffect(() => {
@@ -112,6 +115,7 @@ function UserCard({ user }: Props) {
         id: refresh,
       });
       //   router.reload()
+      window.location.reload();
     } catch (error) {
       toast.error(`${error}`, {
         id: refresh,

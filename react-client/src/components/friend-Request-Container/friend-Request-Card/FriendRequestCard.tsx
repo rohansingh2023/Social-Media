@@ -70,7 +70,7 @@ const FriendRequestCard = ({ user }: Props) => {
   };
 
   return (
-    <div className="mt-10 flex flex-1 items-center rounded-md border border-gray-200 bg-[#191818] text-white p-5">
+    <div className="mt-10 flex flex-1 items-center rounded-md shadow-xl bg-[#191818] text-white p-5">
       <div className="flex-[0.2]">
         {user?.profilePic && (
           <img

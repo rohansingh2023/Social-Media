@@ -4,3 +4,5 @@ export { default as Search } from "./search/Search";
 export { default as FriendRequest } from "./friend-requests/FriendRequest";
 export { default as Profile } from "./profile/Profile";
 export { default as User } from "./user/User";
+export { default as UserPost } from "./user-post/UserPost";
+export { default as Chat } from "./chat/Chat";
