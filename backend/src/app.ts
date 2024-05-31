@@ -25,7 +25,7 @@ export const redisClient = new Redis({
   port: 6379,
 });
 
-const port = process.env.PORT || 8080;
+const port = process.env.PORT || 8081;
 
 // app.set("trust proxy", 1);
 app.use(morganMiddleware);
@@ -67,8 +67,13 @@ export const startServer = async () => {
     })
   );
 
-  redisClient.on("connect", () => console.log("Redis Client connected"));
-  redisClient.on("error", (err) => console.log("Redis Client Error", err));
+  redisClient.on("connect", () => logger.info("Redis Client connected"));
+  redisClient.on("error", (err) => logger.info("Redis Client Error", err));
+
+  // await kafkaWrapper.connect("social-media", [
+  //   "localhost:9092",
+  //   "localhost:9092",
+  // ]);
 
   app.get("/", (req: Request, res: Response) => {
     logger.info("Checking the API Status: Everything OK");
@@ -76,7 +81,7 @@ export const startServer = async () => {
   });
 
   app.listen(port, () => {
-    logger.info(`🚀 Server ready at at http://localhost:${port}`);
-    // console.log(`gql path is ${apolloServer.graphqlPath}`);
+    // logger.info(`🚀 Server ready at at http://localhost:${port}`);
+    logger.http(`🚀 Server ready at at http://localhost:${port}`);
   });
 };

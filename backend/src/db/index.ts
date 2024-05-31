@@ -1,14 +1,15 @@
 import mongoose from "mongoose";
 import dotenv from "dotenv";
+import { logger } from "../logging";
 
 dotenv.config();
 
 const dbConnect = async () => {
   try {
     await mongoose.connect(`${process.env.MONGO_DB_URL}`, {});
-    console.log("Connected to MongoDB");
+    logger.info("Connected to MongoDB");
   } catch (error) {
-    console.log(error);
+    logger.info(error);
   }
 };
 

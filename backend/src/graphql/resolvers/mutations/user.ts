@@ -4,6 +4,9 @@ import jwt from "jsonwebtoken";
 import { v2 as cloudinary } from "cloudinary";
 import { redisClient } from "../../../app";
 import dotenv from "dotenv";
+import Producer from "../../../utils/rabbitmq/producer";
+
+const producer = new Producer();
 
 dotenv.config();
 
@@ -45,7 +48,12 @@ export const UserMutation = {
       await redisClient.flushall();
       // create and return the json web token
       const jwtUser: String = jwt.sign(
-        { id: user._id, name: user.name, email: user.email },
+        {
+          id: user._id,
+          name: user.name,
+          email: user.email,
+          photo: user.profilePic,
+        },
         `${process.env.JWT_SECRET_KEY}`
       );
       req.session = {
@@ -82,7 +90,12 @@ export const UserMutation = {
       }
       // create and return the json web token
       const jwtUser: String = jwt.sign(
-        { id: user._id, name: user.name, email: user.email },
+        {
+          id: user._id,
+          name: user.name,
+          email: user.email,
+          photo: user.profilePic,
+        },
         `${process.env.JWT_SECRET_KEY}`
       );
 
@@ -145,6 +158,11 @@ export const UserMutation = {
       }
       await post.save();
       await redisClient.flushall();
+      await producer.publishMsg("Like", {
+        id: post.user,
+        profilePic: payload.photo,
+        messageInfo: `${payload.name} liked your post`,
+      });
       return post;
     } else {
       throw new Error("Post not found");
@@ -172,6 +190,11 @@ export const UserMutation = {
       });
       await post.save();
       await redisClient.flushall();
+      await producer.publishMsg("Comment", {
+        id: post.user,
+        profilePic: payload.photo,
+        messageInfo: `${payload.name} commented on your post`,
+      });
       return post;
     } else throw new UserInputError("Post not found");
   },
@@ -217,6 +240,11 @@ export const UserMutation = {
         });
         await userTo.save();
         await redisClient.flushall();
+        await producer.publishMsg("Friend", {
+          id: userTo.id,
+          profilePic: userFrom.profilePic,
+          messageInfo: `${userFrom.name} sent you a friend request`,
+        });
         return userTo;
       }
     } catch (error) {
@@ -259,6 +287,11 @@ export const UserMutation = {
         await requestReceiver.save();
         await requestSender.save();
         await redisClient.flushall();
+        await producer.publishMsg("Friend", {
+          id: requestSender.id,
+          profilePic: requestReceiver.profilePic,
+          messageInfo: `${requestReceiver.name} accepted your friend request`,
+        });
         return requestReceiver;
       } else {
         throw new UserInputError("Already Friends");
@@ -300,6 +333,11 @@ export const UserMutation = {
         await friend.save();
         await currentUser.save();
         await redisClient.flushall();
+        await producer.publishMsg("Friend", {
+          id: friend.id,
+          profilePic: currentUser.profilePic,
+          messageInfo: `${currentUser.name} unfriended you`,
+        });
         return friend;
       } else {
         throw new UserInputError("Not in my friends List");
