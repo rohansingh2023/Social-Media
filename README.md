@@ -33,6 +33,78 @@ Built using NextJS, GraphQl, TailwindCSS, Typescript, Socket-Io, Express and Mon
 - `SocketIO` : For Real-Time socket server.
 - `RabbitMQ` : For building Message Queue and passing events between services.
 
+## To run the application locally:
+
+## client
+
+- Install all dependencies
+
+```bash
+npm install
+```
+
+- Run the app
+
+```bash
+npm run dev
+```
+
+## backend
+
+- Install all dependencies
+
+```bash
+yarn
+```
+
+- Run the app
+
+```bash
+yarn dev
+```
+
+## chat-server
+
+- Install all dependencies
+
+```bash
+yarn
+```
+
+- Run the app
+
+```bash
+yarn dev
+```
+
+## socket-server
+
+- Install all dependencies
+
+```bash
+yarn
+```
+
+- Run the app
+
+```bash
+yarn dev
+```
+
+## notifications
+
+- Install all dependencies
+
+```bash
+yarn
+```
+
+- Run the app
+
+```bash
+yarn dev
+```
+
 ## Some of it's previews
 
 - Home Page
@@ -61,10 +133,3 @@ Built using NextJS, GraphQl, TailwindCSS, Typescript, Socket-Io, Express and Mon
 
 - Chat Page
   ![Screenshot 2022-09-10 205803](https://user-images.githubusercontent.com/65129632/189497623-d3ac0168-8786-462e-bc28-eaca1e709208.png)
-
-## To run the application:
-
-- client : - npm i - npm run dev
-- backend: - yarn - yarn dev
-- chat-server: - yarn - yarn dev
-- socket-server: - yarn - yarn dev
