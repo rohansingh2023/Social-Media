@@ -107,6 +107,19 @@ yarn
 yarn dev
 ```
 
+## Deployment Strategy (In Progress)
+
+The most used approach for deploying microservices approach is using Docker and Kubernetes(k8s). I have dockerized all my services using Dockerfile. My strategy would be like this:
+
+- Frontend and Backend would be in two separate Clusters.
+- I would be using deployments for each service so that it will automatically create and maintain pods.
+- Deployments inside a cluster can communicate using ClusterIP.
+- External communication would take place using Ingress Loadbalancer.
+
+Most of the networking part is still remaining, other than that mostly all of the k8s structure is complete.
+
+![k8s-overview](./images/k8s-overview.jpg)
+
 ## Some of it's previews
 
 - Home Page
