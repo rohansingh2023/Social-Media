@@ -32,6 +32,8 @@ Built using NextJS, GraphQl, TailwindCSS, Typescript, Socket-Io, Express and Mon
 - `TailwindCSS` : CSS framework for writing CSS inside the JSX.
 - `SocketIO` : For Real-Time socket server.
 - `RabbitMQ` : For building Message Queue and passing events between services.
+- `Docker` : Containerizing the application for better deployments.
+- `Kubernetes` : Orchestrating the containers using Pods, Deployments, etc.
 
 ## To run the application locally:
 
