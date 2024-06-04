@@ -105,6 +105,12 @@ export const UserMutation = {
       return {
         token: jwtUser,
         message: "Logged In User Successfully",
+        // details: {
+        id: user._id,
+        name: user.name,
+        email: user.email,
+        photo: user.profilePic,
+        // },
       };
     } catch (error) {
       throw new Error(`${error}`);

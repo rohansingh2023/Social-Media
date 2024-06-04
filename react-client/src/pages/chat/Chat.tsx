@@ -9,9 +9,17 @@ const Chat = () => {
   const currentUser = useCurrentState((state) => state.currentUser);
 
   useEffect(() => {
-    socket.on("userOnline", (data) => {
-      console.log(data);
+    socket.emit("login", {
+      userId: currentUser?.user?._id,
+      name: currentUser?.user?.name,
+      email: currentUser?.user?.email,
+      profielPic: currentUser?.user?.profilePic,
     });
+
+    // // Cleanup on component unmount
+    // return () => {
+    //   socket.disconnect();
+    // };
   }, []);
 
   const { data } = useQuery(GET_USER_BY_ID, {

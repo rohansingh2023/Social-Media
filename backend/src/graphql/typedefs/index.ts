@@ -41,6 +41,10 @@ export const typeDefs = gql`
   type AuthData {
     token: String
     message: String
+    id: String
+    name: String
+    email: String
+    photo: String
   }
 
   type UserError {

@@ -4,6 +4,7 @@ import { LOGIN_USER } from "../../graphql/mutations/userMutations";
 import toast from "react-hot-toast";
 import Cookies from "js-cookie";
 import { Link, useNavigate } from "react-router-dom";
+import { socket } from "../../utils/web-socket";
 
 type FormData = {
   email: string;
@@ -37,6 +38,12 @@ const Login = () => {
       });
       toast.success("Login successful!", {
         id: refreshToast,
+      });
+      socket.emit("login", {
+        userId: tokenData?.id,
+        name: tokenData?.name,
+        email: tokenData?.email,
+        profilePic: tokenData?.photo,
       });
       router("/");
       window.location.reload();

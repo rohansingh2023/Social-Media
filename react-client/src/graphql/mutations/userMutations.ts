@@ -1,4 +1,4 @@
-import { gql } from '@apollo/client'
+import { gql } from "@apollo/client";
 
 const REGISTER_USER = gql`
   mutation createUser(
@@ -21,22 +21,26 @@ const REGISTER_USER = gql`
       token
     }
   }
-`
+`;
 
 const LOGIN_USER = gql`
   mutation loginUser($email: String!, $password: String!) {
     login(email: $email, password: $password) {
       message
       token
+      id
+      name
+      email
+      photo
     }
   }
-`
+`;
 
 const LOGOUT = gql`
   mutation logout {
     logout
   }
-`
+`;
 
 const UPDATE_USER = gql`
   mutation updateUser(
@@ -61,7 +65,7 @@ const UPDATE_USER = gql`
       dob
     }
   }
-`
+`;
 
 const SEND_FRIEND_REQUEST = gql`
   mutation friendReq($id: ID!) {
@@ -78,7 +82,7 @@ const SEND_FRIEND_REQUEST = gql`
       }
     }
   }
-`
+`;
 
 const ACCEPT_FRIEND_REQUEST = gql`
   mutation acceptFriendReq($email: String!) {
@@ -98,7 +102,7 @@ const ACCEPT_FRIEND_REQUEST = gql`
       }
     }
   }
-`
+`;
 
 const DECLINE_FRIEND_REQUEST = gql`
   mutation declineFriendRequest($email: String!) {
@@ -108,7 +112,7 @@ const DECLINE_FRIEND_REQUEST = gql`
       email
     }
   }
-`
+`;
 
 const UNFRIEND = gql`
   mutation unFriend($email: String!) {
@@ -121,7 +125,7 @@ const UNFRIEND = gql`
       }
     }
   }
-`
+`;
 
 export {
   REGISTER_USER,
@@ -132,4 +136,4 @@ export {
   DECLINE_FRIEND_REQUEST,
   UPDATE_USER,
   LOGOUT,
-}
+};
