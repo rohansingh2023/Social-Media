@@ -71,7 +71,7 @@ yarn dev
 - Install all dependencies
 
 ```bash
-go install
+go get .
 ```
 
 - Run the app
