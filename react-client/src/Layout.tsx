@@ -5,11 +5,19 @@ import { lazy, useEffect } from "react";
 const NavbarLazy = lazy(() => import("./components/navbar/Navbar"));
 
 const Layout = () => {
-  const addCurrentUser = useCurrentState((state) => state.addCurrentUser);
+  const { addCurrentUser, loading, error } = useCurrentState();
 
   useEffect(() => {
     addCurrentUser();
   }, [addCurrentUser]);
+
+  if (loading) {
+    console.log("Fetching current user data");
+  }
+
+  if (error) {
+    console.log(error);
+  }
 
   return (
     <>

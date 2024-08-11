@@ -7,6 +7,7 @@ import { ApolloProvider } from "@apollo/client";
 import { QueryClientProvider, QueryClient } from "@tanstack/react-query";
 import client from "./services/apollo-client";
 import { Toaster } from "react-hot-toast";
+import { SkeletonTheme } from "react-loading-skeleton";
 
 const rqclient = new QueryClient();
 
@@ -14,8 +15,10 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
     <QueryClientProvider client={rqclient}>
       <ApolloProvider client={client}>
-        <Toaster />
-        <RouterProvider router={router} />
+        <SkeletonTheme baseColor="#202020" highlightColor="#444">
+          <Toaster />
+          <RouterProvider router={router} />
+        </SkeletonTheme>
       </ApolloProvider>
     </QueryClientProvider>
   </React.StrictMode>

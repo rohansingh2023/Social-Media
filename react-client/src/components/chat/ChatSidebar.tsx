@@ -1,51 +1,42 @@
-import React, { Dispatch, SetStateAction } from "react";
+import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { AiOutlineSearch } from "react-icons/ai";
 import { BeakerIcon } from "@heroicons/react/24/solid";
 import toast from "react-hot-toast";
-// import axios from 'axios'
 import ChatListCard from "./ChatListCard";
+import axios from "axios";
+import { useParams } from "react-router-dom";
 
 interface IProps {
-  //   user: User;
   isChatOpen: boolean;
   setIsChatOpen: Dispatch<SetStateAction<boolean>>;
-  conversations: Conversation[];
   currentChat: Conversation | undefined;
   setCurrentChat: React.Dispatch<
     React.SetStateAction<Conversation | undefined>
   >;
 }
 
-const ChatSidebar = ({
-  //   user,
-  isChatOpen,
-  setIsChatOpen,
-  conversations,
-  setCurrentChat,
-}: IProps) => {
-  //   const [convs, setConvs] = useState<Conversation[]>(conversations)
+const ChatSidebar = ({ isChatOpen, setIsChatOpen, setCurrentChat }: IProps) => {
+  const [convs, setConvs] = useState<Conversation[]>();
+  const [loading, setLoading] = useState<boolean>(false);
+  const { id } = useParams();
 
-  const handleRefresh = async () => {
-    try {
-      const refreshToast = toast.loading("Refreshing...");
-      //   const res = await axios.get(
-      //     `http://localhost:3001/api/conversation/${user._id}`
-      //   )
-      // setConvs(res.data)
-      // console.log(res.data)
-
-      toast.success("ChatList Updated", {
-        id: refreshToast,
-      });
-    } catch (error) {
-      toast.error(`${error}`);
-      console.log(error);
-    }
-  };
-
-  if (!conversations) {
-    return "Loading";
-  }
+  useEffect(() => {
+    const getConvs = async () => {
+      setLoading(true);
+      try {
+        const res = await axios.get(
+          `http://localhost:8080/api/conversation/user/${id}`
+        );
+        setConvs(res.data.data);
+        setLoading(false);
+      } catch (error) {
+        toast.error(`${error}`);
+        setLoading(false);
+        console.log(error);
+      }
+    };
+    getConvs();
+  }, []);
 
   return (
     <div
@@ -59,7 +50,7 @@ const ChatSidebar = ({
       <div className="flex items-center justify-between px-3 py-2">
         <h1 className="text-xl font-bold">Chats</h1>
         <BeakerIcon
-          onClick={handleRefresh}
+          // onClick={handleRefresh}
           className="mr-5 h-6 w-6 cursor-pointer text-[#FF8080] transition-all duration-500 ease-out hover:rotate-180 active:scale-125"
         />
       </div>
@@ -76,14 +67,16 @@ const ChatSidebar = ({
 
       {/* Chat List */}
       <div className="h-[77vh] cursor-pointer overflow-y-scroll py-2">
-        {conversations?.map((u) => (
-          <ChatListCard
-            key={u._id}
-            conv={u}
-            setIsChatOpen={setIsChatOpen}
-            setCurrentChat={setCurrentChat}
-          />
-        ))}
+        {convs &&
+          convs?.map((u) => (
+            <ChatListCard
+              key={u._id}
+              conv={u}
+              setIsChatOpen={setIsChatOpen}
+              setCurrentChat={setCurrentChat}
+              loading={loading}
+            />
+          ))}
       </div>
     </div>
   );

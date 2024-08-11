@@ -199,7 +199,7 @@ const Feed = ({ postData: posts, loading }: Props) => {
           {/* {loading === true && <PostSkeleton />} */}
           {posts?.length > 0 ? (
             posts!.map((post, i) => (
-              <Suspense fallback={<PostSkeleton />}>
+              <Suspense fallback={<PostSkeleton />} key={i}>
                 <Post
                   key={i}
                   post={post.posts}

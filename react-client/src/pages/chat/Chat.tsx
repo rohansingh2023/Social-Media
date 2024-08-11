@@ -2,11 +2,18 @@ import { useEffect } from "react";
 import { ChatMain } from "../../components";
 import { socket } from "../../utils/web-socket";
 import { useQuery } from "@apollo/client";
-import { GET_USER_BY_ID } from "../../graphql/queries/userQueries";
+import {
+  CURRENT_USER,
+  GET_USER_BY_ID,
+} from "../../graphql/queries/userQueries";
 import { useCurrentState } from "../../state-management/current-user";
 
 const Chat = () => {
   const currentUser = useCurrentState((state) => state.currentUser);
+
+  const { data } = useQuery(CURRENT_USER);
+
+  // console.log(data?.currentUser?.user);
 
   useEffect(() => {
     socket.emit("login", {
@@ -15,23 +22,12 @@ const Chat = () => {
       email: currentUser?.user?.email,
       profielPic: currentUser?.user?.profilePic,
     });
-
-    // // Cleanup on component unmount
-    // return () => {
-    //   socket.disconnect();
-    // };
   }, []);
-
-  const { data } = useQuery(GET_USER_BY_ID, {
-    variables: {
-      id: currentUser?.user?._id,
-    },
-  });
 
   return (
     <div>
       {/* <Navbar /> */}
-      <ChatMain user={data?.userById?.user} />
+      <ChatMain user={data?.currentUser?.user} />
     </div>
   );
 };

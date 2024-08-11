@@ -132,7 +132,7 @@ const Navbar = () => {
               className="mr-5 h-10 w-10 rounded-full bg-gray-400 object-cover lg:mr-0"
             />
           )}
-          <Link to={"/chat"}>
+          <Link to={`/chat/${currentUser?.user?._id}`}>
             <MdMessage
               color="#111"
               size={45}

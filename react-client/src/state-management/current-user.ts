@@ -4,6 +4,8 @@ import { CURRENT_USER } from "../graphql/queries/userQueries";
 
 interface CurrentUserState {
   currentUser: CurrentUser;
+  loading: boolean;
+  error: string | null;
   addCurrentUser: () => void;
 }
 
@@ -20,15 +22,18 @@ export const useCurrentState = create<CurrentUserState>()((set) => ({
       friends: [],
     },
   },
+  loading: false,
+  error: null,
   addCurrentUser: async () => {
+    set({ loading: true, error: null });
     try {
       const { data } = await client.query({
         query: CURRENT_USER,
       });
 
-      set({ currentUser: data?.currentUser });
+      set({ currentUser: data?.currentUser, loading: false });
     } catch (error) {
-      console.log(error);
+      set({ loading: false, error: error.message });
     }
   },
 }));

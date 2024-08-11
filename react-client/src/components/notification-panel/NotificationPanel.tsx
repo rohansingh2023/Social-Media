@@ -32,7 +32,7 @@ const NotificationPanel = () => {
     });
   };
 
-  console.log(notifications);
+  // console.log(notifications);
 
   return (
     <div className="fixed right-5 top-16 z-50 w-[350px] bg-[#191818] text-white p-3 rounded-b-md">

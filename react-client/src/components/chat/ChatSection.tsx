@@ -5,6 +5,11 @@ import axios from "axios";
 import { socket } from "../../utils/web-socket";
 import { useCurrentState } from "../../state-management/current-user";
 import MessageCard from "./MessageCard";
+import { IoCall } from "react-icons/io5";
+import { BsFillCameraVideoFill } from "react-icons/bs";
+import { AiOutlineMore } from "react-icons/ai";
+import client from "../../services/apollo-client";
+import { GET_USER_BY_ID } from "../../graphql/queries/userQueries";
 
 //   const MessageCard = dynamic(() => import('./MessageCard'), {
 //     loading: () => <p>Loading</p>,
@@ -22,17 +27,39 @@ interface IProps {
 const ChatSection = ({ isChatOpen, currentChat }: IProps) => {
   const [messages, setMessages] = useState<Message[]>([]);
   const [msgInput, setMsgInput] = useState<string>("");
-  // const [arrivalMessage, setArrivalMessage] = useState<{
-  //   sender: any
-  //   text: any
-  //   createdAt: number
-  // }>({
-  //   sender: '',
-  //   text: '',
-  //   createdAt: 0,
-  // })
   const currentUser = useCurrentState((state) => state.currentUser);
   const scrollRef = useRef<null | HTMLDivElement>(null);
+  const [otherUser, setOtherUser] = useState<User>();
+
+  const receiverId = currentChat?.members.find(
+    (m) => m !== currentUser?.user?._id
+  );
+
+  useEffect(() => {
+    const getOtherUser = async () => {
+      try {
+        const { data } = await client.query({
+          query: GET_USER_BY_ID,
+          variables: {
+            id: receiverId,
+          },
+        });
+        setOtherUser(data?.userById?.user);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    getOtherUser();
+  }, [receiverId]);
+  // console.log(currentChat?._id);
+
+  useEffect(() => {
+    const checkConv = async () => {
+      try {
+      } catch (error) {}
+    };
+    checkConv();
+  }, []);
 
   useEffect(() => {
     socket.on("getMessage", (data) => {
@@ -48,8 +75,10 @@ const ChatSection = ({ isChatOpen, currentChat }: IProps) => {
     const getMessages = async () => {
       try {
         const res = await axios.get(
-          `http://localhost:3001/api/message/${currentChat?._id}`
+          `http://localhost:8080/api/message/${currentChat?._id}`
         );
+        console.log(res.data);
+
         setMessages(res.data);
       } catch (error) {
         console.log(error);
@@ -57,10 +86,6 @@ const ChatSection = ({ isChatOpen, currentChat }: IProps) => {
     };
     getMessages();
   }, [currentChat]);
-
-  const receiverId = currentChat?.members.find(
-    (m) => m !== currentUser?.user?._id
-  );
 
   const handleMessage = async (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter") {
@@ -86,7 +111,7 @@ const ChatSection = ({ isChatOpen, currentChat }: IProps) => {
         });
 
         const res = await axios.post(
-          "http://localhost:3001/api/message/",
+          "http://localhost:8080/api/message/",
           message
         );
         setMessages([...messages, res.data]);
@@ -101,9 +126,9 @@ const ChatSection = ({ isChatOpen, currentChat }: IProps) => {
     scrollRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
 
-  if (!messages) {
-    return "Loading";
-  }
+  // if (!messages) {
+  //   return "Loading";
+  // }
 
   const socketTest = () => {
     socket.emit("test", { message: "Hello" });
@@ -121,39 +146,42 @@ const ChatSection = ({ isChatOpen, currentChat }: IProps) => {
             }
           >
             {/* Chat Header */}
-            {/* <div className="flex flex-[0.05] items-center justify-between border-x border-b-2 border-gray-300 bg-white px-3 py-1">
-                <div className="flex items-center">
-                  <img
-                    src="https://tse3.mm.bing.net/th?id=OIP.zXrPNOOO6yjo5RuG7sKTwAHaLH&pid=Api&P=0&w=120&h=180"
-                    alt=""
-                    className="h-12 w-12 rounded-full object-cover"
-                  />
-                  <h1 className="mx-3 text-lg font-semibold">Username</h1>
-                </div>
-  
-                <div className="flex items-center">
-                  <IoCall
-                    size={40}
-                    color="#FF8080"
-                    className="mx-1 rounded-full p-2 hover:bg-gray-200 "
-                  />
-                  <BsFillCameraVideoFill
-                    size={40}
-                    color="#FF8080"
-                    className="mx-1 rounded-full p-2 hover:bg-gray-200 "
-                  />
-                  <AiOutlineMore
-                    size={40}
-                    color="#FF8080"
-                    className="mx-1 rounded-full p-2 hover:bg-gray-200 "
-                  />
-                </div>
-              </div> */}
+            <div className="flex flex-[0.05] items-center justify-between bg-[#191818] px-3 py-2">
+              <div className="flex items-center">
+                <img
+                  // src="https://tse3.mm.bing.net/th?id=OIP.zXrPNOOO6yjo5RuG7sKTwAHaLH&pid=Api&P=0&w=120&h=180"
+                  src={otherUser?.profilePic}
+                  alt=""
+                  className="h-12 w-12 rounded-full object-cover"
+                />
+                <h1 className="mx-3 text-lg font-semibold">
+                  {otherUser?.name}
+                </h1>
+              </div>
+
+              <div className="flex items-center">
+                <IoCall
+                  size={40}
+                  color="#FF8080"
+                  className="mx-1 rounded-full p-2 hover:bg-gray-200 "
+                />
+                <BsFillCameraVideoFill
+                  size={40}
+                  color="#FF8080"
+                  className="mx-1 rounded-full p-2 hover:bg-gray-200 "
+                />
+                <AiOutlineMore
+                  size={40}
+                  color="#FF8080"
+                  className="mx-1 rounded-full p-2 hover:bg-gray-200 "
+                />
+              </div>
+            </div>
 
             {/* Chats */}
             <div className="flex-[0.90] overflow-y-scroll border-x bg-[#010100] text-white">
-              {messages?.map((m) => (
-                <div ref={scrollRef} key={m._id}>
+              {messages?.map((m, i) => (
+                <div ref={scrollRef} key={i}>
                   <MessageCard message={m} receiverId={receiverId} />
                 </div>
               ))}

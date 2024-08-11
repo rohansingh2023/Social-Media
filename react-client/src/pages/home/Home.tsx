@@ -3,7 +3,6 @@ import { GET_POSTS } from "../../graphql/queries/postQueries";
 import { lazy, useEffect } from "react";
 import { socket } from "../../utils/web-socket";
 import { useCurrentState } from "../../state-management/current-user";
-// import { useCurrentState } from "../../state-management/current-user";
 
 const Feed = lazy(() => import("../../components/feed/Feed"));
 const Leftbar = lazy(() => import("../../components/leftbar/Leftbar"));
@@ -13,9 +12,9 @@ const Home = () => {
   const { loading, data } = useQuery(GET_POSTS, {});
   const currentUser = useCurrentState((state) => state.currentUser);
 
-  if (loading) {
-    console.log("Loading");
-  }
+  // if (loading) {
+  //   console.log("Loading");
+  // }
 
   useEffect(() => {
     socket.emit("login", {
@@ -31,7 +30,7 @@ const Home = () => {
     // };
   }, []);
 
-  console.log(currentUser.user.name);
+  // console.log(currentUser.user.name);
 
   return (
     <div className="bg-[#010100] font-Segoe">

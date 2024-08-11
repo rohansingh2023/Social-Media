@@ -84,7 +84,7 @@ export const router = createBrowserRouter(
           }
         />
         <Route
-          path="chat"
+          path="chat/:id"
           element={
             <ProtectedRoute>
               <Chat />

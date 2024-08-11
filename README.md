@@ -1,6 +1,6 @@
 # Social-Media
 
-Built using NextJS, GraphQl, TailwindCSS, Typescript, Socket-Io, Express and MongoDB
+Built using NextJS, GraphQl, TailwindCSS, Typescript, Socket-Io, NodeJS (Express), Go (Gin) and MongoDB
 
 - It includes all the latest web technologies ranging from NextJs to GraphQL
 - Some of it's features include post, like, comment, friend/unfriend, chat, etc.
@@ -24,6 +24,7 @@ Built using NextJS, GraphQl, TailwindCSS, Typescript, Socket-Io, Express and Mon
 
 - `Typescript` : For type-safe Javascript.
 - `NodeJS` : Javascript runtime for server-side Javascript.
+- `Go` : Statically typed, compiled high-level programming language.
 - `ReactJS` : Javascript library for building single-page applications.
 - `NextJS` : ReactJS framework for server-side rendering and static sites for better SEOs.
 - `GraphQL` : A query language for building fast and robust APIs with single URL, customized parameter data fetching.
@@ -70,13 +71,13 @@ yarn dev
 - Install all dependencies
 
 ```bash
-yarn
+go install
 ```
 
 - Run the app
 
 ```bash
-yarn dev
+go run main.go
 ```
 
 ## socket-server
