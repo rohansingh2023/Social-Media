@@ -22,9 +22,7 @@ const Layout = () => {
   return (
     <>
       <div className="overflow-hidden">
-        {/* <header className="z-50 "> */}
         <NavbarLazy />
-        {/* </header> */}
         <Outlet />
       </div>
     </>

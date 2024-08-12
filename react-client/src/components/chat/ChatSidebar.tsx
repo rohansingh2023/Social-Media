@@ -5,6 +5,7 @@ import toast from "react-hot-toast";
 import ChatListCard from "./ChatListCard";
 import axios from "axios";
 import { useParams } from "react-router-dom";
+import ChatListLoading from "./ChatListLoading";
 
 interface IProps {
   isChatOpen: boolean;
@@ -67,7 +68,7 @@ const ChatSidebar = ({ isChatOpen, setIsChatOpen, setCurrentChat }: IProps) => {
 
       {/* Chat List */}
       <div className="h-[77vh] cursor-pointer overflow-y-scroll py-2">
-        {convs &&
+        {!loading ? (
           convs?.map((u) => (
             <ChatListCard
               key={u._id}
@@ -76,7 +77,16 @@ const ChatSidebar = ({ isChatOpen, setIsChatOpen, setCurrentChat }: IProps) => {
               setCurrentChat={setCurrentChat}
               loading={loading}
             />
-          ))}
+          ))
+        ) : (
+          <>
+            <ChatListLoading />
+            <ChatListLoading />
+            <ChatListLoading />
+            <ChatListLoading />
+            <ChatListLoading />
+          </>
+        )}
       </div>
     </div>
   );

@@ -2,25 +2,22 @@ import { useEffect, useState } from "react";
 import ChatInfoCard from "./ChatInfoCard";
 import { socket } from "../../utils/web-socket";
 
-interface IProps {
-  user: User;
-  //   conv: Conversation[]
+interface OnlineUsers {
+  email: string;
+  name: string;
+  profilePic?: string;
+  socketId: string;
+  userId: string;
 }
 
-const ChatInfo = ({ user }: IProps) => {
-  const [onlineUsers, setOnlineUsers] = useState<string[]>([]);
+const ChatInfo = () => {
+  const [onlineUsers, setOnlineUsers] = useState<OnlineUsers[]>([]);
 
   useEffect(() => {
-    // / Listen for the getUsers event from the server
     socket.on("getUsers", (users) => {
-      // setOnlineUsers(users.map((user: { userId: string, name: string, email: string, profilePic: string, socketId: string }) => user.userId, user.));
+      setOnlineUsers(users);
       console.log(users);
     });
-
-    // Cleanup on component unmount
-    return () => {
-      socket.disconnect();
-    };
   }, []);
 
   return (
@@ -29,8 +26,8 @@ const ChatInfo = ({ user }: IProps) => {
         <h1 className="text-2xl font-bold">Active Users</h1>
       </div>
       <div className="max-h-[83vh] cursor-pointer overflow-y-scroll scrollbar-hide">
-        {user?.friends?.map((u) => (
-          <ChatInfoCard key={u._id} friendInfo={u} />
+        {onlineUsers?.map((u, i) => (
+          <ChatInfoCard key={i} friendInfo={u} />
         ))}
       </div>
     </div>

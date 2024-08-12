@@ -1,12 +1,9 @@
 import { useState } from "react";
 import ChatSidebar from "./ChatSidebar";
 import ChatSection from "./ChatSection";
+import ChatInfo from "./ChatInfo";
 
-interface IProps {
-  user: User;
-}
-
-const ChatMain = ({ user }: IProps) => {
+const ChatMain = () => {
   const [isChatOpen, setIsChatOpen] = useState<boolean>(false);
   const [currentChat, setCurrentChat] = useState<Conversation>();
 
@@ -23,7 +20,7 @@ const ChatMain = ({ user }: IProps) => {
         currentChat={currentChat}
         setCurrentChat={setCurrentChat}
       />
-      {/* <ChatInfo user={user} /> */}
+      <ChatInfo />
     </div>
   );
 };

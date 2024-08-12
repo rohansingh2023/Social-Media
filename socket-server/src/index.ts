@@ -50,17 +50,12 @@ io.on(
   (
     socket: Socket<DefaultEventsMap, DefaultEventsMap, DefaultEventsMap, any>
   ) => {
-    // socket.on("join_chat", (data) => {
-    //   addNewUser(data?.userId, socket.id);
-    //   io.emit("userOnline", onlineUsers);
-    //   console.log(onlineUsers);
-    //   console.log(`User connected with id: ${data?.userId}`);
-    // });
-
     // / When a user logs in, they emit this event
     socket.on("login", ({ userId, name, email, profilePic }) => {
       console.log(`${name} logged in`);
       addNewUser(userId, name, email, profilePic, socket.id);
+      console.log(onlineUsers);
+
       io.emit("getUsers", onlineUsers);
     });
 

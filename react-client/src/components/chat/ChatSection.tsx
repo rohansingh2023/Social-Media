@@ -11,13 +11,8 @@ import { AiOutlineMore } from "react-icons/ai";
 import client from "../../services/apollo-client";
 import { GET_USER_BY_ID } from "../../graphql/queries/userQueries";
 
-//   const MessageCard = dynamic(() => import('./MessageCard'), {
-//     loading: () => <p>Loading</p>,
-//   })
-
 interface IProps {
   isChatOpen: boolean;
-  // setIsChatOpen: Dispatch<SetStateAction<boolean>>
   currentChat: Conversation | undefined;
   setCurrentChat: React.Dispatch<
     React.SetStateAction<Conversation | undefined>
@@ -51,7 +46,6 @@ const ChatSection = ({ isChatOpen, currentChat }: IProps) => {
     };
     getOtherUser();
   }, [receiverId]);
-  // console.log(currentChat?._id);
 
   useEffect(() => {
     const checkConv = async () => {
@@ -77,8 +71,6 @@ const ChatSection = ({ isChatOpen, currentChat }: IProps) => {
         const res = await axios.get(
           `http://localhost:8080/api/message/${currentChat?._id}`
         );
-        console.log(res.data);
-
         setMessages(res.data);
       } catch (error) {
         console.log(error);
@@ -126,10 +118,6 @@ const ChatSection = ({ isChatOpen, currentChat }: IProps) => {
     scrollRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
 
-  // if (!messages) {
-  //   return "Loading";
-  // }
-
   const socketTest = () => {
     socket.emit("test", { message: "Hello" });
   };
@@ -149,7 +137,6 @@ const ChatSection = ({ isChatOpen, currentChat }: IProps) => {
             <div className="flex flex-[0.05] items-center justify-between bg-[#191818] px-3 py-2">
               <div className="flex items-center">
                 <img
-                  // src="https://tse3.mm.bing.net/th?id=OIP.zXrPNOOO6yjo5RuG7sKTwAHaLH&pid=Api&P=0&w=120&h=180"
                   src={otherUser?.profilePic}
                   alt=""
                   className="h-12 w-12 rounded-full object-cover"
