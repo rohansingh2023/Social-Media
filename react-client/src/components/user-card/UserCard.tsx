@@ -11,11 +11,6 @@ import {
   GET_USER_BY_ID,
   SEARCH_USERS,
 } from "../../graphql/queries/userQueries";
-// import { getUserById, getUsers } from '../services'
-// import { socket } from '../socket'
-// import { useSelector } from 'react-redux'
-// import { selectCurrentUser, selectToken } from '../redux/activities/userRedux'
-// import Image from 'next/image'
 import { useCurrentState } from "../../state-management/current-user";
 import Cookies from "js-cookie";
 
@@ -88,14 +83,14 @@ function UserCard({ user }: Props) {
     (f) => f.userId.toString() === currentUser?.user?._id.toString()
   );
 
-  const handleRefresh = async () => {
-    const refreshToast = toast.loading("Refreshing...");
-    const u: User = await getUserById(user._id);
-    setUserD(u);
-    toast.success("Search Section Updated", {
-      id: refreshToast,
-    });
-  };
+  // const handleRefresh = async () => {
+  //   const refreshToast = toast.loading("Refreshing...");
+  //   const u: User = await getUserById(user._id);
+  //   setUserD(u);
+  //   toast.success("Search Section Updated", {
+  //     id: refreshToast,
+  //   });
+  // };
 
   const handleRequest = async () => {
     // socket.emit('sent_request', {
@@ -132,9 +127,9 @@ function UserCard({ user }: Props) {
           <img
             src={user.profilePic}
             alt=""
-            height={64}
-            width={64}
-            className="rounded-full object-cover"
+            // height={64}
+            // width={64}
+            className="rounded-full object-cover h-[64px] w-[64px]"
           />
         )}
         <div className="ml-3">

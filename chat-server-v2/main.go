@@ -41,5 +41,5 @@ func main() {
 		msg.POST("/", controllers.AddMessage)
 		msg.GET("/:conversationId", controllers.GetAMessage)
 	}
-	r.Run()
+	r.Run(":9090")
 }

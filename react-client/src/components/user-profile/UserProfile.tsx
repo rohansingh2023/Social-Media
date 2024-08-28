@@ -14,6 +14,8 @@ function UserProfile({ userD, post, loading }: Props) {
   const [showModal, setShowModal] = useState<boolean>(false);
   const currentUser = useCurrentState((state) => state.currentUser);
 
+  console.log(post);
+
   if (loading) {
     console.log("Loading...");
   }

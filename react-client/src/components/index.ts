@@ -11,3 +11,4 @@ export { default as UserModal } from "./modals/UserModal";
 export { default as PostModal } from "./modals/PostModal";
 export { default as ChatMain } from "./chat/ChatMain";
 export { default as VideoCard } from "./video-card/VideoCard";
+export { default as Sidebar } from "./sidebar/Sidebar";

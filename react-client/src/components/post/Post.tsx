@@ -138,9 +138,7 @@ const Post = ({ post, user }: Props) => {
                   effect="blur"
                   src={user.profilePic}
                   alt=""
-                  height={48}
-                  width={48}
-                  className="rounded-full object-cover"
+                  className="rounded-full object-cover h-[48px] w-[48px]"
                 />
               )}
               <div className="flex flex-col items-start">

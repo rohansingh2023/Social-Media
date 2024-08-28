@@ -1,4 +1,7 @@
+import axios from "axios";
+import toast from "react-hot-toast";
 import { HiOutlineUserAdd } from "react-icons/hi";
+import { useParams } from "react-router-dom";
 
 interface OnlineUsers {
   email: string;
@@ -9,10 +12,33 @@ interface OnlineUsers {
 }
 
 interface IProps {
-  friendInfo: OnlineUsers;
+  friendInfo: friends;
 }
 
 const ChatInfoCard = ({ friendInfo }: IProps) => {
+  const { id } = useParams();
+
+  const handleCreateConv = async () => {
+    const tid = toast.loading("Creating Conversation...");
+    try {
+      await axios.post("http://localhost:8080/api/conversation/", {
+        senderId: friendInfo?._id,
+        receiverId: id,
+      });
+      toast.success(
+        `Conversation with ${friendInfo?.name} created successfully`,
+        {
+          id: tid,
+        }
+      );
+    } catch (error) {
+      console.log(error);
+      toast.error(`${error}`, {
+        id: tid,
+      });
+    }
+  };
+
   return (
     <div className="m-3 flex flex-1 items-center rounded-md p-2 font-Inter hover:bg-[#191818]">
       <img
@@ -26,7 +52,7 @@ const ChatInfoCard = ({ friendInfo }: IProps) => {
           <p className="text-sm font-light">{friendInfo?.email}</p>
         </div>
         <div>
-          <HiOutlineUserAdd size={25} />
+          <HiOutlineUserAdd size={25} onClick={handleCreateConv} />
         </div>
       </div>
     </div>

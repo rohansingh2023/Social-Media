@@ -23,18 +23,26 @@ Built using NextJS, GraphQl, TailwindCSS, Typescript, Socket-Io, NodeJS (Express
 ## Technologies used:
 
 - `Typescript` : For type-safe Javascript.
-- `NodeJS` : Javascript runtime for server-side Javascript.
-- `Go` : Statically typed, compiled high-level programming language.
+- `NodeJS (ExpressJS)` : Javascript runtime for server-side Javascript.
+- `Go (Gin)` : Statically typed, compiled high-level programming language.
+- `Java (Spring Boot)`: High-level, class-based, object-oriented programming language.
 - `ReactJS` : Javascript library for building single-page applications.
 - `NextJS` : ReactJS framework for server-side rendering and static sites for better SEOs.
 - `GraphQL` : A query language for building fast and robust APIs with single URL, customized parameter data fetching.
 - `MongoDB` : No-SQL Database for storing data as documents.
 - `PostgreSQL` : Relational Database for maintaining data as tables.
 - `TailwindCSS` : CSS framework for writing CSS inside the JSX.
-- `SocketIO` : For Real-Time socket server.
+- `WebSocket` : For Real-Time socket server.
 - `RabbitMQ` : For building Message Queue and passing events between services.
 - `Docker` : Containerizing the application for better deployments.
 - `Kubernetes` : Orchestrating the containers using Pods, Deployments, etc.
+
+## In Development:
+
+- One-to-One Voice and Video call to your friends using webRTC.
+  - Technologies to be used:
+    - Java : Spring Boot as Signaling server.
+    - ReactJS: Adding webRTC functionality for peer-to-peer connection.
 
 ## To run the application locally:
 
@@ -106,6 +114,20 @@ yarn
 
 ```bash
 yarn dev
+```
+
+## signaling-server
+
+- Install all dependencies
+
+```bash
+mvn
+```
+
+- Run the app
+
+```bash
+mvn spring-boot:run
 ```
 
 ## Deployment Strategy (In Progress)

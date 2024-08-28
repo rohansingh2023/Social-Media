@@ -9,8 +9,6 @@ const Search = () => {
     },
   });
 
-  console.log(data?.searchUsers);
-
   return (
     <div className="grid-rows-10 grid max-h-screen overflow-hidden font-DMSerif">
       {/* <header className="z-50 row-span-1">

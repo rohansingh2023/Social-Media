@@ -1,4 +1,4 @@
-import React, { Key, useState } from "react";
+import { Key, useState } from "react";
 import { AiOutlineSearch } from "react-icons/ai";
 import { useCurrentState } from "../../state-management/current-user";
 import { UserCard } from "..";
@@ -44,7 +44,6 @@ function SearchFriends({ searchUsers, loading }: Props) {
           </span>
         )}
       </div>
-      {/* )} */}
     </div>
   );
 }

@@ -18,9 +18,10 @@ import { LOGOUT } from "../../graphql/mutations/userMutations";
 import Cookies from "js-cookie";
 import { Link, useNavigate } from "react-router-dom";
 import NotificationPanel from "../notification-panel/NotificationPanel";
+import Sidebar from "../sidebar/Sidebar";
 
 const Navbar = () => {
-  // const [isOpen, setIsOpen] = useState(false)
+  const [isOpen, setIsOpen] = useState(false);
   const router = useNavigate();
   const [colour, setColour] = useState("home");
   const currentUser = useCurrentState((state) => state.currentUser);
@@ -156,20 +157,20 @@ const Navbar = () => {
           {/* </Link> */}
           {/* </div> */}
 
-          {/* <FaListUl
+          <FaListUl
             size={45}
             className="rounded-full bg-gray-300 p-3 hover:bg-gray-400 lg:hidden"
             color="#FF8080"
-            // onClick={() => setIsOpen(true)}
-          /> */}
+            onClick={() => setIsOpen(true)}
+          />
         </div>
-        {/* {isOpen && (
+        {isOpen && (
           <Sidebar
             isOpen={isOpen}
             setIsOpen={setIsOpen}
             logout={handleLogout}
           />
-        )} */}
+        )}
         {isOn && <NotificationPanel />}
       </div>
     </>
