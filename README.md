@@ -1,11 +1,12 @@
 # Social-Media
 
-Built using NextJS, GraphQl, TailwindCSS, Typescript, Socket-Io, NodeJS (Express), Go (Gin) and MongoDB
+Built using NextJS, GraphQl, TailwindCSS, Typescript, Socket-Io, NodeJS (Express), Go (Gin), Spring-Boot (Java) and MongoDB
 
 - It includes all the latest web technologies ranging from NextJs to GraphQL
 - Some of it's features include post, like, comment, friend/unfriend, chat, etc.
 - For Real-Time Chat functionality, I've leveraged socket-io's real-time data communication technology.
 - Notifications service for sending events receives after like/comment on a post, send/receive friend request.
+- All the frequent queries like getPosts, getCurrentUser, etc. are cached in Redis for better performance.
 - Additionally, for having Robust and Typed-safe code, I've used Typescript throughout my application.
 
 ## Microservices used:
@@ -36,6 +37,7 @@ Built using NextJS, GraphQl, TailwindCSS, Typescript, Socket-Io, NodeJS (Express
 - `RabbitMQ` : For building Message Queue and passing events between services.
 - `Docker` : Containerizing the application for better deployments.
 - `Kubernetes` : Orchestrating the containers using Pods, Deployments, etc.
+- `Redis` : In-Memory Database for storing frequent queries.
 
 ## In Development:
 
