@@ -1,10 +1,11 @@
-import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
+import React, { Dispatch, SetStateAction, useContext, useEffect, useState } from "react";
 import { GET_USER_BY_ID } from "../../graphql/queries/userQueries";
 import { socket } from "../../utils/web-socket";
 import { useCurrentState } from "../../state-management/current-user";
 import client from "../../services/apollo-client";
 import "react-loading-skeleton/dist/skeleton.css";
 import ChatListLoading from "./ChatListLoading";
+import { OnlineUsersContext } from "../../state-management/online-users";
 
 interface IProps {
   conv: any;
@@ -23,6 +24,13 @@ const ChatListCard = ({
 }: IProps) => {
   const currentUser = useCurrentState((state) => state.currentUser);
   const [convChats, setConvChats] = useState<User>();
+  const context = useContext(OnlineUsersContext);
+
+  if (!context) {
+    return <div>Error: GlobalContext not found!</div>;
+  }
+
+  const { onlineUsers } = context;
 
   useEffect(() => {
     const friendId = conv?.members?.find(
@@ -55,6 +63,10 @@ const ChatListCard = ({
     socket.emit("addUser", { room: conv?._id });
   };
 
+  const isUserOnline: boolean = onlineUsers?.some(
+    (user: { _id: string | undefined }) => user._id === convChats?._id
+  );
+
   return (
     <div
       className="m-3 flex flex-1 items-center rounded-md p-2 font-Inter bg-[#191818] hover:bg-[#010100] text-white"
@@ -65,6 +77,7 @@ const ChatListCard = ({
         alt=""
         className="h-12 w-12 rounded-full object-cover"
       />
+      {isUserOnline && <p className="-ml-3 mt-5">🟢</p>}
       <div className="ml-3 flex flex-col">
         <h1 className="text-sm font-semibold">{convChats?.name}</h1>
         <p className="text-xs font-light">{convChats?.email}</p>

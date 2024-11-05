@@ -52,7 +52,7 @@ const ChatInfoCard = ({ friendInfo }: IProps) => {
           <p className="text-sm font-light">{friendInfo?.email}</p>
         </div>
         <div>
-          <HiOutlineUserAdd size={25} onClick={handleCreateConv} />
+          <p>🟢</p>
         </div>
       </div>
     </div>

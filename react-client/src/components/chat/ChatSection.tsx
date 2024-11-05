@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import { RiSendPlaneFill } from "react-icons/ri";
 import { IoMdPhotos } from "react-icons/io";
 import axios from "axios";
@@ -10,6 +10,9 @@ import { BsFillCameraVideoFill } from "react-icons/bs";
 import { AiOutlineMore } from "react-icons/ai";
 import client from "../../services/apollo-client";
 import { GET_USER_BY_ID } from "../../graphql/queries/userQueries";
+import StartVideoChat from "../video-chat/StartVideoChat";
+import { useVideoCardState } from "../../state-management/show-video-card";
+import { OnlineUsersContext } from "../../state-management/online-users";
 
 interface IProps {
   isChatOpen: boolean;
@@ -25,6 +28,14 @@ const ChatSection = ({ isChatOpen, currentChat }: IProps) => {
   const currentUser = useCurrentState((state) => state.currentUser);
   const scrollRef = useRef<null | HTMLDivElement>(null);
   const [otherUser, setOtherUser] = useState<User>();
+  const { showVideoChatCard, setShowVideoChatCard } = useVideoCardState();
+  const context = useContext(OnlineUsersContext);
+
+  if (!context) {
+    return <div>Error: GlobalContext not found!</div>;
+  }
+
+  const { onlineUsers } = context;
 
   const receiverId = currentChat?.members.find(
     (m) => m !== currentUser?.user?._id
@@ -48,28 +59,21 @@ const ChatSection = ({ isChatOpen, currentChat }: IProps) => {
   }, [receiverId]);
 
   useEffect(() => {
-    const checkConv = async () => {
-      try {
-      } catch (error) {}
-    };
-    checkConv();
-  }, []);
-
-  useEffect(() => {
-    socket.on("getMessage", (data) => {
+    const handleGetMessage = (data: Message) => {
+      console.log(data); // This should now only log once
       setMessages((prev) => [...prev, data]);
-    });
-  }, []);
-
-  useEffect(() => {
-    socket.emit("addUser", currentUser?.user?._id);
-  }, [currentUser?.user?._id]);
+    };
+    socket.on("getMessage", handleGetMessage);
+    return () => {
+      socket.off("getMessage", handleGetMessage);
+    };
+  }, [socket]);
 
   useEffect(() => {
     const getMessages = async () => {
       try {
         const res = await axios.get(
-          `http://localhost:8080/api/message/${currentChat?._id}`
+          `http://localhost:9090/api/message/${currentChat?._id}`
         );
         setMessages(res.data);
       } catch (error) {
@@ -82,7 +86,7 @@ const ChatSection = ({ isChatOpen, currentChat }: IProps) => {
   const handleMessage = async (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter") {
       e.preventDefault();
-      e.stopPropagation;
+      e.stopPropagation();
       try {
         const message = {
           conversationId: currentChat?._id,
@@ -94,7 +98,7 @@ const ChatSection = ({ isChatOpen, currentChat }: IProps) => {
           (m) => m !== currentUser?.user?._id
         );
 
-        await socket.emit("sendMessage", {
+        socket.emit("sendMessage", {
           conversationId: currentChat?._id,
           sender: currentUser?.user?._id,
           receiverId,
@@ -103,7 +107,7 @@ const ChatSection = ({ isChatOpen, currentChat }: IProps) => {
         });
 
         const res = await axios.post(
-          "http://localhost:8080/api/message/",
+          "http://localhost:9090/api/message/",
           message
         );
         setMessages([...messages, res.data]);
@@ -122,17 +126,32 @@ const ChatSection = ({ isChatOpen, currentChat }: IProps) => {
     socket.emit("test", { message: "Hello" });
   };
 
+  const isUserOnline: boolean = onlineUsers?.some(
+    (user: { _id: string | undefined }) => user._id === otherUser?._id
+  );
+
   return (
     <>
       {isChatOpen ? (
         <>
+          {showVideoChatCard && (
+            <StartVideoChat
+              currentUser={currentUser?.user}
+              otherUser={otherUser}
+            />
+          )}
           <div
             className={
               isChatOpen
-                ? "col-span-12 flex max-h-[91vh] flex-col font-Inter transition-all duration-300 ease-in-out md:col-span-6"
+                ? `col-span-12 flex max-h-[91vh] flex-col font-Inter transition-all ${
+                    showVideoChatCard
+                      ? "duration-0 blur-sm"
+                      : "duration-300 ease-in-out"
+                  } md:col-span-6`
                 : "hidden max-h-[91vh] flex-col font-Inter transition-all duration-300 ease-in-out md:col-span-6 md:inline-flex"
             }
           >
+            <div></div>
             {/* Chat Header */}
             <div className="flex flex-[0.05] items-center justify-between bg-[#191818] px-3 py-2">
               <div className="flex items-center">
@@ -144,6 +163,7 @@ const ChatSection = ({ isChatOpen, currentChat }: IProps) => {
                 <h1 className="mx-3 text-lg font-semibold">
                   {otherUser?.name}
                 </h1>
+                {isUserOnline && <p>🟢</p>}
               </div>
 
               <div className="flex items-center">
@@ -153,6 +173,7 @@ const ChatSection = ({ isChatOpen, currentChat }: IProps) => {
                   className="mx-1 rounded-full p-2 hover:bg-gray-200 "
                 />
                 <BsFillCameraVideoFill
+                  onClick={() => setShowVideoChatCard(!showVideoChatCard)}
                   size={40}
                   color="#FF8080"
                   className="mx-1 rounded-full p-2 hover:bg-gray-200 "

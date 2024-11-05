@@ -2,12 +2,14 @@ package controllers
 
 import (
 	"context"
+	"fmt"
 	"net/http"
 	"time"
 
 	"github.com/gin-gonic/gin"
 	"github.com/rohan/chat-server-v2/models"
 	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
 )
 
@@ -28,6 +30,7 @@ func AddMessage(ctx *gin.Context) {
 		ctx.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
+	fmt.Println("New message model: ", newMessage)
 	c, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
 	collection := client.Database("smChatDb").Collection("messages")
@@ -38,7 +41,10 @@ func AddMessage(ctx *gin.Context) {
 		return
 	}
 
-	ctx.JSON(http.StatusOK, result)
+	// Set the ID field in newMessage to the inserted ID
+	newMessage.ID = result.InsertedID.(primitive.ObjectID)
+
+	ctx.JSON(http.StatusOK, newMessage)
 }
 
 func GetAMessage(ctx *gin.Context) {

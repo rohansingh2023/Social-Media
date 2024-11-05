@@ -45,6 +45,11 @@ const Sidebar = ({ isOpen, setIsOpen, logout }: Props) => {
               <p className="ml-3 text-2xl">Profile</p>
             </div>
           </Link>
+          <Link to={`chat/${currentUser?.user?._id}`}>
+            <div className="m-4 w-full cursor-pointer rounded-md p-2 text-base uppercase transition-all duration-200 ease-in-out hover:bg-gray-500  hover:text-white ">
+              <p className="ml-3 text-2xl">Chat</p>
+            </div>
+          </Link>
           {/* <Link href={'/'}> */}
           <div
             className="m-4 w-full cursor-pointer rounded-md p-2 text-base uppercase transition-all duration-200 ease-in-out hover:bg-gray-500  hover:text-white "

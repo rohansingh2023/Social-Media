@@ -1,6 +1,6 @@
-import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
+import React, { Dispatch, SetStateAction,  useEffect, useState } from "react";
 import { AiOutlineSearch } from "react-icons/ai";
-import { BeakerIcon } from "@heroicons/react/24/solid";
+import { BeakerIcon, PencilIcon } from "@heroicons/react/24/solid";
 import toast from "react-hot-toast";
 import ChatListCard from "./ChatListCard";
 import axios from "axios";
@@ -26,7 +26,7 @@ const ChatSidebar = ({ isChatOpen, setIsChatOpen, setCurrentChat }: IProps) => {
       setLoading(true);
       try {
         const res = await axios.get(
-          `http://localhost:8080/api/conversation/user/${id}`
+          `http://localhost:9090/api/conversation/user/${id}`
         );
         setConvs(res.data.data);
         setLoading(false);
@@ -39,6 +39,12 @@ const ChatSidebar = ({ isChatOpen, setIsChatOpen, setCurrentChat }: IProps) => {
     getConvs();
   }, []);
 
+  const openAddConversation = ()=>{
+    
+  }
+
+  
+
   return (
     <div
       className={
@@ -50,10 +56,18 @@ const ChatSidebar = ({ isChatOpen, setIsChatOpen, setCurrentChat }: IProps) => {
       {/* Chat header */}
       <div className="flex items-center justify-between px-3 py-2">
         <h1 className="text-xl font-bold">Chats</h1>
+        <div className="flex items-center">
         <BeakerIcon
           // onClick={handleRefresh}
           className="mr-5 h-6 w-6 cursor-pointer text-[#FF8080] transition-all duration-500 ease-out hover:rotate-180 active:scale-125"
         />
+
+        <PencilIcon
+        onClick={openAddConversation}
+        className="mr-2 h-6 w-6 cursor-pointer text-[#FF8080] transition-all duration-500 ease-out hover:rotate-180 active:scale-125"
+        />
+
+        </div>
       </div>
 
       {/* SearchBar */}

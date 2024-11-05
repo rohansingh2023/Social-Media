@@ -33,6 +33,7 @@ const Navbar = () => {
     try {
       await logout();
       Cookies.remove("userJwt");
+      localStorage.removeItem("my-id")
       toast.success("Logged out successfully", {
         id: refreshId,
       });

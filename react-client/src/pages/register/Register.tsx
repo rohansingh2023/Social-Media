@@ -157,7 +157,7 @@ function Register() {
                 <FileBase
                   type="file"
                   multiple={false}
-                  onChange={(e) => {
+                  onChange={(e: { target: { value: any } }) => {
                     setFormData({ ...formData, profilePic: e.target.value });
                   }}
                   className="upload-btn"

@@ -32,6 +32,7 @@ const Login = () => {
       const { data } = await loginUser();
       const tokenData: Login = data?.login;
       localStorage.setItem("userToken", JSON.stringify(tokenData?.token));
+      localStorage.setItem("my-id", tokenData?.id)
       Cookies.set("userJwt", JSON.stringify(tokenData?.token), {
         path: "/",
         expires: 1 / 12,
@@ -40,13 +41,9 @@ const Login = () => {
         id: refreshToast,
       });
       socket.emit("login", {
-        userId: tokenData?.id,
-        name: tokenData?.name,
-        email: tokenData?.email,
-        profilePic: tokenData?.photo,
+        userId: tokenData?.id
       });
       router("/");
-      window.location.reload();
     } catch (error) {
       console.log(error);
       toast.error(`${error}`, {
