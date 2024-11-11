@@ -22,7 +22,7 @@ func GenerateJWTToken(user models.User) (string, error) {
         "name":  user.Name,
         "email": user.Email,
         "photo": user.ProfilePic,
-        "exp":   time.Now().Add(24 * time.Hour).Unix(),
+        "exp":   time.Now().Add(24 * time.Minute).Unix(),
 	})
 
 	return token.SignedString(jwtSecret)

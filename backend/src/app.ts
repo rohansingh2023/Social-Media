@@ -15,6 +15,7 @@ import dbConnect from "./db";
 import models from "./models";
 import { morganMiddleware } from "./middlewares/logger";
 import { logger } from "./logging";
+import { eurekaClient } from "./config/eureka";
 
 dotenv.config();
 
@@ -70,10 +71,14 @@ export const startServer = async () => {
   redisClient.on("connect", () => logger.info("Redis Client connected"));
   redisClient.on("error", (err) => logger.info("Redis Client Error", err));
 
-  // await kafkaWrapper.connect("social-media", [
-  //   "localhost:9092",
-  //   "localhost:9092",
-  // ]);
+  // Start the Eureka client to register the service
+  eurekaClient.start((error) => {
+    if (error) {
+      logger.error("Error registering with Eureka", error)
+    } else {
+      logger.info("Service registered with Eureka");
+    }
+  });
 
   app.get("/", (req: Request, res: Response) => {
     logger.info("Checking the API Status: Everything OK");
@@ -81,7 +86,6 @@ export const startServer = async () => {
   });
 
   app.listen(port, () => {
-    // logger.info(`🚀 Server ready at at http://localhost:${port}`);
     logger.http(`🚀 Server ready at at http://localhost:${port}`);
   });
 };

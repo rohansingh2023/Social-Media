@@ -6,9 +6,10 @@ import (
 	"strings"
 	"time"
 
+	"github.com/gin-contrib/sessions"
 	"github.com/gin-gonic/gin"
+	"github.com/go-redis/redis/v8"
 	"github.com/rohan/auth/models"
-	service "github.com/rohan/auth/services"
 	"github.com/rohan/auth/utils"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
@@ -28,6 +29,20 @@ func LoginUser(c *gin.Context){
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Invalid MongoDB client type"})
 		return
 	}
+
+	redisInterface, exists := c.Get("redis")
+	if !exists {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Redis client not found"})
+		return
+	}
+
+	// Type assertion to convert interface{} to *mongo.Client
+	redis, ok := redisInterface.(*redis.Client)
+	if !ok {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Invalid Redis client type"})
+		return
+	}
+
 	var input struct {
 		Email    string `json:"email" binding:"required"`
 		Password string `json:"password" binding:"required"`
@@ -72,16 +87,40 @@ func LoginUser(c *gin.Context){
 		return
 	}
 
-	// Optionally store the JWT token in Redis session
-	err = service.SetupRedisInstance().Set(ctx, user.ID.Hex(), token, 24*time.Hour).Err()
+	session:= sessions.Default(c)
+	session.Set("jwt", token)
+	session.Save()
+
+	// Create a refresh token
+	refreshToken, _ , err := utils.GenerateRefreshToken()
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "Error setting session in Redis"})
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Could not generate refresh token"})
+		return
+	}
+
+
+	// Set the Refresh token as an HTTP-only cookie
+	http.SetCookie(c.Writer, &http.Cookie{
+		Name: "refresh_token",
+		Value: refreshToken,
+		Path: "/",
+		Expires: time.Now().Add(24 * time.Hour),
+		HttpOnly: true,
+		Secure: false,
+		SameSite: http.SameSiteLaxMode,
+	})
+
+	// Optionally store the Refresh token in Redis session
+	err = redis.SetEX(ctx, "refresh-token:"+ string(user.ID.Hex()), refreshToken, 24*time.Hour).Err()
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Error storing refresh token in Redis"})
 		return
 	}
 
 	// Return the token and user details
 	c.JSON(http.StatusOK, gin.H{
-		"token":   token,
+		"access-token":   token,
+		"refresh-token": refreshToken,
 		"message": "Logged in successfully",
 		"user": gin.H{
 			"id":    user.ID.Hex(),
