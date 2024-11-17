@@ -4,16 +4,18 @@ import (
 	"log"
 	"net/http"
 
+	"github.com/gin-contrib/sessions"
+	"github.com/gin-contrib/sessions/cookie"
 	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
 	"github.com/rohan/auth/controllers"
 	"github.com/rohan/auth/middlewares"
 	service "github.com/rohan/auth/services"
-    "github.com/gin-contrib/sessions"
-    "github.com/gin-contrib/sessions/cookie" 
+	"github.com/rohan/auth/utils"
 )
 
 func SetupRouter() *gin.Engine {
+    logger := utils.NewCustomLogger()
     err := godotenv.Load()
 	if err != nil {
 		log.Fatalf("Error loading .env file: %v", err)
@@ -27,6 +29,8 @@ func SetupRouter() *gin.Engine {
     r := service.SetupRedisInstance()
     router.Use(middlewares.GlobalDBVariables(d))
     router.Use(middlewares.GlobalCacheVariables(r))
+
+    logger.Log("INFO", "238eujre", "Auth", "Started Auth Service", utils.LogOptions{})
 
     // Define routes
     router.GET("/", func(c *gin.Context) {

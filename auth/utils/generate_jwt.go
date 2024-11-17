@@ -50,12 +50,14 @@ func SaveRefreshTokenToCache(ctx context.Context, redisClient *redis.Client, use
 	return nil
 }
 
-func ValidateRefreshToken(ctx context.Context, redisClient *redis.Client, userID int, refreshString string)bool{
-	storedRefToken, err := redisClient.Get(ctx, "refresh-token:" + string(rune(userID))).Result()
+func ValidateRefreshToken(ctx context.Context, redisClient *redis.Client, userID string, refreshString string)bool{
+	storedRefToken, err := redisClient.Get(ctx, "refresh-token:" + userID).Result()
 	if err != nil {
 		log.Println("Redis error:", err)
 		return false
 	}
-	err = bcrypt.CompareHashAndPassword([]byte(storedRefToken), []byte(refreshString))
-	return err == nil
+	if storedRefToken == refreshString{
+		return true
+	}
+	return false
 }

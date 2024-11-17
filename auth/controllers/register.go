@@ -66,10 +66,11 @@ func RegisterUser(c *gin.Context){
     }
 
     // Upload profile picture to Cloudinary
-    cld, _ := cloudinary.NewFromParams(os.Getenv("CLOUDINARY_CLOUD_NAME"), os.Getenv("CLOUDINARY_API_KEY"), os.Getenv("CLOUDINARY_API_SECRET"))
+    cld, _ := cloudinary.NewFromParams(os.Getenv("CLOUD_NAME"), os.Getenv("CLOUD_API_KEY"), os.Getenv("CLOUD_API_SECRET"))
 
     uploadResult, err := cld.Upload.Upload(ctx, input.ProfilePic, uploader.UploadParams{})
     if err != nil {
+        log.Fatal(err)
         c.JSON(http.StatusInternalServerError, gin.H{"error": "Error uploading profile picture"})
         return
     }

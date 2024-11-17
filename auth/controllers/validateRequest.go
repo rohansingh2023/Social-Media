@@ -1,10 +1,10 @@
 package controllers
 
 import (
+	"log"
 	"net/http"
 	"os"
 
-	// "github.com/gin-contrib/sessions"
 	"github.com/gin-gonic/gin"
 	"github.com/go-redis/redis/v8"
 	"github.com/golang-jwt/jwt/v4"
@@ -14,11 +14,10 @@ import (
 var jwtSecret = []byte(os.Getenv("JWT_SECRET_KEY"))
 
 // -------------> IN PROGRESS <------------------- //
-func ValidateRequest(c *gin.Context){
-	// 1: Take Redis and session variables
-	// session := sessions.Default(c)
+func ValidateRequest(c *gin.Context) {
+	// 1: Take Redis variables
 	redisInterface, err := c.Get("redis")
-	if !err{
+	if !err {
 		c.JSON(http.StatusInternalServerError, gin.H{"message": "Redis client not found"})
 		return
 	}
@@ -31,11 +30,11 @@ func ValidateRequest(c *gin.Context){
 	// 2: Check if access and refresh token are not null
 	access_token := c.GetHeader("Authorization")
 	refreshToken, erro := c.Cookie("refresh_token")
-    if erro != nil {
-        c.JSON(http.StatusUnauthorized, gin.H{"error": "Refresh token not found"})
-        return
-    }
-	if access_token == "" || refreshToken == ""{
+	if erro != nil {
+		c.JSON(http.StatusUnauthorized, gin.H{"error": "Refresh token not found"})
+		return
+	}
+	if access_token == "" || refreshToken == "" {
 		c.JSON(http.StatusUnauthorized, gin.H{"message": "Tokens not found"})
 		return
 	}
@@ -48,27 +47,26 @@ func ValidateRequest(c *gin.Context){
 		}
 		return jwtSecret, nil
 	})
-
 	if erro != nil {
 		c.JSON(http.StatusUnauthorized, gin.H{"error": "Invalid token"})
 		c.Abort()
 		return
 	}
-	if claims, ok := token.Claims.(jwt.MapClaims); ok && token.Valid {
-		// Pass claims to the context for use in handlers
-		c.Set("userID", claims["id"])
-		c.Set("userName", claims["name"])
-		c.Set("userEmail", claims["email"])
-		c.Set("userPhoto", claims["photo"])
-	} else {
-		c.JSON(http.StatusUnauthorized, gin.H{"error": "Invalid token claims"})
-		c.Abort()
+	claims, ok := token.Claims.(jwt.MapClaims)
+	if !ok {
+		// Handle error
+		log.Println("Could not extract claims")
 		return
 	}
-	err = utils.ValidateRefreshToken(c, redis, 1223, refreshToken)
-	if err{
+	userID, ok := claims["id"].(string)
+	if !ok {
+		// Handle error: userID not found or not of expected type
+		log.Println("userID not found or not a string")
+		return
+	}
+	errio := utils.ValidateRefreshToken(c, redis, userID, refreshToken)
+	if !errio {
 		c.JSON(http.StatusUnauthorized, gin.H{"message": "Refresh Token not valid"})
 	}
-
 	c.JSON(http.StatusOK, gin.H{"message": "Request is authorized"})
 }
