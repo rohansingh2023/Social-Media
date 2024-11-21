@@ -14,14 +14,25 @@ import (
 )
 
 func AccessTokenRegenerate(c *gin.Context, redis *redis.Client, refreshString string, session sessions.Session) {
-	err := utils.ValidateRefreshToken(c, redis, session.Get("userId").(string), refreshString)
+	userID, ok := session.Get("userId").(string)
+	if !ok {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "userId not found"})
+		return
+	}
+
+	err := utils.ValidateRefreshToken(c, redis, userID, refreshString)
 	if !err {
 		c.JSON(http.StatusUnauthorized, gin.H{"message": "Refresh Token not valid"})
 		c.Abort()
 		return
 	}
 	var user models.User
-	user.ID = session.Get("userId").(primitive.ObjectID)
+	uID, erri := primitive.ObjectIDFromHex(userID)
+	if erri != nil {
+		c.JSON(http.StatusUnauthorized, gin.H{"error": erri})
+		return
+	}
+	user.ID = uID
 	user.Name = session.Get("name").(string)
 	user.Email = session.Get("email").(string)
 	user.ProfilePic = session.Get("photo").(string)

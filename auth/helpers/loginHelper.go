@@ -62,7 +62,7 @@ func GetMongoRedisClient(c *gin.Context, logger *utils.CustomLogger) (*mongo.Cli
 }
 
 
-func MakeLoginRequest(c *gin.Context, logger *utils.CustomLogger, client *mongo.Client, ctx context.Context) (models.User, error, models.LoginInput){
+func MakeLoginCallAsync(c *gin.Context, logger *utils.CustomLogger, client *mongo.Client, ctx context.Context) (models.User, error, models.LoginInput){
 	var input models.LoginInput
 	// Bind the request JSON to the input struct
 	if err := c.ShouldBindJSON(&input); err != nil {
@@ -110,10 +110,9 @@ func GenJWTTokenAndSaveSession(c *gin.Context, logger *utils.CustomLogger, user 
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Error generating token"})
 		return "", err
 	}
-
 	session:= sessions.Default(c)
 	session.Set("jwt", token)
-	session.Set("userId", user.ID)
+	session.Set("userId", user.ID.Hex())
 	session.Set("name", user.Name)
 	session.Set("email", user.Email)
 	session.Set("photo", user.ProfilePic)

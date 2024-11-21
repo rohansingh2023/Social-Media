@@ -13,7 +13,7 @@ import (
 
 func LoginUser(c *gin.Context){
 	logger := utils.NewCustomLogger()
-	clientOrigin := c.GetHeader("Origin") // Get the Origin header
+	clientOrigin := c.GetHeader("Origin")
 	sourceURL := c.Request.RequestURI
 	if clientOrigin != "" {
 		sourceURL = clientOrigin + sourceURL
@@ -34,7 +34,7 @@ func LoginUser(c *gin.Context){
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
 
-	user, err, input := helpers.MakeLoginRequest(c, logger, client, ctx)
+	user, err, input := helpers.MakeLoginCallAsync(c, logger, client, ctx)
 	if err != nil{
 		return
 	}
