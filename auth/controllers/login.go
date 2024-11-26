@@ -39,7 +39,6 @@ func LoginUser(c *gin.Context){
 		return
 	}
 
-	// Compare the hashed password with the input password
 	err = bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(input.Password))
 	if err != nil {
 		statusCode := http.StatusUnauthorized
@@ -50,19 +49,16 @@ func LoginUser(c *gin.Context){
 		return
 	}
 
-	// Create a JWT token for the user
 	token , err := helpers.GenJWTTokenAndSaveSession(c, logger, user)
 	if err != nil{
 		return
 	}
 
-	// Create a refresh token
 	refreshToken, err := helpers.GenRefreshTokenAndSaveToCache(c, logger, user, redis, ctx)
 	if err != nil{
 		return
 	}
 
-	// Return the token and user details
 	statusCode := http.StatusOK
 	logger.Log("DEBUG", "1832eh2238ey289", "Auth", "User Logged In Successfully", utils.LogOptions{
 		StatusCode: &statusCode,

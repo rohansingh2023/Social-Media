@@ -15,6 +15,7 @@ import (
 	"go.mongodb.org/mongo-driver/mongo"
 )
 
+// Get mongo and redis variables
 func GetMongoRedisClient(c *gin.Context, logger *utils.CustomLogger) (*mongo.Client, *redis.Client, bool){
 	clientInterface, exists := c.Get("client")
 	if !exists {
@@ -26,7 +27,6 @@ func GetMongoRedisClient(c *gin.Context, logger *utils.CustomLogger) (*mongo.Cli
 		return nil, nil, true
 	}
 
-	// Type assertion to convert interface{} to *mongo.Client
 	client, ok := clientInterface.(*mongo.Client)
 	if !ok {
 		statusCode := http.StatusInternalServerError
@@ -47,7 +47,6 @@ func GetMongoRedisClient(c *gin.Context, logger *utils.CustomLogger) (*mongo.Cli
 		return nil, nil, true
 	}
 
-	// Type assertion to convert interface{} to *mongo.Client
 	redis, ok := redisInterface.(*redis.Client)
 	if !ok {
 		statusCode := http.StatusInternalServerError
@@ -61,7 +60,7 @@ func GetMongoRedisClient(c *gin.Context, logger *utils.CustomLogger) (*mongo.Cli
 	return client, redis, false
 }
 
-
+// Make DB call to login a user.
 func MakeLoginCallAsync(c *gin.Context, logger *utils.CustomLogger, client *mongo.Client, ctx context.Context) (models.User, error, models.LoginInput){
 	var input models.LoginInput
 	// Bind the request JSON to the input struct
@@ -100,8 +99,9 @@ func MakeLoginCallAsync(c *gin.Context, logger *utils.CustomLogger, client *mong
 	return user, nil, input
 }
 
+// Generate JWT for access token and save the ssession in memory.
 func GenJWTTokenAndSaveSession(c *gin.Context, logger *utils.CustomLogger, user models.User) (string, error){
-	token, err := utils.GenerateJWTToken(user)
+	token, err := utils.GenerateAccessToken(user.ID.String())
 	if err != nil {
 		statusCode := http.StatusInternalServerError
 		logger.Log("ERROR", "1832eh2238ey289", "Auth", "Error generating token", utils.LogOptions{
@@ -121,8 +121,9 @@ func GenJWTTokenAndSaveSession(c *gin.Context, logger *utils.CustomLogger, user 
 	return token , nil
 }
 
+// Generate JWT for refresh token and save it to Redis cache.
 func GenRefreshTokenAndSaveToCache(c *gin.Context, logger *utils.CustomLogger, user models.User, redis *redis.Client, ctx context.Context)(string, error){
-	refreshToken, _ , err := utils.GenerateRefreshToken()
+	refreshToken, err := utils.GenerateRefreshToken(user.ID.String())
 	if err != nil {
 		statusCode := http.StatusInternalServerError
 		logger.Log("ERROR", "1832eh2238ey289", "Auth", "Could not generate refresh token", utils.LogOptions{
@@ -145,7 +146,7 @@ func GenRefreshTokenAndSaveToCache(c *gin.Context, logger *utils.CustomLogger, u
 	})
 
 	// Optionally store the Refresh token in Redis session
-	err = redis.SetEX(ctx, "refresh-token:"+ string(user.ID.Hex()), refreshToken, 24*time.Hour).Err()
+	err = redis.SetEX(ctx, "refresh-token:"+ user.ID.String(), refreshToken, 24*time.Hour).Err()
 	if err != nil {
 		statusCode := http.StatusInternalServerError
 		logger.Log("ERROR", "1832eh2238ey289", "Auth", "Error storing refresh token in Redis", utils.LogOptions{

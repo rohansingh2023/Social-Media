@@ -40,15 +40,23 @@ func RegisterUser(c *gin.Context){
         log.Printf("Error flushing Redis cache: %v", err)
     }
 
-    // Generate JWT token
-    token, err := utils.GenerateJWTToken(newUser)
+    // Generate Refresh Token
+    refreshToken, err := utils.GenerateRefreshToken(newUser.ID.String())
     if err != nil {
-        c.JSON(http.StatusInternalServerError, gin.H{"error": "Error generating token"})
+        c.JSON(http.StatusInternalServerError, gin.H{"error": "Error generating refresh token"})
+        return
+    }
+
+    // Generate JWT token
+    token, err := utils.GenerateAccessToken(newUser.ID.String())
+    if err != nil {
+        c.JSON(http.StatusInternalServerError, gin.H{"error": "Error generating access token"})
         return
     }
 
     c.JSON(http.StatusCreated, gin.H{
         "token":   token,
+        "refresh-token": refreshToken,
         "message": "Registered user successfully",
     })
 }

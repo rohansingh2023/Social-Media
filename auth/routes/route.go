@@ -43,6 +43,7 @@ func SetupRouter() *gin.Engine {
     router.POST("/api/auth/logout", controllers.LogoutUser)
     router.GET("/api/auth/profile", controllers.TestProfile)
     router.GET("/api/auth/validate", controllers.ValidateRequest)
+    router.GET("/api/auth/refresh", controllers.Refresh)
 
     return router
 }
