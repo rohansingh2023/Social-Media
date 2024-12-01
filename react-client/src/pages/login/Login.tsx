@@ -5,6 +5,8 @@ import toast from "react-hot-toast";
 import Cookies from "js-cookie";
 import { Link, useNavigate } from "react-router-dom";
 import { socket } from "../../utils/web-socket";
+import axios from "axios";
+import ApiProxyService from "../../services/api-service";
 
 type FormData = {
   email: string;
@@ -17,23 +19,21 @@ const Login = () => {
     password: "",
   });
   const router = useNavigate();
-
-  const [loginUser] = useMutation(LOGIN_USER, {
-    variables: {
-      email: formData.email,
-      password: formData.password,
-    },
-  });
+  const apiService = new ApiProxyService({
+    baseUrl: "http://localhost:7007"
+  })
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const refreshToast = toast.loading("Loading...");
     try {
-      const { data } = await loginUser();
-      const tokenData: Login = data?.login;
-      localStorage.setItem("userToken", JSON.stringify(tokenData?.token));
-      localStorage.setItem("my-id", tokenData?.id)
-      Cookies.set("userJwt", JSON.stringify(tokenData?.token), {
+      const res = await apiService.post<FormData, Login>("/api/auth/login", {
+        email: formData.email,
+        password: formData.password
+      })
+      localStorage.setItem("userToken", JSON.stringify(res.data?.access_token));
+      localStorage.setItem("my-id", res.data?.user.id)
+      Cookies.set("userJwt", JSON.stringify(res.data?.access_token), {
         path: "/",
         expires: 1 / 12,
       });
@@ -41,7 +41,7 @@ const Login = () => {
         id: refreshToast,
       });
       socket.emit("login", {
-        userId: tokenData?.id
+        userId: res.data?.user.id
       });
       router("/");
     } catch (error) {

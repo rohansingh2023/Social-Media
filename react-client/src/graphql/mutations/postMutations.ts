@@ -1,8 +1,8 @@
-import { gql } from '@apollo/client'
+import { gql } from "@apollo/client";
 
 const ADD_POST = gql`
-  mutation addPost($content: String!, $image: String!) {
-    addPost(content: $content, image: $image) {
+  mutation addPost($id: ID!, $content: String!, $image: String!) {
+    addPost(id: $id, content: $content, image: $image) {
       _id
       content
       image
@@ -19,11 +19,16 @@ const ADD_POST = gql`
       createdAt
     }
   }
-`
+`;
 
 const LIKE_POST = gql`
-  mutation likePost($id: ID!) {
-    likePost(id: $id) {
+  mutation likePost(
+    $id: ID!
+    $name: String!
+    $email: String!
+    $profilePic: String!
+  ) {
+    likePost(id: $id, name: $name, email: $email, profilePic: $profilePic) {
       _id
       content
       image
@@ -34,11 +39,23 @@ const LIKE_POST = gql`
       }
     }
   }
-`
+`;
 
 const ADD_COMMENT = gql`
-  mutation addComment($postId: ID!, $body: String!) {
-    createComment(postId: $postId, body: $body) {
+  mutation addComment(
+    $postId: ID!
+    $body: String!
+    $name: String!
+    $email: String!
+    $profilePic: String!
+  ) {
+    createComment(
+      postId: $postId
+      body: $body
+      name: $name
+      email: $email
+      profilePic: $profilePic
+    ) {
       _id
       content
       likes {
@@ -53,7 +70,7 @@ const ADD_COMMENT = gql`
       }
     }
   }
-`
+`;
 
 const UPDATE_POST = gql`
   mutation updatePost($id: ID!, $content: String, $image: String) {
@@ -64,12 +81,12 @@ const UPDATE_POST = gql`
       createdAt
     }
   }
-`
+`;
 
 const DELETE_POST = gql`
   mutation deletePost($id: ID!) {
     deletePost(id: $id)
   }
-`
+`;
 
-export { ADD_POST, LIKE_POST, ADD_COMMENT, UPDATE_POST, DELETE_POST }
+export { ADD_POST, LIKE_POST, ADD_COMMENT, UPDATE_POST, DELETE_POST };

@@ -124,13 +124,13 @@ export const UserMutation = {
   },
   updateUser: async (
     _: any,
-    { name, email, profilePic, dob, bio }: any,
+    { id, name, email, profilePic, dob, bio }: any,
     { models, payload }: any
   ) => {
     await redisClient.flushall();
     return await models.User.findOneAndUpdate(
       {
-        _id: payload.id,
+        _id: id,
       },
       {
         $set: {
@@ -146,19 +146,19 @@ export const UserMutation = {
       }
     );
   },
-  likePost: async (_: any, { id }: any, { models, payload }: any) => {
+  likePost: async (_: any, { id, name, email, profilePic }: any, { models, payload }: any) => {
     const post = await models.Post.findById(id);
     if (post) {
-      if (post.likes.find((like: any) => like.email === payload.email)) {
+      if (post.likes.find((like: any) => like.email === email)) {
         // Post already liked, unlike it
         post.likes = post.likes.filter(
-          (like: any) => like.email !== payload.email
+          (like: any) => like.email !== email
         );
       } else {
         // Post not liked, like it
         post.likes.push({
-          name: payload.name,
-          email: payload.email,
+          name: name,
+          email: email,
           createdAt: new Date().toISOString(),
         });
       }
@@ -166,8 +166,8 @@ export const UserMutation = {
       await redisClient.flushall();
       await producer.publishMsg("Like", {
         id: post.user,
-        profilePic: payload.photo,
-        messageInfo: `${payload.name} liked your post`,
+        profilePic: profilePic,
+        messageInfo: `${name} liked your post`,
       });
       return post;
     } else {
@@ -176,7 +176,7 @@ export const UserMutation = {
   },
   createComment: async (
     _: any,
-    { postId, body }: any,
+    { postId, body, name, email, profilePic }: any,
     { models, payload }: any
   ) => {
     if (body.trim() === "") {
@@ -190,24 +190,24 @@ export const UserMutation = {
     if (post) {
       post.comments.unshift({
         body,
-        name: payload.name,
-        email: payload.email,
+        name: name,
+        email: email,
         createdAt: new Date().toISOString(),
       });
       await post.save();
       await redisClient.flushall();
       await producer.publishMsg("Comment", {
         id: post.user,
-        profilePic: payload.photo,
-        messageInfo: `${payload.name} commented on your post`,
+        profilePic: profilePic,
+        messageInfo: `${name} commented on your post`,
       });
       return post;
     } else throw new UserInputError("Post not found");
   },
 
-  deleteComment: async (
+   : async (
     _: any,
-    { postId, commentId }: any,
+    { postId, commentId, email }: any,
     { models, payload }: any
   ) => {
     const post = await models.Post.findById(postId);
@@ -215,7 +215,7 @@ export const UserMutation = {
       const commentIndex = post.comments.findIndex(
         (c: { id: any }) => c.id === commentId
       );
-      if (post.comments[commentIndex].email === payload.email) {
+      if (post.comments[commentIndex].email === email) {
         post.comments.splice(commentIndex, 1);
         await post.save();
         await redisClient.flushall();

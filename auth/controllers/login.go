@@ -64,8 +64,8 @@ func LoginUser(c *gin.Context){
 		StatusCode: &statusCode,
 	})
 	c.JSON(http.StatusOK, gin.H{
-		"access-token":   token,
-		"refresh-token": refreshToken,
+		"access_token":   token,
+		"refresh_token": refreshToken,
 		"message": "Logged in successfully",
 		"user": gin.H{
 			"id":    user.ID.Hex(),
