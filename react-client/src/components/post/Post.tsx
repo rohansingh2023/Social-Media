@@ -34,6 +34,9 @@ const Post = ({ post, user }: Props) => {
   const [likePost] = useMutation(LIKE_POST, {
     variables: {
       id: post._id,
+      name: cuser?.user?.name,
+      email: cuser?.user.email,
+      profilePic: cuser?.user?.profilePic
     },
     context: {
       headers: {
@@ -59,6 +62,9 @@ const Post = ({ post, user }: Props) => {
     variables: {
       postId: post._id,
       body: body,
+      name: cuser?.user?.name,
+      email: cuser?.user.email,
+      profilePic: cuser?.user?.profilePic
     },
     context: {
       headers: {

@@ -34,6 +34,7 @@ export const PostMutation = {
     { id, content, image }: any,
     { models, log4u }: ContextPayloads
   ) => {
+    log4u.log({message: "Request arrived for updatePost mutation"})
     try {
       await redisClient.flushall();
       log4u.log({type: "DEBUG", message:"updatePost mutation processed successfully"})
@@ -57,6 +58,7 @@ export const PostMutation = {
     }
   },
   deletePost: async (parent: any, { id }: any, { models, log4u }: ContextPayloads) => {
+    log4u.log({message: "Request arrived for deletePost mutation"})
     try {
       await models.Post.findOneAndRemove({ _id: id });
       await redisClient.flushall();

@@ -1,6 +1,5 @@
 import amqp from "amqplib";
-// import { config } from "./config";
-// import config from "./config";
+import { Logger } from "log4u";
 
 interface MessageProps {
   id: string;
@@ -15,6 +14,7 @@ const rabbitMQ = {
 
 class Producer {
   channel!: amqp.Channel;
+  log4u: Logger = new Logger({serviceName:"GraphQL"});
 
   async createChannel() {
     const connection = await amqp.connect(rabbitMQ.url);
@@ -38,7 +38,7 @@ class Producer {
         })
       )
     );
-    console.log(`The message ${message} is sent to ${exchangeName}`);
+    this.log4u.log({type:"DEBUG", message:`The message ${message} is sent to ${exchangeName}`})
   }
 }
 

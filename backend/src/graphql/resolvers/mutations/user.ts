@@ -5,6 +5,7 @@ import { v2 as cloudinary } from "cloudinary";
 import { redisClient } from "../../../app";
 import dotenv from "dotenv";
 import Producer from "../../../utils/rabbitmq/producer";
+import { ContextPayloads } from "src/types";
 
 const producer = new Producer();
 
@@ -125,91 +126,124 @@ export const UserMutation = {
   updateUser: async (
     _: any,
     { id, name, email, profilePic, dob, bio }: any,
-    { models, payload }: any
+    { models, log4u }: ContextPayloads
   ) => {
-    await redisClient.flushall();
-    return await models.User.findOneAndUpdate(
-      {
-        _id: id,
-      },
-      {
-        $set: {
-          name,
-          email,
-          profilePic,
-          dob,
-          bio,
-        },
-      },
-      {
-        new: true,
-      }
-    );
-  },
-  likePost: async (_: any, { id, name, email, profilePic }: any, { models, payload }: any) => {
-    const post = await models.Post.findById(id);
-    if (post) {
-      if (post.likes.find((like: any) => like.email === email)) {
-        // Post already liked, unlike it
-        post.likes = post.likes.filter(
-          (like: any) => like.email !== email
-        );
-      } else {
-        // Post not liked, like it
-        post.likes.push({
-          name: name,
-          email: email,
-          createdAt: new Date().toISOString(),
-        });
-      }
-      await post.save();
+    log4u.log({message:"Request arrived for updateUser mutation"})
+    try {
       await redisClient.flushall();
-      await producer.publishMsg("Like", {
-        id: post.user,
-        profilePic: profilePic,
-        messageInfo: `${name} liked your post`,
-      });
-      return post;
-    } else {
-      throw new Error("Post not found");
+      log4u.log({type:"DEBUG", message:"updateUser mutation processed successfully"})
+      return await models.User.findOneAndUpdate(
+        {
+          _id: id,
+        },
+        {
+          $set: {
+            name,
+            email,
+            profilePic,
+            dob,
+            bio,
+          },
+        },
+        {
+          new: true,
+        }
+      );
+      
+    } catch (error) {
+      log4u.log({type:"ERROR", message: error})
+      throw new Error(`${error}`)
+    }
+  },
+  likePost: async (_: any, { id, name, email, profilePic }: any, { models, log4u }: ContextPayloads) => {
+    log4u.log({message:"Request arrived for likePost mutation"})
+    try {
+      const post = await models.Post.findById(id);
+      if (post) {
+        if (post.likes.find((like: any) => like.email === email)) {
+          // Post already liked, unlike it
+          post.likes = post.likes.filter(
+            (like: any) => like.email !== email
+          );
+        } else {
+          // Post not liked, like it
+          post.likes.push({
+            name: name,
+            email: email,
+            createdAt: new Date().toISOString(),
+          });
+        }
+        await post.save();
+        await redisClient.flushall();
+        log4u.log({type:"DEBUG", message:"Redis Cache cleared"})
+        await producer.publishMsg("Like", {
+          id: post.user,
+          profilePic: profilePic,
+          messageInfo: `${name} liked your post`,
+        });
+        log4u.log({type:"DEBUG", message:"User Info published to `Like` queue"})
+        log4u.log({type:"DEBUG", message:"likePost mutation processed successfully"})
+        return post;
+      } else {
+        log4u.log({type:"ERROR", message: "Post not found"})
+        throw new Error("Post not found");
+      }
+    } catch (error) {
+      log4u.log({type:"ERROR", message: error})
+      throw new Error(`${error}`)
     }
   },
   createComment: async (
     _: any,
     { postId, body, name, email, profilePic }: any,
-    { models, payload }: any
+    { models, log4u }: ContextPayloads
   ) => {
-    if (body.trim() === "") {
-      throw new UserInputError("Comment body must not be empty", {
-        errors: {
-          body: "Comment body must not be empty",
-        },
-      });
+    log4u.log({message:"Request arrived for createComment mutation"})
+    try {
+      if (body.trim() === "") {
+        log4u.log({type:"ERROR", message: "Comment body must not be empty"})
+        throw new UserInputError("UserInputError --> Comment body must not be empty", {
+          errors: {
+            body: "Comment body must not be empty",
+          },
+        });
+      }
+      const post = await models.Post.findById(postId);
+      if (post) {
+        post.comments.unshift({
+          body,
+          name: name,
+          email: email,
+          createdAt: new Date().toISOString(),
+        });
+        await post.save();
+        await redisClient.flushall();
+        log4u.log({type:"DEBUG", message:"Redis Cache cleared"})
+        await producer.publishMsg("Comment", {
+          id: post.user,
+          profilePic: profilePic,
+          messageInfo: `${name} commented on your post`,
+        });
+        log4u.log({type:"DEBUG", message:"Comment Info published to `Comment` queue"})
+        log4u.log({type:"DEBUG", message:"createComment mutation processed successfully"})
+        return post;
+      } else {
+        log4u.log({type:"ERROR", message: "UserInputError --> Post not found"})
+        throw new UserInputError("Post not found");
+      }
+    } catch (error) {
+      log4u.log({type:"ERROR", message: error})
+      throw new Error(`${error}`)
     }
-    const post = await models.Post.findById(postId);
-    if (post) {
-      post.comments.unshift({
-        body,
-        name: name,
-        email: email,
-        createdAt: new Date().toISOString(),
-      });
-      await post.save();
-      await redisClient.flushall();
-      await producer.publishMsg("Comment", {
-        id: post.user,
-        profilePic: profilePic,
-        messageInfo: `${name} commented on your post`,
-      });
-      return post;
-    } else throw new UserInputError("Post not found");
   },
 
-   : async (
+  deleteComment: async (
     _: any,
     { postId, commentId, email }: any,
-    { models, payload }: any
+    { models, log4u }: ContextPayloads
   ) => {
+  log4u.log({message:"Request arrived for deleteComment mutation"})
+   try {
     const post = await models.Post.findById(postId);
     if (post) {
       const commentIndex = post.comments.findIndex(
@@ -219,16 +253,24 @@ export const UserMutation = {
         post.comments.splice(commentIndex, 1);
         await post.save();
         await redisClient.flushall();
+        log4u.log({type:"DEBUG", message:"Redis Cache cleared"})
+        log4u.log({type:"DEBUG", message:"deleteComment mutation processed successfully"})
         return post;
       } else {
+        log4u.log({type:"ERROR", message:"AuthenticationError --> You can only delete your own comments"})
         throw new AuthenticationError("You can only delete your own comments");
       }
     } else {
+      log4u.log({type:"ERROR", message: "UserInputError --> Post not found"})
       throw new UserInputError("Post not found");
     }
+   } catch (error) {
+    log4u.log({type:"ERROR", message: error})
+    throw new Error(`${error}`)
+   }
   },
 
-  friendRequest: async (_: any, { id }: any, { models, payload }: any) => {
+  friendRequest: async (_: any, { id }: any, { models, payload }: ContextPayloads) => {
     try {
       const userTo = await models.User.findById(id);
       const userFrom = await models.User.findById(payload.id);
@@ -261,7 +303,7 @@ export const UserMutation = {
   acceptFriendRequest: async (
     _: any,
     { email }: any,
-    { models, payload }: any
+    { models, payload }: ContextPayloads
   ) => {
     try {
       const requestSender = await models.User.findOne({ email });
@@ -309,7 +351,7 @@ export const UserMutation = {
   declineFriendRequest: async (
     _: any,
     { email }: any,
-    { models, payload }: any
+    { models, payload }: ContextPayloads
   ) => {
     try {
       const me = await models.User.findById(payload.id);
@@ -323,7 +365,7 @@ export const UserMutation = {
       throw new Error("Error declining friend request");
     }
   },
-  unFriend: async (_: any, { email }: any, { models, payload }: any) => {
+  unFriend: async (_: any, { email }: any, { models, payload }: ContextPayloads) => {
     try {
       const friend = await models.User.findOne({ email });
       const currentUser = await models.User.findById(payload.id);

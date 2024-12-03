@@ -41,6 +41,9 @@ function UserPost() {
     variables: {
       postId: url,
       body: body,
+      name: currentUser?.user?.name,
+      email: currentUser?.user.email,
+      profilePic: currentUser?.user?.profilePic
     },
     context: {
       headers: {
