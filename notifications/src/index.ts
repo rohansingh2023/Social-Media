@@ -20,9 +20,12 @@ addComment(log4u);
 addFriend(log4u);
 
 app.use("/api", NotificationRouter);
+app.get("/api/notifications/", (req: Request, res: Response)=>{
+  res.json({"message": "AuthFilter successfull"});
+})
 
-app.listen(6005, () => {
+app.listen(6007, () => {
   log4u.log({message:"Started Notifications service..."})
-  log4u.log({message:"Notification server listening on port: 6005"})
-  console.log(`Notification server listening on port: 6005`);
+  log4u.log({message:"Notification server listening on port: 6007"})
+  console.log(`Notification server listening on port: 6007`);
 });

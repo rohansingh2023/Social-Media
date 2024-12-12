@@ -1,7 +1,6 @@
 package controllers
 
 import (
-	"github.com/gin-contrib/sessions"
 	"github.com/gin-gonic/gin"
 	// "github.com/golang-jwt/jwt/v4"
 )
@@ -9,8 +8,8 @@ import (
 // var jwtSecret = []byte(os.Getenv("JWT_SECRET_KEY"))
 
 func TestProfile(c *gin.Context){
-	session := sessions.Default(c)
-	token := session.Get("jwt")
+	// session := sessions.Default(c)
+	// token := session.Get("jwt")
 	// access_token := c.GetHeader("Authorization")
 	// refreshToken, erro := c.Cookie("refresh_token")
 	// if erro != nil {
@@ -35,5 +34,5 @@ func TestProfile(c *gin.Context){
 	// 	// c.Abort()
 	// 	return
 	// }
-	c.JSON(200, gin.H{"access-token": token})
+	c.JSON(200, gin.H{"access-token": "This is an access-token"})
 } 

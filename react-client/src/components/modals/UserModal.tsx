@@ -5,6 +5,7 @@ import { UPDATE_USER } from "../../graphql/mutations/userMutations";
 import toast from "react-hot-toast";
 // import { useNavigate } from "react-router-dom";
 import Cookies from "js-cookie";
+import { useCurrentState } from "../../state-management/current-user";
 
 interface IProps {
   user: User;
@@ -23,9 +24,11 @@ const UserModal = ({ user, setShowModal }: IProps) => {
   //   const router = useNavigate();
   const cookie = Cookies.get("userJwt");
   const token = cookie?.substring(1, cookie.length - 1);
+  const {currentUser} = useCurrentState()
 
   const [updateUser] = useMutation(UPDATE_USER, {
     variables: {
+      id: currentUser?.user?._id,
       name: formData.name,
       email: formData.email,
       profilePic: formData.profilePic,
