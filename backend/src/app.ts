@@ -14,6 +14,7 @@ import models from "./models";
 import { logger } from "./logging";
 import { Logger } from "log4u";
 import { logRequest } from "./middlewares/log-request";
+import { eurekaClient } from "./config/eureka";
 
 dotenv.config();
 
@@ -26,8 +27,6 @@ export const redisClient = new Redis({
 
 const port = process.env.PORT || 8081;
 
-// app.set("trust proxy", 1);
-app.use(cors({ credentials: true, origin: process.env.ORIGIN_URL }));
 app.use(express.json({ limit: "50mb" }));
 app.use(express.urlencoded({ extended: true }));
 app.use(
@@ -87,13 +86,13 @@ export const startServer = async () => {
     logger.info("Redis Client Error", err)});
 
   // Start the Eureka client to register the service
-  // eurekaClient.start((error) => {
-  //   if (error) {
-  //     logger.error("Error registering with Eureka", error)
-  //   } else {
-  //     logger.info("Service registered with Eureka");
-  //   }
-  // });
+  eurekaClient.start((error) => {
+    if (error) {
+      logger.error("Error registering with Eureka", error)
+    } else {
+      logger.info("Service registered with Eureka");
+    }
+  });
 
   app.get("/", (req: Request, res: Response) => {
     log4u.log({message: "Checking the API Status: Everything OK"})

@@ -6,27 +6,39 @@ interface OnlineUsersContextType {
   setOnlineUsers: React.Dispatch<React.SetStateAction<any>>;
 }
 
-export const OnlineUsersContext = createContext<OnlineUsersContextType | null>(null);
+export const OnlineUsersContext = createContext<OnlineUsersContextType | null>(
+  null
+);
 
 interface OnlineUsersContextProviderProps {
   children: ReactNode; // ReactNode allows for any valid JSX children
 }
 
-export const OnlineUsersContextProvider: React.FC<OnlineUsersContextProviderProps> = ({ children }) => {
-  const [onlineUsers, setOnlineUsers] = useState([])
+export const OnlineUsersContextProvider: React.FC<
+  OnlineUsersContextProviderProps
+> = ({ children }) => {
+  const [onlineUsers, setOnlineUsers] = useState([]);
 
-  useEffect(()=>{
-    const userId = localStorage.getItem("my-id")
-    if(userId){
+  useEffect(() => {
+    const userId = localStorage.getItem("my-id");
+    if (userId) {
       socket.emit("login", {
-        userId 
-      })
+        userId,
+      });
     }
 
-    socket.on("onlineUsers", (data)=>{
-      setOnlineUsers(data)
-    })
-  },[])
+    // This listener should only be set once
+    const handleOnlineUsers = (data: any) => {
+      setOnlineUsers(data);
+    };
+
+    socket.on("onlineUsers", handleOnlineUsers);
+
+    // Cleanup the listener on unmount
+    return () => {
+      socket.off("onlineUsers", handleOnlineUsers);
+    };
+  }, []);
 
   return (
     <OnlineUsersContext.Provider value={{ onlineUsers, setOnlineUsers }}>

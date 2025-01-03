@@ -24,7 +24,7 @@ func SetupRouter() *gin.Engine {
     router := gin.Default()
     store := cookie.NewStore([]byte("secret"))
     router.Use(sessions.Sessions("my-sessions", store))
-    router.Use(middlewares.CORS())
+    // router.Use(middlewares.CORS())
     d := service.ConfigDatabase()
     r := service.SetupRedisInstance()
     router.Use(middlewares.GlobalDBVariables(d))
