@@ -5,6 +5,7 @@ import { socket } from "./utils/web-socket";
 import { AnswerVideoChat } from "./components";
 import { useVideoCardState } from "./state-management/show-video-card";
 import AcceptedVideoChat from "./components/video-chat/AcceptedVideoChat";
+import DialogBox from "./components/shared-modules/custom-dialog-box/DialogBox";
 
 const NavbarLazy = lazy(() => import("./components/navbar/Navbar"));
 
@@ -15,11 +16,19 @@ const Layout = () => {
   const { showVideoChatCard, setShowVideoChatCard } = useVideoCardState();
   const [currentUserId, setCurrentUserId] = useState<String | undefined>();
   const [currentName, setCurrentName] = useState<String | undefined>();
+  const [isDialogOpen, setDialogOpen] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
+
   const [data, setData] = useState<any>();
   const userId = localStorage.getItem("my-id")
 
   useEffect(() => {
     addCurrentUser(userId);
+    socket.on('connect_error', (error) => {
+      setErrorMessage('Socket server is not running or is unreachable.');
+      setDialogOpen(true);
+    });
+
     socket.on("sendOffer", (data) => {
       // console.log(data.sdp);
       setCurrentUserId(data?.userId);
@@ -38,8 +47,21 @@ const Layout = () => {
     console.log(error);
   }
 
+  const handleOkClick = () => {
+    setDialogOpen(false);
+  };
+
   return (
     <>
+    {/* {isDialogOpen && (
+      <DialogBox
+        title="Socket Connection Error"
+        description={errorMessage}
+        isOpen = {isDialogOpen}
+        onOk={handleOkClick}
+        onClose={handleOkClick}
+      />
+    )} */}
       {answerVideoChatVisible && (
         <AnswerVideoChat
           answerVideoChatVisible={answerVideoChatVisible}

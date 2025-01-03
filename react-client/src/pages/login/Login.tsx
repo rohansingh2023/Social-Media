@@ -1,11 +1,8 @@
-import { useMutation } from "@apollo/client";
-import React, { useState } from "react";
-import { LOGIN_USER } from "../../graphql/mutations/userMutations";
+import React, {useState } from "react";
 import toast from "react-hot-toast";
 import Cookies from "js-cookie";
 import { Link, useNavigate } from "react-router-dom";
 import { socket } from "../../utils/web-socket";
-import axios from "axios";
 import ApiProxyService from "../../services/api-service";
 
 type FormData = {
@@ -20,7 +17,7 @@ const Login = () => {
   });
   const router = useNavigate();
   const apiService = new ApiProxyService({
-    baseUrl: "http://localhost:7007"
+    baseUrl: "http://localhost:9001"
   })
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -53,10 +50,9 @@ const Login = () => {
   };
 
   return (
-    <div className="relative  flex h-screen items-center justify-center bg-login bg-cover bg-center bg-no-repeat">
+    <div className="relative flex h-screen items-center justify-center bg-login bg-cover bg-center bg-no-repeat">
       <div
-        className="absolute top-1/4 rounded-md
-      bg-slate-200 px-5 py-7 font-DMSerif shadow-md"
+        className="absolute top-1/4 rounded-md bg-slate-200 px-5 py-7 font-DMSerif shadow-md"
       >
         <div className="mb-10">
           <div className="flex justify-center">

@@ -30,6 +30,7 @@ public class AuthGatewayFilterFactory extends AbstractGatewayFilterFactory<AuthG
     public GatewayFilter apply(Config config) {
         return (exchange, chain) -> {
             String accessToken = exchange.getRequest().getHeaders().getFirst("Authorization");
+            logger.info("[AuthFilter] - Found access token: {}", accessToken);
             String refreshToken = getRefreshTokenFromCookies(exchange.getRequest());
 
             return validateTokens(accessToken, refreshToken)

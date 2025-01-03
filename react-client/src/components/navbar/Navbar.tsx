@@ -26,7 +26,7 @@ const Navbar = () => {
   const currentUser = useCurrentState((state) => state.currentUser);
   const { isOn, toggle } = useNavigationPanelState();
   const apiService = new ApiProxyService({
-    baseUrl: "http://localhost:7007"
+    baseUrl: "http://localhost:9001"
   })
 
   const handleLogout = async () => {
@@ -35,6 +35,7 @@ const Navbar = () => {
       await apiService.post("/api/auth/logout", {})
       Cookies.remove("userJwt");
       localStorage.removeItem("my-id")
+      localStorage.removeItem("userToken")
       toast.success("Logged out successfully", {
         id: refreshId,
       });
