@@ -1,12 +1,12 @@
 import { create } from "zustand";
 import client from "../services/apollo-client";
-import { CURRENT_USER } from "../graphql/queries/userQueries";
+import { CURRENT_USER, GET_USER_BY_ID } from "../graphql/queries/userQueries";
 
 interface CurrentUserState {
   currentUser: CurrentUser;
   loading: boolean;
   error: string | null;
-  addCurrentUser: () => void;
+  addCurrentUser: (id: any) => void;
 }
 
 export const useCurrentState = create<CurrentUserState>()((set) => ({
@@ -24,14 +24,16 @@ export const useCurrentState = create<CurrentUserState>()((set) => ({
   },
   loading: false,
   error: null,
-  addCurrentUser: async () => {
+  addCurrentUser: async (id: any) => {
     set({ loading: true, error: null });
     try {
       const { data } = await client.query({
-        query: CURRENT_USER,
+        query: GET_USER_BY_ID,
+        variables:{
+          id
+        }
       });
-
-      set({ currentUser: data?.currentUser, loading: false });
+      set({ currentUser: data?.userById, loading: false });
     } catch (error) {
       set({ loading: false, error: error.message });
     }

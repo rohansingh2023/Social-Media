@@ -1,3 +1,4 @@
+import { Logger } from "log4u";
 import pool from "../../db";
 import Consumer from "../../utils/consumer";
 
@@ -13,7 +14,7 @@ interface Payload {
 
 const consumer = new Consumer();
 
-export const addComment = async () => {
+export const addComment = async (log4u: Logger) => {
   try {
     const data: Payload = await consumer.consumeMsg("Comment");
     const likeMsgPayload = {
@@ -31,8 +32,9 @@ export const addComment = async () => {
       likeMsgPayload.logtype,
       likeMsgPayload.datecreated,
     ]);
-    console.log("Comment notifications added successfully");
+    log4u.log({type:"DEBUG", message:"Comment notifications added successfully"})
   } catch (error) {
+    log4u.log({type:"ERROR", message: error})
     console.log(error);
   }
 };

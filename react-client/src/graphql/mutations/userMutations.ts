@@ -44,6 +44,7 @@ const LOGOUT = gql`
 
 const UPDATE_USER = gql`
   mutation updateUser(
+    $id: ID!
     $name: String!
     $email: String!
     $profilePic: String!
@@ -51,6 +52,7 @@ const UPDATE_USER = gql`
     $bio: String!
   ) {
     updateUser(
+      id: $id
       name: $name
       email: $email
       profilePic: $profilePic

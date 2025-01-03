@@ -1,3 +1,4 @@
+import { Logger } from "log4u";
 import pool from "../../db";
 import Consumer from "../../utils/consumer";
 
@@ -13,7 +14,7 @@ interface Payload {
 
 const consumer = new Consumer();
 
-export const addFriend = async () => {
+export const addFriend = async (log4u: Logger) => {
   try {
     const data: Payload = await consumer.consumeMsg("Friend");
     const likeMsgPayload = {
@@ -31,8 +32,9 @@ export const addFriend = async () => {
       likeMsgPayload.logtype,
       likeMsgPayload.datecreated,
     ]);
-    console.log("Friend notifications added successfully");
+    log4u.log({type:"DEBUG", message:"Friend notifications added successfully"})
   } catch (error) {
+    log4u.log({type:"ERROR", message: error})
     console.log(error);
   }
 };

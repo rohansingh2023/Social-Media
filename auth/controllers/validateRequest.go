@@ -1,72 +1,48 @@
 package controllers
 
 import (
-	"log"
 	"net/http"
-	"os"
 
 	"github.com/gin-gonic/gin"
-	"github.com/go-redis/redis/v8"
-	"github.com/golang-jwt/jwt/v4"
 	"github.com/rohan/auth/utils"
 )
 
-var jwtSecret = []byte(os.Getenv("JWT_SECRET_KEY"))
-
-// -------------> IN PROGRESS <------------------- //
 func ValidateRequest(c *gin.Context) {
-	// 1: Take Redis variables
-	redisInterface, err := c.Get("redis")
-	if !err {
-		c.JSON(http.StatusInternalServerError, gin.H{"message": "Redis client not found"})
-		return
+	logger := utils.NewCustomLogger()
+	clientOrigin := c.GetHeader("Origin")
+	sourceURL := c.Request.RequestURI
+	if clientOrigin != "" {
+		sourceURL = clientOrigin + sourceURL
 	}
-	redis, ok := redisInterface.(*redis.Client)
-	if !ok {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "Invalid Redis client type"})
-		return
-	}
-
-	// 2: Check if access and refresh token are not null
-	access_token := c.GetHeader("Authorization")
-	refreshToken, erro := c.Cookie("refresh_token")
-	if erro != nil {
-		c.JSON(http.StatusUnauthorized, gin.H{"error": "Refresh token not found"})
-		return
-	}
-	if access_token == "" || refreshToken == "" {
-		c.JSON(http.StatusUnauthorized, gin.H{"message": "Tokens not found"})
-		return
-	}
-
-	// 4: Verify access and refresh token
-	token, erro := jwt.Parse(access_token, func(token *jwt.Token) (interface{}, error) {
-		// Ensure the signing method is correct
-		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
-			return nil, jwt.ErrSignatureInvalid
-		}
-		return jwtSecret, nil
+	logger.Log("INFO", "1832eh2238ey289", "Auth", "Incoming Request from: ", utils.LogOptions{
+		SourceURL: &sourceURL,
 	})
-	if erro != nil {
-		c.JSON(http.StatusUnauthorized, gin.H{"error": "Invalid token"})
-		c.Abort()
-		return
+	targetUrl := c.Request.URL.Scheme + "://" + c.Request.Host + c.Request.RequestURI
+	logger.Log("INFO", "1832eh2238ey289", "Auth", "Incoming Request to: ", utils.LogOptions{
+		TargetURL: &targetUrl,
+	})
+	token := c.GetHeader("Authorization")
+	if token == ""{
+		statusCode := http.StatusUnauthorized
+		logger.Log("ERROR", "1832eh2238ey289", "Auth", "Missing Auth Header", utils.LogOptions{
+			StatusCode: &statusCode,
+		})
+		c.JSON(http.StatusUnauthorized, gin.H{"error": "Missing Auth Header"})
+        c.Abort()
+        return
 	}
-	claims, ok := token.Claims.(jwt.MapClaims)
-	if !ok {
-		// Handle error
-		log.Println("Could not extract claims")
-		return
-	}
-	userID, ok := claims["id"].(string)
-	if !ok {
-		// Handle error: userID not found or not of expected type
-		log.Println("userID not found or not a string")
-		return
-	}
-	errio := utils.ValidateRefreshToken(c, redis, userID, refreshToken)
-	if !errio {
-		c.JSON(http.StatusUnauthorized, gin.H{"message": "Refresh Token not valid"})
-	}
-	c.JSON(http.StatusOK, gin.H{"message": "Request is authorized"})
+	_ , err := utils.ValidateAccessToken(token)
+	if err != nil {
+		statusCode := http.StatusUnauthorized
+		logger.Log("ERROR", "1832eh2238ey289", "Auth", "Invalid access token", utils.LogOptions{
+			StatusCode: &statusCode,
+		})
+        c.JSON(http.StatusUnauthorized, gin.H{"error": "Invalid access token"})
+        return
+    }
+	statusCode := http.StatusOK
+	logger.Log("DEBUG", "1832eh2238ey289", "Auth", "Request is Authorized", utils.LogOptions{
+		StatusCode: &statusCode,
+	})
+    c.JSON(http.StatusOK, gin.H{"message": "Request is Authorized"})
 }

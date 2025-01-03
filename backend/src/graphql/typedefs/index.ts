@@ -120,7 +120,7 @@ export const typeDefs = gql`
   }
 
   type Mutation {
-    addPost(content: String!, image: String!): Post!
+    addPost(id: ID!, content: String!, image: String!): Post!
     updatePost(id: ID!, content: String, image: String): Post!
     deletePost(id: ID!): Boolean!
     register(
@@ -133,16 +133,17 @@ export const typeDefs = gql`
     ): AuthData!
     login(email: String!, password: String!): AuthData!
     logout: String!
-    likePost(id: ID!): Post!
+    likePost(id: ID!, name: String!, email: String!, profilePic: String!): Post!
     updateUser(
+      id: ID!
       name: String!
       email: String!
       profilePic: String!
       dob: String!
       bio: String!
     ): User!
-    createComment(postId: ID!, body: String!): Post!
-    deleteComment(postId: ID!, commentId: ID!): Post!
+    createComment(postId: ID!, body: String!, name: String!, email: String!, profilePic: String!): Post!
+    deleteComment(postId: ID!, commentId: ID!, email: String!): Post!
     friendRequest(id: ID!): User!
     acceptFriendRequest(email: String!): User!
     declineFriendRequest(email: String!): User

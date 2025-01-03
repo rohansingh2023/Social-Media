@@ -1,0 +1,5 @@
+Start-Process powershell -ArgumentList "cd 'D:/Programming/Web Development/projects/Socialism/socialism/backend'; yarn dev; exit" 
+Start-Process powershell -ArgumentList "cd 'D:/Programming/Web Development/projects/Socialism/socialism/notifications'; yarn dev; exit" 
+Start-Process powershell -ArgumentList "cd 'D:/Programming/Web Development/projects/Socialism/socialism/auth'; go run main.go; exit" 
+Start-Process powershell -ArgumentList "cd 'D:/Programming/Web Development/projects/Socialism/socialism/chat-server-v2'; go run main.go; exit" 
+Start-Process powershell -ArgumentList "cd 'D:/Programming/Web Development/projects/Socialism/socialism/api-gateway'; mvn spring-boot:run; exit"

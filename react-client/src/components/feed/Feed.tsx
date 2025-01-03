@@ -45,14 +45,11 @@ const Feed = ({ postData: posts, loading }: Props) => {
   });
   const cookie = Cookies.get("userJwt");
   const token = cookie?.substring(1, cookie.length - 1);
-  // console.log(posts);
-
   const currentUser = useCurrentState((state) => state.currentUser);
-
-  //   const token = useSelector(selectToken)
 
   const [addPost] = useMutation(ADD_POST, {
     variables: {
+      id: currentUser?.user?._id,
       content: formData.content,
       image: formData.image,
     },

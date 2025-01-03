@@ -13,12 +13,11 @@ import toast from "react-hot-toast";
 import { IoIosPersonAdd } from "react-icons/io";
 import { useCurrentState } from "../../state-management/current-user";
 import { useNavigationPanelState } from "../../state-management/notification-panel";
-import { useMutation } from "@apollo/client";
-import { LOGOUT } from "../../graphql/mutations/userMutations";
 import Cookies from "js-cookie";
 import { Link, useNavigate } from "react-router-dom";
 import NotificationPanel from "../notification-panel/NotificationPanel";
 import Sidebar from "../sidebar/Sidebar";
+import ApiProxyService from "../../services/api-service";
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -26,19 +25,19 @@ const Navbar = () => {
   const [colour, setColour] = useState("home");
   const currentUser = useCurrentState((state) => state.currentUser);
   const { isOn, toggle } = useNavigationPanelState();
-  const [logout] = useMutation(LOGOUT);
+  const apiService = new ApiProxyService({
+    baseUrl: "http://localhost:7007"
+  })
 
   const handleLogout = async () => {
     const refreshId = toast.loading("Logging Out");
     try {
-      await logout();
+      await apiService.post("/api/auth/logout", {})
       Cookies.remove("userJwt");
       localStorage.removeItem("my-id")
       toast.success("Logged out successfully", {
         id: refreshId,
       });
-      // socket.disconnect()
-      // router("/login");
       router("/");
       window.location.reload();
     } catch (error) {
@@ -48,10 +47,6 @@ const Navbar = () => {
       });
     }
   };
-
-  // const joinChat = (e: React.MouseEvent<SVGElement, MouseEvent>) => {
-  //   socket.emit('join_chat', { userId: currentUser?.user?._id })
-  // }
 
   return (
     <>

@@ -74,11 +74,14 @@ type Message = {
 
 type Login = {
   message: string;
-  token: string;
-  id: string;
-  name: string;
-  email: string;
-  photo: string;
+  access_token: string;
+  refresh_token: string;
+  user: {
+    id: string;
+    name: string;
+    email: string;
+    photo: string;
+  };
 };
 
 type CurrentUser = {

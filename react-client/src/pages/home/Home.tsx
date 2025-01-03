@@ -8,6 +8,7 @@ const Rightbar = lazy(() => import("../../components/rightbar/Rightbar"));
 
 const Home = () => {
   const { loading, data } = useQuery(GET_POSTS, {});
+  console.log(data)
 
   return (
     <div className="bg-[#010100] font-Segoe">

@@ -16,9 +16,10 @@ const Layout = () => {
   const [currentUserId, setCurrentUserId] = useState<String | undefined>();
   const [currentName, setCurrentName] = useState<String | undefined>();
   const [data, setData] = useState<any>();
+  const userId = localStorage.getItem("my-id")
 
   useEffect(() => {
-    addCurrentUser();
+    addCurrentUser(userId);
     socket.on("sendOffer", (data) => {
       // console.log(data.sdp);
       setCurrentUserId(data?.userId);

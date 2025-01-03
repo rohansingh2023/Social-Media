@@ -1,3 +1,7 @@
+import { Request } from "express";
+import Redis from "ioredis";
+import { Logger } from "log4u";
+
 export interface UserPayload {
   id: string;
   email: string;
@@ -53,4 +57,12 @@ export interface IPost {
   image: string;
   likes: [Like];
   comments: [Comment];
+}
+
+export interface ContextPayloads{
+  req: Request
+  client: Redis
+  models: any
+  log4u: Logger
+  payload: any
 }

@@ -41,9 +41,9 @@ func SetupRouter() *gin.Engine {
     router.POST("/api/auth/register", controllers.RegisterUser)
     router.POST("/api/auth/login", controllers.LoginUser)
     router.POST("/api/auth/logout", controllers.LogoutUser)
-    router.POST("/api/auth/generate-refresh-token", controllers.GenerateRefreshToken)
     router.GET("/api/auth/profile", controllers.TestProfile)
     router.GET("/api/auth/validate", controllers.ValidateRequest)
+    router.GET("/api/auth/refresh", controllers.Refresh)
 
     return router
 }
