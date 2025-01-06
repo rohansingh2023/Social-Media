@@ -21,10 +21,6 @@ import PostSkeleton from "../post/PostSkeleton";
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import "react-lazy-load-image-component/src/effects/blur.css";
 
-// const Post = dynamic(() => import('../components/Post'), {
-//   // ssr: false,
-//   loading: () => <p>Loading...</p>,
-// })
 
 const Post = lazy(() => import("../../components/post/Post"));
 
@@ -59,30 +55,11 @@ const Feed = ({ postData: posts, loading }: Props) => {
       },
     },
     refetchQueries: [{ query: GET_POSTS }],
-
-    // refetchQueries: [GET_POSTS, 'posts'],
-    // update(cache, { data: { addPost } }) {
-    //   const { posts }: any = cache.readQuery({
-    //     query: GET_POSTS,
-    //   })
-
-    //   if (posts) {
-    //     cache.writeQuery({
-    //       query: GET_POSTS,
-    //       data: {
-    //         posts: [...posts, addPost],
-    //       },
-    //     })
-    //   }
-    // },
   });
-
-  //   const fileInputRef = useRef<HTMLInputElement>(null)
 
   const handleRefresh = async () => {
     const refreshToast = toast.loading("Refreshing...");
     await getPosts();
-    // setPostData(posts)
     toast.success("Post Updated", {
       id: refreshToast,
     });
@@ -97,9 +74,6 @@ const Feed = ({ postData: posts, loading }: Props) => {
       await addPost();
       toast.success("Post added successfully");
       setFormData({ content: "", image: "" });
-      // window.location.reload()
-      // const posts = await getPosts()
-      // setPostData(posts)
       toast.success("Post Updated", {
         id: refreshToast,
       });
@@ -115,10 +89,6 @@ const Feed = ({ postData: posts, loading }: Props) => {
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
-
-  //   if (!postData) {
-  //     return <Loading />
-  //   }
 
   return (
     <div className="col-span-12 max-h-[91vh] overflow-y-scroll bg-[#010100] text-white p-3 scrollbar-hide lg:col-span-8 lg:border-x lg:p-5 xl:col-span-6">

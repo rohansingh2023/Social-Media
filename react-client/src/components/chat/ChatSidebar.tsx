@@ -6,6 +6,8 @@ import ChatListCard from "./ChatListCard";
 import axios from "axios";
 import { useParams } from "react-router-dom";
 import ChatListLoading from "./ChatListLoading";
+import DialogBox from "../shared-modules/custom-dialog-box/DialogBox";
+import ApiProxyService from "../../services/api-service";
 
 interface IProps {
   isChatOpen: boolean;
@@ -19,19 +21,23 @@ interface IProps {
 const ChatSidebar = ({ isChatOpen, setIsChatOpen, setCurrentChat }: IProps) => {
   const [convs, setConvs] = useState<Conversation[]>();
   const [loading, setLoading] = useState<boolean>(false);
+  const [isDialogOpen, setIsDialogOpen] = useState<boolean>(false);
+  const [error, setError] = useState<any>();
   const { id } = useParams();
+  const apiService = new ApiProxyService({
+    baseUrl: "http://localhost:9090"
+  })
 
   useEffect(() => {
     const getConvs = async () => {
       setLoading(true);
       try {
-        const res = await axios.get(
-          `http://localhost:9090/api/conversation/user/${id}`
-        );
-        setConvs(res.data.data);
+        const res = await apiService.get<Conversation[]>(`api/conversation/user/${id}`)
+        setConvs(res.data);
         setLoading(false);
       } catch (error) {
         toast.error(`${error}`);
+        setError(error)
         setLoading(false);
         console.log(error);
       }
@@ -43,9 +49,21 @@ const ChatSidebar = ({ isChatOpen, setIsChatOpen, setCurrentChat }: IProps) => {
     
   }
 
-  
+  const handleOkClick = () => {
+    setIsDialogOpen(false);
+  };
 
   return (
+    <>
+      {isDialogOpen && (
+      <DialogBox
+        title="GraphQL Error"
+        description={error?.message}
+        isOpen = {isDialogOpen} 
+        onOk={handleOkClick}
+        onClose={handleOkClick}
+      />
+    )}
     <div
       className={
         isChatOpen
@@ -103,6 +121,7 @@ const ChatSidebar = ({ isChatOpen, setIsChatOpen, setCurrentChat }: IProps) => {
         )}
       </div>
     </div>
+    </>
   );
 };
 

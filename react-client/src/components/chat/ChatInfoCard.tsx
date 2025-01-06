@@ -2,6 +2,7 @@ import axios from "axios";
 import toast from "react-hot-toast";
 import { HiOutlineUserAdd } from "react-icons/hi";
 import { useParams } from "react-router-dom";
+import ApiProxyService from "../../services/api-service";
 
 interface OnlineUsers {
   email: string;
@@ -17,14 +18,17 @@ interface IProps {
 
 const ChatInfoCard = ({ friendInfo }: IProps) => {
   const { id } = useParams();
+  const apiService = new ApiProxyService({
+    baseUrl: "http://localhost:8080"
+  })
 
   const handleCreateConv = async () => {
     const tid = toast.loading("Creating Conversation...");
     try {
-      await axios.post("http://localhost:8080/api/conversation/", {
+      await apiService.post<CreateConversationProps, any>("api/conversation/", {
         senderId: friendInfo?._id,
         receiverId: id,
-      });
+      })
       toast.success(
         `Conversation with ${friendInfo?.name} created successfully`,
         {

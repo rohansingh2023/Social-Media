@@ -109,3 +109,14 @@ type NotificationLog = {
   logtype: string;
   datecreated: string;
 };
+
+type CreateConversationProps = {
+  senderId: string;
+  receiverId: string | undefined;
+};
+
+type MessageProps = {
+  conversationId: string | undefined;
+  sender: string;
+  text: string;
+};

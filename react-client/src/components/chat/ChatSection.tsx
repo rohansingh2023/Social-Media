@@ -1,7 +1,6 @@
 import React, { useContext, useEffect, useRef, useState } from "react";
 import { RiSendPlaneFill } from "react-icons/ri";
 import { IoMdPhotos } from "react-icons/io";
-import axios from "axios";
 import { socket } from "../../utils/web-socket";
 import { useCurrentState } from "../../state-management/current-user";
 import MessageCard from "./MessageCard";
@@ -13,6 +12,7 @@ import { GET_USER_BY_ID } from "../../graphql/queries/userQueries";
 import StartVideoChat from "../video-chat/StartVideoChat";
 import { useVideoCardState } from "../../state-management/show-video-card";
 import { OnlineUsersContext } from "../../state-management/online-users";
+import ApiProxyService from "../../services/api-service";
 
 interface IProps {
   isChatOpen: boolean;
@@ -30,6 +30,9 @@ const ChatSection = ({ isChatOpen, currentChat }: IProps) => {
   const [otherUser, setOtherUser] = useState<User>();
   const { showVideoChatCard, setShowVideoChatCard } = useVideoCardState();
   const context = useContext(OnlineUsersContext);
+  const apiService = new ApiProxyService({
+    baseUrl: "http://localhost:9090"
+  })
 
   if (!context) {
     return <div>Error: GlobalContext not found!</div>;
@@ -60,7 +63,6 @@ const ChatSection = ({ isChatOpen, currentChat }: IProps) => {
 
   useEffect(() => {
     const handleGetMessage = (data: Message) => {
-      console.log(data); // This should now only log once
       setMessages((prev) => [...prev, data]);
     };
     socket.on("getMessage", handleGetMessage);
@@ -72,9 +74,7 @@ const ChatSection = ({ isChatOpen, currentChat }: IProps) => {
   useEffect(() => {
     const getMessages = async () => {
       try {
-        const res = await axios.get(
-          `http://localhost:9090/api/message/${currentChat?._id}`
-        );
+        const res = await apiService.get<Message[]>(`api/message/${currentChat?._id}`)
         setMessages(res.data);
       } catch (error) {
         console.log(error);
@@ -106,10 +106,7 @@ const ChatSection = ({ isChatOpen, currentChat }: IProps) => {
           createdAt: Date.now(),
         });
 
-        const res = await axios.post(
-          "http://localhost:9090/api/message/",
-          message
-        );
+        const res = await apiService.post<MessageProps, Message>("api/message/", message)
         setMessages([...messages, res.data]);
         setMsgInput("");
       } catch (error) {
